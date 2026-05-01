@@ -5,14 +5,14 @@
 :root {
   /* Arrow toggle buttons — edit base values; open states derive from them automatically */
   --state-arrow-size:           10px;
-  --state-arrow-color:          #4a6080;
-  --state-arrow-open-color:     #6f90c0; /* base RGB × 1.5 */
+  --state-arrow-color:          #6a88a8;
+  --state-arrow-open-color:     #8fa8d0;
   --sub-section-arrow-size:     9px;
-  --sub-section-arrow-color:    #3d5878;
-  --sub-section-arrow-open-color: #5c84b4;
+  --sub-section-arrow-color:    #5d7898;
+  --sub-section-arrow-open-color: #7ca4d4;
   --group-arrow-size:           9px;
-  --group-arrow-color:          #3a5070;
-  --group-arrow-open-color:     #5778a8; /* base RGB × 1.5 */
+  --group-arrow-color:          #5a7090;
+  --group-arrow-open-color:     #7798c8;
 }
 
 *, *::before, *::after {
@@ -36,6 +36,7 @@ html, body {
 #app {
   display: flex;
   height: 100vh;
+  height: 100dvh;
   width: 100vw;
 }
 
@@ -122,7 +123,7 @@ html, body {
   flex-shrink: 0;
   background: none;
   border: none;
-  color: #4a6080;
+  color: #6a88a8;
   cursor: pointer;
   padding: 2px 4px;
   border-radius: 4px;

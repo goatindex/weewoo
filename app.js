@@ -1124,8 +1124,8 @@ const ICONS = {
 
 function minimizeSVG(pointLeft) {
   return pointLeft
-    ? `<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2L4 7l5 5"/><path d="M13 2L8 7l5 5"/></svg>`
-    : `<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2l5 5-5 5"/><path d="M1 2l5 5-5 5"/></svg>`;
+    ? `<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2L4 7l5 5"/><path d="M13 2L8 7l5 5"/></svg>`
+    : `<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2l5 5-5 5"/><path d="M1 2l5 5-5 5"/></svg>`;
 }
 
 function restoreTabSVG(pointRight) {
@@ -1203,8 +1203,6 @@ const MODAL_CONTENT = {
     <h3 class="modal-section-title">Data corrections</h3>
     <p>If you notice a facility that is missing, incorrectly located, or has wrong details, please include the facility name, state, and the correct information in your report.</p>
 
-    <h3 class="modal-section-title">Email</h3>
-    <p><a href="mailto:hello@weewoo.map" style="color:#4a90ff;">hello@weewoo.map</a></p>
   `,
   settings: `
     <h3 class="modal-section-title">Saved layers</h3>
@@ -1261,7 +1259,7 @@ function initSidebarState() {
   }
 
   // Restore persisted minimised state
-  if (localStorage.getItem('weewoo_sidebar_minimized') === '1') {
+  if (localStorage.getItem('weewoo_sidebar_minimized') === '1' && window.innerWidth <= 768) {
     document.getElementById('sidebar').classList.add('hidden');
     document.getElementById('sidebar-restore-tab').classList.remove('hidden');
   }
