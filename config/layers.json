@@ -1,0 +1,1128 @@
+[
+  {
+    "id": "national",
+    "label": "National",
+    "groups": [
+      {
+        "id": "national__boundaries",
+        "label": "State Boundaries",
+        "type": "polygon",
+        "color": "#9e9e9e",
+        "fillColor": "#9e9e9e",
+        "fillOpacity": 0.06,
+        "weight": 1.5,
+        "file": "geojson/au.json",
+        "nameKey": "name",
+        "singleFeature": false,
+        "isSESFacilityGroup": false,
+        "sesLinking": null,
+        "filter": null
+      }
+    ]
+  },
+  {
+    "id": "VIC",
+    "label": "Victoria",
+    "groups": [
+      {
+        "type": "section",
+        "id": "VIC__lga_section",
+        "label": "LGA",
+        "groups": [
+          {
+            "id": "VIC__lgas",
+            "label": "LGA Boundaries",
+            "type": "polygon",
+            "color": "#4682b4",
+            "fillColor": "#4682b4",
+            "fillOpacity": 0.15,
+            "weight": 1.5,
+            "file": "geojson/VIC/LGAs.geojson",
+            "nameKey": "LGA_NAME",
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          },
+          {
+            "id": "VIC__lga_facilities",
+            "label": "LGA Facilities",
+            "type": "point",
+            "color": "#4682b4",
+            "fillColor": "#4682b4",
+            "markerRadius": 6,
+            "file": "geojson/VIC/municipal_offices.geojson",
+            "nameKey": "name",
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "id": "VIC__cfa_section",
+        "label": "CFA",
+        "groups": [
+          {
+            "id": "VIC__cfa",
+            "label": "CFA Brigade Areas",
+            "type": "polygon",
+            "color": "#cc2200",
+            "fillColor": "#cc2200",
+            "fillOpacity": 0.12,
+            "weight": 1,
+            "file": "geojson/VIC/cfa.geojson",
+            "nameKey": "BRIG_NAME",
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          },
+          {
+            "id": "VIC__cfa_brigade_bld",
+            "label": "CFA Brigade Stations",
+            "type": "point",
+            "color": "#cc2200",
+            "fillColor": "#cc2200",
+            "markerRadius": 6,
+            "file": "geojson/VIC/cfa_brigade_bld.geojson",
+            "nameKey": "brig_name",
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          },
+          {
+            "id": "VIC__cfa_district_bld",
+            "label": "CFA District HQs",
+            "type": "point",
+            "color": "#cc2200",
+            "fillColor": "#cc2200",
+            "markerRadius": 6,
+            "file": "geojson/VIC/cfa_district_bld.geojson",
+            "nameKey": "brig_name",
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          },
+          {
+            "id": "VIC__cfa_coastguard_bld",
+            "label": "Coast Guard (CFA)",
+            "type": "point",
+            "color": "#cc2200",
+            "fillColor": "#cc2200",
+            "markerRadius": 6,
+            "file": "geojson/VIC/cfa_coastguard_bld.geojson",
+            "nameKey": "brig_name",
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          }
+        ]
+      },
+      {
+        "id": "VIC__frv",
+        "label": "FRV Coverage",
+        "type": "polygon",
+        "color": "#8b0000",
+        "fillColor": "#8b0000",
+        "fillOpacity": 0.18,
+        "weight": 2,
+        "file": "geojson/VIC/frv.geojson",
+        "nameKey": null,
+        "singleFeature": true,
+        "isSESFacilityGroup": false,
+        "sesLinking": null,
+        "filter": null
+      },
+      {
+        "type": "section",
+        "id": "VIC__ses_section",
+        "label": "SES",
+        "groups": [
+          {
+            "id": "VIC__ses_zones",
+            "label": "SES Response Zones",
+            "type": "polygon",
+            "color": "#ff8c00",
+            "fillColor": "#ff8c00",
+            "fillOpacity": 0.18,
+            "weight": 1.5,
+            "file": "geojson/VIC/ses.with_hq.geojson",
+            "nameKey": "RESPONSE_ZONE_NAME",
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": {
+              "linkedGroupId": "VIC__ses_facilities",
+              "zoneNameKey": "HQ_FACILITY_NAME"
+            },
+            "filter": "ses_exclude_test"
+          },
+          {
+            "id": "VIC__ses_facilities",
+            "label": "SES Facilities",
+            "type": "point",
+            "color": "#ff8c00",
+            "fillColor": "#ff8c00",
+            "markerRadius": 6,
+            "file": "geojson/VIC/SESBLD_VICTORIA.geojson",
+            "nameKey": "facility_name",
+            "singleFeature": false,
+            "isSESFacilityGroup": true,
+            "sesLinking": null,
+            "filter": null
+          }
+        ]
+      },
+      {
+        "id": "VIC__ambulance",
+        "label": "Ambulance Stations",
+        "type": "point",
+        "color": "#f5c400",
+        "fillColor": "#f5c400",
+        "markerRadius": 6,
+        "file": "geojson/VIC/ambulance_vic.geojson",
+        "nameKey": "facility_name",
+        "singleFeature": false,
+        "isSESFacilityGroup": false,
+        "sesLinking": null,
+        "filter": null
+      },
+      {
+        "id": "VIC__police",
+        "label": "Police Stations",
+        "type": "point",
+        "color": "#1a5aab",
+        "fillColor": "#1a5aab",
+        "markerRadius": 6,
+        "file": "geojson/VIC/police.geojson",
+        "nameKey": "place_name",
+        "singleFeature": false,
+        "isSESFacilityGroup": false,
+        "sesLinking": null,
+        "filter": null
+      },
+      {
+        "type": "section",
+        "id": "VIC__flood_section",
+        "label": "Flood",
+        "groups": [
+          {
+            "id": "VIC__flood_100yr",
+            "label": "100-Year Flood Extent",
+            "type": "polygon",
+            "color": "#1565c0",
+            "fillColor": "#1565c0",
+            "fillOpacity": 0.25,
+            "weight": 0.5,
+            "file": "geojson/VIC/flood/vic_flood_stat_100yr.geojson",
+            "nameKey": null,
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          },
+          {
+            "id": "VIC__flood_history_2022",
+            "label": "October 2022 Flood Event",
+            "type": "polygon",
+            "color": "#0d47a1",
+            "fillColor": "#0d47a1",
+            "fillOpacity": 0.35,
+            "weight": 1,
+            "file": "geojson/VIC/flood/vic_flood_history_oct2022.geojson",
+            "nameKey": "incident_n",
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          },
+          {
+            "id": "VIC__flood_fo",
+            "label": "Flood Overlay (FO)",
+            "type": "polygon",
+            "color": "#1976d2",
+            "fillColor": "#1976d2",
+            "fillOpacity": 0.18,
+            "weight": 1,
+            "file": "geojson/VIC/flood/vicmap_planning_FO.geojson",
+            "nameKey": "LGA",
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          },
+          {
+            "id": "VIC__flood_lsio",
+            "label": "Land Subject to Inundation (LSIO)",
+            "type": "polygon",
+            "color": "#42a5f5",
+            "fillColor": "#42a5f5",
+            "fillOpacity": 0.15,
+            "weight": 0.8,
+            "file": "geojson/VIC/flood/vicmap_planning_LSIO.geojson",
+            "nameKey": "LGA",
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          },
+          {
+            "id": "VIC__mw_darebin_current",
+            "label": "Melbourne Water \u00e2\u20ac\u201d Darebin (Current)",
+            "type": "polygon",
+            "color": "#0077be",
+            "fillColor": "#0077be",
+            "fillOpacity": 0.35,
+            "weight": 0.5,
+            "file": "geojson/VIC/flood/melbwater_flood_darebin_current.geojson",
+            "nameKey": null,
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          },
+          {
+            "id": "VIC__mw_darebin_2100",
+            "label": "Melbourne Water \u00e2\u20ac\u201d Darebin (2100)",
+            "type": "polygon",
+            "color": "#0077be",
+            "fillColor": "#0077be",
+            "fillOpacity": 0.2,
+            "weight": 0.5,
+            "file": "geojson/VIC/flood/melbwater_flood_darebin_2100.geojson",
+            "nameKey": null,
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          },
+          {
+            "id": "VIC__mw_glen_eira_current",
+            "label": "Melbourne Water \u00e2\u20ac\u201d Glen Eira (Current)",
+            "type": "polygon",
+            "color": "#0077be",
+            "fillColor": "#0077be",
+            "fillOpacity": 0.35,
+            "weight": 0.5,
+            "file": "geojson/VIC/flood/melbwater_flood_glen_eira_current.geojson",
+            "nameKey": null,
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          },
+          {
+            "id": "VIC__mw_glen_eira_2100",
+            "label": "Melbourne Water \u00e2\u20ac\u201d Glen Eira (2100)",
+            "type": "polygon",
+            "color": "#0077be",
+            "fillColor": "#0077be",
+            "fillOpacity": 0.2,
+            "weight": 0.5,
+            "file": "geojson/VIC/flood/melbwater_flood_glen_eira_2100.geojson",
+            "nameKey": null,
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          },
+          {
+            "id": "VIC__mw_merri_bek_current",
+            "label": "Melbourne Water \u00e2\u20ac\u201d Merri-bek (Current)",
+            "type": "polygon",
+            "color": "#0077be",
+            "fillColor": "#0077be",
+            "fillOpacity": 0.35,
+            "weight": 0.5,
+            "file": "geojson/VIC/flood/melbwater_flood_merri_bek_current.geojson",
+            "nameKey": null,
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          },
+          {
+            "id": "VIC__mw_merri_bek_2100",
+            "label": "Melbourne Water \u00e2\u20ac\u201d Merri-bek (2100)",
+            "type": "polygon",
+            "color": "#0077be",
+            "fillColor": "#0077be",
+            "fillOpacity": 0.2,
+            "weight": 0.5,
+            "file": "geojson/VIC/flood/melbwater_flood_merri_bek_2100.geojson",
+            "nameKey": null,
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          },
+          {
+            "id": "VIC__mw_yarra_current",
+            "label": "Melbourne Water \u00e2\u20ac\u201d Yarra (Current)",
+            "type": "polygon",
+            "color": "#0077be",
+            "fillColor": "#0077be",
+            "fillOpacity": 0.35,
+            "weight": 0.5,
+            "file": "geojson/VIC/flood/melbwater_flood_yarra_current.geojson",
+            "nameKey": null,
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          },
+          {
+            "id": "VIC__mw_yarra_2100",
+            "label": "Melbourne Water \u00e2\u20ac\u201d Yarra (2100)",
+            "type": "polygon",
+            "color": "#0077be",
+            "fillColor": "#0077be",
+            "fillOpacity": 0.2,
+            "weight": 0.5,
+            "file": "geojson/VIC/flood/melbwater_flood_yarra_2100.geojson",
+            "nameKey": null,
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "NSW",
+    "label": "New South Wales",
+    "groups": [
+      {
+        "type": "section",
+        "id": "NSW__lga_section",
+        "label": "LGA",
+        "groups": [
+          {
+            "id": "NSW__lgas",
+            "label": "LGA Boundaries",
+            "type": "polygon",
+            "color": "#4682b4",
+            "fillColor": "#4682b4",
+            "fillOpacity": 0.15,
+            "weight": 1.5,
+            "file": "geojson/NSW/LGAs.geojson",
+            "nameKey": "lga_name_2024",
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          },
+          {
+            "id": "NSW__lga_facilities",
+            "label": "LGA Facilities",
+            "type": "point",
+            "color": "#4682b4",
+            "fillColor": "#4682b4",
+            "markerRadius": 6,
+            "file": "geojson/NSW/lga_facilities.geojson",
+            "nameKey": "name",
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "id": "NSW__ses_section",
+        "label": "SES",
+        "groups": [
+          {
+            "id": "NSW__ses_zones",
+            "label": "SES Zones",
+            "type": "polygon",
+            "color": "#ff8c00",
+            "fillColor": "#ff8c00",
+            "fillOpacity": 0.15,
+            "weight": 1.5,
+            "file": "geojson/NSW/ses_zones.geojson",
+            "nameKey": "ZONENAME",
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          },
+          {
+            "id": "NSW__ses_clusters",
+            "label": "SES Clusters",
+            "type": "polygon",
+            "color": "#ff8c00",
+            "fillColor": "#ff8c00",
+            "fillOpacity": 0.12,
+            "weight": 1,
+            "file": "geojson/NSW/ses_clusters.geojson",
+            "nameKey": "CLUSTERNAME",
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          },
+          {
+            "id": "NSW__ses_units",
+            "label": "SES Units",
+            "type": "polygon",
+            "color": "#ff8c00",
+            "fillColor": "#ff8c00",
+            "fillOpacity": 0.1,
+            "weight": 0.8,
+            "file": "geojson/NSW/ses_units.geojson",
+            "nameKey": "UNITNAME",
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          },
+          {
+            "id": "NSW__ses_facilities",
+            "label": "SES Facilities",
+            "type": "point",
+            "color": "#ff8c00",
+            "fillColor": "#ff8c00",
+            "markerRadius": 6,
+            "file": "geojson/NSW/SESBLD_NEW_SOUTH_WALES.geojson",
+            "nameKey": "facility_name",
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          },
+          {
+            "id": "NSW__ses_hq",
+            "label": "SES HQs",
+            "type": "point",
+            "color": "#ff8c00",
+            "fillColor": "#ff8c00",
+            "markerRadius": 6,
+            "file": "geojson/NSW/ses_hq.geojson",
+            "nameKey": "HQNAME",
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          }
+        ]
+      },
+      {
+        "id": "NSW__ambulance",
+        "label": "Ambulance Stations",
+        "type": "point",
+        "color": "#f5c400",
+        "fillColor": "#f5c400",
+        "markerRadius": 6,
+        "file": "geojson/NSW/ambulance_nsw.geojson",
+        "nameKey": "facility_name",
+        "singleFeature": false,
+        "isSESFacilityGroup": false,
+        "sesLinking": null,
+        "filter": null
+      }
+    ]
+  },
+  {
+    "id": "QLD",
+    "label": "Queensland",
+    "groups": [
+      {
+        "type": "section",
+        "id": "QLD__lga_section",
+        "label": "LGA",
+        "groups": [
+          {
+            "id": "QLD__lgas",
+            "label": "LGA Boundaries",
+            "type": "polygon",
+            "color": "#4682b4",
+            "fillColor": "#4682b4",
+            "fillOpacity": 0.15,
+            "weight": 1.5,
+            "file": "geojson/QLD/LGAs.geojson",
+            "nameKey": "lga_name_2024",
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          },
+          {
+            "id": "QLD__lga_facilities",
+            "label": "LGA Facilities",
+            "type": "point",
+            "color": "#4682b4",
+            "fillColor": "#4682b4",
+            "markerRadius": 6,
+            "file": "geojson/QLD/lga_facilities.geojson",
+            "nameKey": "name",
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "id": "QLD__rfs_section",
+        "label": "Rural Fire Service",
+        "groups": [
+          {
+            "id": "QLD__rfs_brigades",
+            "label": "RFS Brigade Areas",
+            "type": "polygon",
+            "color": "#cc2200",
+            "fillColor": "#cc2200",
+            "fillOpacity": 0.12,
+            "weight": 1,
+            "file": "geojson/QLD/rfs_brigades.geojson",
+            "nameKey": "BRIGADE_NAME",
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          },
+          {
+            "id": "QLD__rfs_stations",
+            "label": "RFS Stations",
+            "type": "point",
+            "color": "#cc2200",
+            "fillColor": "#cc2200",
+            "markerRadius": 6,
+            "file": "geojson/QLD/rfs_stations.geojson",
+            "nameKey": "name",
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "id": "QLD__ses_section",
+        "label": "SES",
+        "groups": [
+          {
+            "id": "QLD__ses_areas",
+            "label": "SES Areas",
+            "type": "polygon",
+            "color": "#ff8c00",
+            "fillColor": "#ff8c00",
+            "fillOpacity": 0.15,
+            "weight": 1.5,
+            "file": "geojson/QLD/ses_areas.geojson",
+            "nameKey": "SES_Area",
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          },
+          {
+            "id": "QLD__ses_facilities",
+            "label": "SES Facilities",
+            "type": "point",
+            "color": "#ff8c00",
+            "fillColor": "#ff8c00",
+            "markerRadius": 6,
+            "file": "geojson/QLD/SESBLD_QUEENSLAND.geojson",
+            "nameKey": "facility_name",
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          }
+        ]
+      },
+      {
+        "id": "QLD__ambulance",
+        "label": "Ambulance Stations",
+        "type": "point",
+        "color": "#f5c400",
+        "fillColor": "#f5c400",
+        "markerRadius": 6,
+        "file": "geojson/QLD/ambulance_qld.geojson",
+        "nameKey": "facility_name",
+        "singleFeature": false,
+        "isSESFacilityGroup": false,
+        "sesLinking": null,
+        "filter": null
+      }
+    ]
+  },
+  {
+    "id": "SA",
+    "label": "South Australia",
+    "groups": [
+      {
+        "type": "section",
+        "id": "SA__lga_section",
+        "label": "LGA",
+        "groups": [
+          {
+            "id": "SA__lgas",
+            "label": "LGA Boundaries",
+            "type": "polygon",
+            "color": "#4682b4",
+            "fillColor": "#4682b4",
+            "fillOpacity": 0.15,
+            "weight": 1.5,
+            "file": "geojson/SA/LGAs.geojson",
+            "nameKey": "lga_name_2024",
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          },
+          {
+            "id": "SA__lga_facilities",
+            "label": "LGA Facilities",
+            "type": "point",
+            "color": "#4682b4",
+            "fillColor": "#4682b4",
+            "markerRadius": 6,
+            "file": "geojson/SA/lga_facilities.geojson",
+            "nameKey": "name",
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          }
+        ]
+      },
+      {
+        "id": "SA__ses_facilities",
+        "label": "SES Facilities",
+        "type": "point",
+        "color": "#ff8c00",
+        "fillColor": "#ff8c00",
+        "markerRadius": 6,
+        "file": "geojson/SA/SESBLD_SOUTH_AUSTRALIA.geojson",
+        "nameKey": "facility_name",
+        "singleFeature": false,
+        "isSESFacilityGroup": false,
+        "sesLinking": null,
+        "filter": null
+      },
+      {
+        "id": "SA__ambulance",
+        "label": "Ambulance Stations",
+        "type": "point",
+        "color": "#f5c400",
+        "fillColor": "#f5c400",
+        "markerRadius": 6,
+        "file": "geojson/SA/ambulance_sa.geojson",
+        "nameKey": "facility_name",
+        "singleFeature": false,
+        "isSESFacilityGroup": false,
+        "sesLinking": null,
+        "filter": null
+      }
+    ]
+  },
+  {
+    "id": "TAS",
+    "label": "Tasmania",
+    "groups": [
+      {
+        "type": "section",
+        "id": "TAS__lga_section",
+        "label": "LGA",
+        "groups": [
+          {
+            "id": "TAS__lgas",
+            "label": "LGA Boundaries",
+            "type": "polygon",
+            "color": "#4682b4",
+            "fillColor": "#4682b4",
+            "fillOpacity": 0.15,
+            "weight": 1.5,
+            "file": "geojson/TAS/LGAs.geojson",
+            "nameKey": "lga_name_2024",
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          },
+          {
+            "id": "TAS__lga_facilities",
+            "label": "LGA Facilities",
+            "type": "point",
+            "color": "#4682b4",
+            "fillColor": "#4682b4",
+            "markerRadius": 6,
+            "file": "geojson/TAS/lga_facilities.geojson",
+            "nameKey": "name",
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "id": "TAS__tfs_section",
+        "label": "Tasmania Fire Service",
+        "groups": [
+          {
+            "id": "TAS__fire_stations",
+            "label": "Fire Stations",
+            "type": "point",
+            "color": "#cc2200",
+            "fillColor": "#cc2200",
+            "markerRadius": 6,
+            "file": "geojson/TAS/fire_stations.geojson",
+            "nameKey": "BRIGADE",
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "id": "TAS__ses_section",
+        "label": "SES",
+        "groups": [
+          {
+            "id": "TAS__ses_facilities",
+            "label": "SES Facilities",
+            "type": "point",
+            "color": "#ff8c00",
+            "fillColor": "#ff8c00",
+            "markerRadius": 6,
+            "file": "geojson/TAS/SESBLD_TASMANIA.geojson",
+            "nameKey": "facility_name",
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          },
+          {
+            "id": "TAS__ses_offices",
+            "label": "SES Offices (LIST)",
+            "type": "point",
+            "color": "#ff8c00",
+            "fillColor": "#ff8c00",
+            "markerRadius": 6,
+            "file": "geojson/TAS/ses_offices.geojson",
+            "nameKey": "SITE_NAME",
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          }
+        ]
+      },
+      {
+        "id": "TAS__ambulance",
+        "label": "Ambulance Stations",
+        "type": "point",
+        "color": "#f5c400",
+        "fillColor": "#f5c400",
+        "markerRadius": 6,
+        "file": "geojson/TAS/ambulance_tas.geojson",
+        "nameKey": "facility_name",
+        "singleFeature": false,
+        "isSESFacilityGroup": false,
+        "sesLinking": null,
+        "filter": null
+      }
+    ]
+  },
+  {
+    "id": "NT",
+    "label": "Northern Territory",
+    "groups": [
+      {
+        "type": "section",
+        "id": "NT__lga_section",
+        "label": "LGA",
+        "groups": [
+          {
+            "id": "NT__lgas",
+            "label": "LGA Boundaries",
+            "type": "polygon",
+            "color": "#4682b4",
+            "fillColor": "#4682b4",
+            "fillOpacity": 0.15,
+            "weight": 1.5,
+            "file": "geojson/NT/LGAs.geojson",
+            "nameKey": "lga_name_2024",
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          },
+          {
+            "id": "NT__lga_facilities",
+            "label": "LGA Facilities",
+            "type": "point",
+            "color": "#4682b4",
+            "fillColor": "#4682b4",
+            "markerRadius": 6,
+            "file": "geojson/NT/lga_facilities.geojson",
+            "nameKey": "name",
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "id": "NT__fire_section",
+        "label": "Bushfires NT",
+        "groups": [
+          {
+            "id": "NT__volunteer_brigades",
+            "label": "Volunteer Brigade Areas",
+            "type": "polygon",
+            "color": "#cc2200",
+            "fillColor": "#cc2200",
+            "fillOpacity": 0.12,
+            "weight": 1,
+            "file": "geojson/NT/volunteer_brigade_areas.geojson",
+            "nameKey": "GAZ_NAME",
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          },
+          {
+            "id": "NT__darwin_brigades",
+            "label": "Darwin Volunteer Brigades",
+            "type": "polygon",
+            "color": "#cc2200",
+            "fillColor": "#cc2200",
+            "fillOpacity": 0.12,
+            "weight": 1,
+            "file": "geojson/NT/darwin_volunteer_brigades.geojson",
+            "nameKey": "SHORT_NAME",
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          },
+          {
+            "id": "NT__era",
+            "label": "Emergency Response Areas",
+            "type": "polygon",
+            "color": "#8b0000",
+            "fillColor": "#8b0000",
+            "fillOpacity": 0.15,
+            "weight": 1.5,
+            "file": "geojson/NT/emergency_response_areas.geojson",
+            "nameKey": "GAZ_NAME",
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          }
+        ]
+      },
+      {
+        "id": "NT__ses_facilities",
+        "label": "SES Facilities",
+        "type": "point",
+        "color": "#ff8c00",
+        "fillColor": "#ff8c00",
+        "markerRadius": 6,
+        "file": "geojson/NT/SESBLD_NORTHERN_TERRITORY.geojson",
+        "nameKey": "facility_name",
+        "singleFeature": false,
+        "isSESFacilityGroup": false,
+        "sesLinking": null,
+        "filter": null
+      },
+      {
+        "id": "NT__ambulance",
+        "label": "Ambulance Stations",
+        "type": "point",
+        "color": "#f5c400",
+        "fillColor": "#f5c400",
+        "markerRadius": 6,
+        "file": "geojson/NT/ambulance_nt.geojson",
+        "nameKey": "facility_name",
+        "singleFeature": false,
+        "isSESFacilityGroup": false,
+        "sesLinking": null,
+        "filter": null
+      }
+    ]
+  },
+  {
+    "id": "WA",
+    "label": "Western Australia",
+    "groups": [
+      {
+        "type": "section",
+        "id": "WA__lga_section",
+        "label": "LGA",
+        "groups": [
+          {
+            "id": "WA__lgas",
+            "label": "LGA Boundaries",
+            "type": "polygon",
+            "color": "#4682b4",
+            "fillColor": "#4682b4",
+            "fillOpacity": 0.15,
+            "weight": 1.5,
+            "file": "geojson/WA/LGAs.geojson",
+            "nameKey": "lga_name_2024",
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          },
+          {
+            "id": "WA__lga_facilities",
+            "label": "LGA Facilities",
+            "type": "point",
+            "color": "#4682b4",
+            "fillColor": "#4682b4",
+            "markerRadius": 6,
+            "file": "geojson/WA/lga_facilities.geojson",
+            "nameKey": "name",
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "id": "WA__dfes_section",
+        "label": "DFES",
+        "groups": [
+          {
+            "id": "WA__frs_districts",
+            "label": "FRS Districts",
+            "type": "polygon",
+            "color": "#8b0000",
+            "fillColor": "#8b0000",
+            "fillOpacity": 0.15,
+            "weight": 1.5,
+            "file": "geojson/WA/frs_districts.geojson",
+            "nameKey": "name",
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          },
+          {
+            "id": "WA__dfes_stations",
+            "label": "DFES Stations",
+            "type": "point",
+            "color": "#8b0000",
+            "fillColor": "#8b0000",
+            "markerRadius": 6,
+            "file": "geojson/WA/dfes_stations.geojson",
+            "nameKey": "displaynam",
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          }
+        ]
+      },
+      {
+        "id": "WA__ses_facilities",
+        "label": "SES Facilities",
+        "type": "point",
+        "color": "#ff8c00",
+        "fillColor": "#ff8c00",
+        "markerRadius": 6,
+        "file": "geojson/WA/SESBLD_WESTERN_AUSTRALIA.geojson",
+        "nameKey": "facility_name",
+        "singleFeature": false,
+        "isSESFacilityGroup": false,
+        "sesLinking": null,
+        "filter": null
+      },
+      {
+        "id": "WA__ambulance",
+        "label": "Ambulance Stations",
+        "type": "point",
+        "color": "#f5c400",
+        "fillColor": "#f5c400",
+        "markerRadius": 6,
+        "file": "geojson/WA/ambulance_wa.geojson",
+        "nameKey": "facility_name",
+        "singleFeature": false,
+        "isSESFacilityGroup": false,
+        "sesLinking": null,
+        "filter": null
+      }
+    ]
+  },
+  {
+    "id": "ACT",
+    "label": "Australian Capital Territory",
+    "groups": [
+      {
+        "type": "section",
+        "id": "ACT__lga_section",
+        "label": "LGA",
+        "groups": [
+          {
+            "id": "ACT__lgas",
+            "label": "LGA Boundaries",
+            "type": "polygon",
+            "color": "#4682b4",
+            "fillColor": "#4682b4",
+            "fillOpacity": 0.15,
+            "weight": 1.5,
+            "file": "geojson/ACT/LGAs.geojson",
+            "nameKey": "lga_name_2024",
+            "singleFeature": false,
+            "isSESFacilityGroup": false,
+            "sesLinking": null,
+            "filter": null
+          }
+        ]
+      },
+      {
+        "id": "ACT__ses_facilities",
+        "label": "SES Facilities",
+        "type": "point",
+        "color": "#ff8c00",
+        "fillColor": "#ff8c00",
+        "markerRadius": 6,
+        "file": "geojson/ACT/SESBLD_AUSTRALIAN_CAPITAL_TERRITORY.geojson",
+        "nameKey": "facility_name",
+        "singleFeature": false,
+        "isSESFacilityGroup": false,
+        "sesLinking": null,
+        "filter": null
+      },
+      {
+        "id": "ACT__ambulance",
+        "label": "Ambulance Stations",
+        "type": "point",
+        "color": "#f5c400",
+        "fillColor": "#f5c400",
+        "markerRadius": 6,
+        "file": "geojson/ACT/ambulance_act.geojson",
+        "nameKey": "facility_name",
+        "singleFeature": false,
+        "isSESFacilityGroup": false,
+        "sesLinking": null,
+        "filter": null
+      }
+    ]
+  }
+]

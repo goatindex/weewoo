@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0f3460" />
+  <meta name="description" content="Australian emergency services map layers" />
+  <title>WeeWoo</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+
+    <div id="sidebar">
+      <div id="sidebar-header">
+        <div id="sidebar-header-top">
+          <div id="sidebar-title">
+            <span id="title-text"><span class="ww-red">WEE</span> <span class="ww-blue">WOO</span> <span class="ww-red">MAP</span> <span class="ww-blue">FRIEND</span></span>
+          </div>
+          <button id="btn-minimize" title="Collapse sidebar" aria-label="Collapse sidebar"></button>
+        </div>
+        <div id="search-wrap">
+          <input
+            id="global-search"
+            type="text"
+            placeholder="Search all layers…"
+            autocomplete="off"
+            spellcheck="false"
+          />
+        </div>
+      </div>
+
+      <div id="layer-tree"></div>
+
+      <div id="sidebar-footer">
+        <button class="footer-btn" id="btn-docs"     title="Documentation"   aria-label="Documentation"></button>
+        <button class="footer-btn" id="btn-contact"  title="Contact"         aria-label="Contact"></button>
+        <button class="footer-btn" id="btn-settings" title="Settings"        aria-label="Settings"></button>
+        <button class="footer-btn" id="btn-flip"     title="Flip sidebar side" aria-label="Flip sidebar side"></button>
+        <button class="footer-btn" id="btn-reset"    title="Clear all saved data and restart" aria-label="Clear saved data"></button>
+      </div>
+    </div>
+
+    <div id="map"></div>
+
+  </div>
+
+  <button id="sidebar-restore-tab" class="hidden" title="Show sidebar" aria-label="Show sidebar"></button>
+
+  <div id="onboarding-overlay" class="hidden" role="dialog" aria-modal="true" aria-labelledby="onboarding-title">
+    <div id="onboarding-panel">
+      <div id="onboarding-logo-wrap">
+        <img id="onboarding-logo" src="icons/logo-wide.png" alt="Wee Woo Map Friend" />
+      </div>
+      <h2 id="onboarding-title">Where would you like to explore?</h2>
+      <p>Select one or more states to zoom in and open their layers, or browse all of Australia.</p>
+      <button id="onboarding-all">All of Australia</button>
+      <p class="picker-or">— or select specific states —</p>
+      <div id="state-picker-grid">
+        <button class="state-picker-btn" data-state-id="VIC">Victoria</button>
+        <button class="state-picker-btn" data-state-id="NSW">New South Wales</button>
+        <button class="state-picker-btn" data-state-id="QLD">Queensland</button>
+        <button class="state-picker-btn" data-state-id="SA">South Australia</button>
+        <button class="state-picker-btn" data-state-id="WA">Western Australia</button>
+        <button class="state-picker-btn" data-state-id="TAS">Tasmania</button>
+        <button class="state-picker-btn" data-state-id="NT">Northern Territory</button>
+        <button class="state-picker-btn" data-state-id="ACT">Australian Capital Territory</button>
+      </div>
+      <button id="state-picker-go" class="hidden">Go ›</button>
+    </div>
+  </div>
+
+  <div id="modal-overlay" class="hidden">
+    <div id="modal-panel">
+      <div id="modal-header">
+        <span id="modal-title"></span>
+        <button id="modal-close" title="Close" aria-label="Close">✕</button>
+      </div>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

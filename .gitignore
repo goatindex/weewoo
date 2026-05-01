@@ -1,0 +1,35 @@
+node_modules/
+www/
+android/
+
+# Claude Code internal config
+.claude/
+.mcp.json
+memory/
+
+# Flood GeoJSON — too large for GitHub (files up to 464 MB)
+geojson/VIC/flood/*.geojson
+
+# Raw source data — only .geojson files belong in the repo
+geojson/**/*.zip
+geojson/**/*.shp
+geojson/**/*.dbf
+geojson/**/*.prj
+geojson/**/*.shx
+geojson/**/*.sbn
+geojson/**/*.sbx
+geojson/**/*.cpg
+geojson/**/*.xml
+geojson/**/*.lyr
+geojson/**/*.kmz
+geojson/**/*.pdf
+geojson/**/*.htm
+geojson/**/*.url
+geojson/**/*.log
+geojson/**/*.lock
+geojson/**/extracted/
+geojson/**/flood/vic_flood_stat_100yr_extracted/
+
+# Python
+__pycache__/
+*.py[cod]

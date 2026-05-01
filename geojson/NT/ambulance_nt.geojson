@@ -1,0 +1,217 @@
+{
+  "type": "FeatureCollection",
+  "name": "Ambulance_Stations_NORTHERN_TERRITORY",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "metadata": {"source": "Digital Atlas of Australia — Ambulance Stations", "source_url": "https://digital.atlas.gov.au/datasets/ambulance-stations", "licence": "Creative Commons Attribution 4.0 International (CC BY 4.0)", "licence_url": "https://creativecommons.org/licenses/by/4.0/", "description": "Ambulance station point locations, Northern Territory (split from national dataset)."}, "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "objectid": 527,
+        "featuretype": "EMERGENCY FACILITY",
+        "descripton": "An emergency management facility from which a particular agency\u2019s resources are commanded, coordinated and assigned to an incident or emergency",
+        "class": "AMBULANCE STATION",
+        "facility_name": "DARWIN",
+        "facility_operationalstatus": "OPERATIONAL",
+        "facility_address": "50 DRIPSTONE ROAD",
+        "abs_suburb": "CASUARINA",
+        "facility_state": "NORTHERN TERRITORY",
+        "abs_postcode": "0810",
+        "facility_attribute_source": "NORTHERN TERRITORY POLICE, FIR",
+        "facility_attribute_date": null,
+        "facility_source": "NORTHERN TERRITORY POLICE, FIR",
+        "facility_date": null,
+        "facility_spatial_confidence": null,
+        "facility_revised": "2016-07-27T00:00:00Z",
+        "comment_": null,
+        "facility_lat": "-12.375519999999938",
+        "facility_long": "130.87691000000007",
+        "validated": null,
+        "gnaf_building_name": "AMBULANCE CENTRE",
+        "gnaf_address_detail_pid": "GANT_703863339",
+        "gnaf_formatted_address": "50 DRIPSTONE ROAD",
+        "gnaf_confidence": "2",
+        "gnaf_postcode": "0810",
+        "gnaf_suburb": "CASUARINA",
+        "distance_to_gnaf": 17,
+        "gnaf_lat": "-12.375448999999946",
+        "gnaf_long": "130.87704300000007"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          130.8769187089645,
+          -12.375506118883965
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "objectid": 528,
+        "featuretype": "EMERGENCY FACILITY",
+        "descripton": "An emergency management facility from which a particular agency\u2019s resources are commanded, coordinated and assigned to an incident or emergency",
+        "class": "AMBULANCE STATION",
+        "facility_name": "KATHERINE",
+        "facility_operationalstatus": "OPERATIONAL",
+        "facility_address": "5 KINTORE STREET",
+        "abs_suburb": "KATHERINE SOUTH",
+        "facility_state": "NORTHERN TERRITORY",
+        "abs_postcode": "0850",
+        "facility_attribute_source": "NORTHERN TERRITORY POLICE, FIR",
+        "facility_attribute_date": null,
+        "facility_source": "NORTHERN TERRITORY POLICE, FIR",
+        "facility_date": null,
+        "facility_spatial_confidence": null,
+        "facility_revised": "2016-07-27T00:00:00Z",
+        "comment_": null,
+        "facility_lat": "-14.464149999999961",
+        "facility_long": "132.25984000000005",
+        "validated": null,
+        "gnaf_building_name": null,
+        "gnaf_address_detail_pid": "GANT_717246953",
+        "gnaf_formatted_address": "5 KINTORE STREET",
+        "gnaf_confidence": "2",
+        "gnaf_postcode": "0850",
+        "gnaf_suburb": "KATHERINE SOUTH",
+        "distance_to_gnaf": 4,
+        "gnaf_lat": "-14.464115139999933",
+        "gnaf_long": "132.25983025000005"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          132.2598486169941,
+          -14.464136148231415
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "objectid": 529,
+        "featuretype": "EMERGENCY FACILITY",
+        "descripton": "An emergency management facility from which a particular agency\u2019s resources are commanded, coordinated and assigned to an incident or emergency",
+        "class": "AMBULANCE STATION",
+        "facility_name": "NHULUNBUY",
+        "facility_operationalstatus": "OPERATIONAL",
+        "facility_address": "80 MATTHEW FLINDERS WAY",
+        "abs_suburb": "NHULUNBUY",
+        "facility_state": "NORTHERN TERRITORY",
+        "abs_postcode": "0880",
+        "facility_attribute_source": "NORTHERN TERRITORY POLICE, FIR",
+        "facility_attribute_date": null,
+        "facility_source": "NORTHERN TERRITORY POLICE, FIR",
+        "facility_date": null,
+        "facility_spatial_confidence": null,
+        "facility_revised": "2016-07-27T00:00:00Z",
+        "comment_": null,
+        "facility_lat": "-12.186763999999926",
+        "facility_long": "136.77732500000002",
+        "validated": null,
+        "gnaf_building_name": null,
+        "gnaf_address_detail_pid": "GANT_718141942",
+        "gnaf_formatted_address": "80 MATTHEW FLINDERS WAY",
+        "gnaf_confidence": "1",
+        "gnaf_postcode": "0880",
+        "gnaf_suburb": "NHULUNBUY",
+        "distance_to_gnaf": 80,
+        "gnaf_lat": "-12.186389989999952",
+        "gnaf_long": "136.77795219000006"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.7773334442555,
+          -12.186750232335607
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "objectid": 530,
+        "featuretype": "EMERGENCY FACILITY",
+        "descripton": "An emergency management facility from which a particular agency\u2019s resources are commanded, coordinated and assigned to an incident or emergency",
+        "class": "AMBULANCE STATION",
+        "facility_name": "TENNANT CREEK",
+        "facility_operationalstatus": "OPERATIONAL",
+        "facility_address": "45 SCHMIDT STREET",
+        "abs_suburb": "TENNANT CREEK",
+        "facility_state": "NORTHERN TERRITORY",
+        "abs_postcode": "0860",
+        "facility_attribute_source": "NORTHERN TERRITORY POLICE, FIR",
+        "facility_attribute_date": null,
+        "facility_source": "NORTHERN TERRITORY POLICE, FIR",
+        "facility_date": null,
+        "facility_spatial_confidence": null,
+        "facility_revised": "2016-07-27T00:00:00Z",
+        "comment_": null,
+        "facility_lat": "-19.646429999999953",
+        "facility_long": "134.1875500000001",
+        "validated": null,
+        "gnaf_building_name": "TENNANT CREEK HOSPITAL",
+        "gnaf_address_detail_pid": "GANT_703857020",
+        "gnaf_formatted_address": "45 SCHMIDT STREET",
+        "gnaf_confidence": "2",
+        "gnaf_postcode": "0860",
+        "gnaf_suburb": "TENNANT CREEK",
+        "distance_to_gnaf": 193,
+        "gnaf_lat": "-19.648057999999935",
+        "gnaf_long": "134.18689300000005"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          134.18755838953106,
+          -19.646416220732885
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "objectid": 531,
+        "featuretype": "EMERGENCY FACILITY",
+        "descripton": "An emergency management facility from which a particular agency\u2019s resources are commanded, coordinated and assigned to an incident or emergency",
+        "class": "AMBULANCE STATION",
+        "facility_name": "ALICE SPRINGS",
+        "facility_operationalstatus": "OPERATIONAL",
+        "facility_address": "45 TELEGRAPH TERRACE",
+        "abs_suburb": "THE GAP",
+        "facility_state": "NORTHERN TERRITORY",
+        "abs_postcode": "0870",
+        "facility_attribute_source": "NORTHERN TERRITORY POLICE, FIR",
+        "facility_attribute_date": null,
+        "facility_source": "NORTHERN TERRITORY POLICE, FIR",
+        "facility_date": null,
+        "facility_spatial_confidence": null,
+        "facility_revised": "2016-07-27T00:00:00Z",
+        "comment_": null,
+        "facility_lat": "-23.71321999999998",
+        "facility_long": "133.8719900000001",
+        "validated": null,
+        "gnaf_building_name": null,
+        "gnaf_address_detail_pid": "GANT_717754036",
+        "gnaf_formatted_address": "45 TELEGRAPH TERRACE",
+        "gnaf_confidence": "0",
+        "gnaf_postcode": "0870",
+        "gnaf_suburb": "THE GAP",
+        "distance_to_gnaf": 13,
+        "gnaf_lat": "-23.713139229999967",
+        "gnaf_long": "133.87208110000006"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          133.87199831881074,
+          -23.713206243813733
+        ]
+      }
+    }
+  ]
+}

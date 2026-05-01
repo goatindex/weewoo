@@ -1,0 +1,381 @@
+{
+  "type": "FeatureCollection",
+  "name": "Ambulance_Stations_AUSTRALIAN_CAPITAL_TERRITORY",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "metadata": {"source": "Digital Atlas of Australia — Ambulance Stations", "source_url": "https://digital.atlas.gov.au/datasets/ambulance-stations", "licence": "Creative Commons Attribution 4.0 International (CC BY 4.0)", "licence_url": "https://creativecommons.org/licenses/by/4.0/", "description": "Ambulance station point locations, Australian Capital Territory (split from national dataset)."}, "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "objectid": 532,
+        "featuretype": "EMERGENCY FACILITY",
+        "descripton": "An emergency management facility from which a particular agency\u2019s resources are commanded, coordinated and assigned to an incident or emergency",
+        "class": "AMBULANCE STATION",
+        "facility_name": "BELCONNEN AMBULANCE STN",
+        "facility_operationalstatus": "OPERATIONAL",
+        "facility_address": "5 BARDI PLACE",
+        "abs_suburb": "ARANDA",
+        "facility_state": "AUSTRALIAN CAPITAL TERRITORY",
+        "abs_postcode": "2614",
+        "facility_attribute_source": "ACT EMERGENCY SERVICES AGENCY",
+        "facility_attribute_date": null,
+        "facility_source": "ACT EMERGENCY SERVICES AGENCY",
+        "facility_date": null,
+        "facility_spatial_confidence": null,
+        "facility_revised": "2018-05-31T00:00:00Z",
+        "comment_": null,
+        "facility_lat": "-35.25173956799995",
+        "facility_long": "149.07572091600002",
+        "validated": null,
+        "gnaf_building_name": "AMBULANCE AND FIRE & RESCUE STATION",
+        "gnaf_address_detail_pid": "GAACT719119853",
+        "gnaf_formatted_address": "5 BINDUBI STREET",
+        "gnaf_confidence": "0",
+        "gnaf_postcode": "2614",
+        "gnaf_suburb": "ARANDA",
+        "distance_to_gnaf": 23,
+        "gnaf_lat": "-35.251739649999934",
+        "gnaf_long": "149.07546882000008"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          149.07572648182756,
+          -35.25172670323461
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "objectid": 533,
+        "featuretype": "EMERGENCY FACILITY",
+        "descripton": "An emergency management facility from which a particular agency\u2019s resources are commanded, coordinated and assigned to an incident or emergency",
+        "class": "AMBULANCE STATION",
+        "facility_name": "CALWELL AMBULANCE STN",
+        "facility_operationalstatus": "OPERATIONAL",
+        "facility_address": "51 JOHNSON DRIVE",
+        "abs_suburb": "CALWELL",
+        "facility_state": "AUSTRALIAN CAPITAL TERRITORY",
+        "abs_postcode": "2905",
+        "facility_attribute_source": "ACT EMERGENCY SERVICES AGENCY",
+        "facility_attribute_date": null,
+        "facility_source": "ACT EMERGENCY SERVICES AGENCY",
+        "facility_date": null,
+        "facility_spatial_confidence": null,
+        "facility_revised": "2018-05-31T00:00:00Z",
+        "comment_": null,
+        "facility_lat": "-35.43403921199996",
+        "facility_long": "149.1156558670001",
+        "validated": null,
+        "gnaf_building_name": "CALWELL AMBULANCE STATION",
+        "gnaf_address_detail_pid": "GAACT716851328",
+        "gnaf_formatted_address": "51 JOHNSON DRIVE",
+        "gnaf_confidence": "1",
+        "gnaf_postcode": "2905",
+        "gnaf_suburb": "CALWELL",
+        "distance_to_gnaf": 24,
+        "gnaf_lat": "-35.43384508999998",
+        "gnaf_long": "149.11577692000003"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          149.11566140359477,
+          -35.434026351855366
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "objectid": 534,
+        "featuretype": "EMERGENCY FACILITY",
+        "descripton": "An emergency management facility from which a particular agency\u2019s resources are commanded, coordinated and assigned to an incident or emergency",
+        "class": "AMBULANCE STATION",
+        "facility_name": "CHARNWOOD AMBULANCE STN",
+        "facility_operationalstatus": "OPERATIONAL",
+        "facility_address": "5 LHOTSKY STREET",
+        "abs_suburb": "CHARNWOOD",
+        "facility_state": "AUSTRALIAN CAPITAL TERRITORY",
+        "abs_postcode": "2615",
+        "facility_attribute_source": "ACT EMERGENCY SERVICES AGENCY",
+        "facility_attribute_date": null,
+        "facility_source": "ACT EMERGENCY SERVICES AGENCY",
+        "facility_date": null,
+        "facility_spatial_confidence": null,
+        "facility_revised": "2018-05-31T00:00:00Z",
+        "comment_": null,
+        "facility_lat": "-35.206460006999976",
+        "facility_long": "149.03339169800006",
+        "validated": null,
+        "gnaf_building_name": "WEST BELCONNEN AMBULANCE AND FIRE STATION",
+        "gnaf_address_detail_pid": "GAACT716975477",
+        "gnaf_formatted_address": "5 LHOTSKY STREET",
+        "gnaf_confidence": "1",
+        "gnaf_postcode": "2615",
+        "gnaf_suburb": "CHARNWOOD",
+        "distance_to_gnaf": 44,
+        "gnaf_lat": "-35.20616493999995",
+        "gnaf_long": "149.0337113600001"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          149.03339727602335,
+          -35.206447138337985
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "objectid": 535,
+        "featuretype": "EMERGENCY FACILITY",
+        "descripton": "An emergency management facility from which a particular agency\u2019s resources are commanded, coordinated and assigned to an incident or emergency",
+        "class": "AMBULANCE STATION",
+        "facility_name": "CURTIN AMBULANCE STN",
+        "facility_operationalstatus": "OPERATIONAL",
+        "facility_address": "123 CARRUTHERS STREET",
+        "abs_suburb": "CURTIN",
+        "facility_state": "AUSTRALIAN CAPITAL TERRITORY",
+        "abs_postcode": "2605",
+        "facility_attribute_source": "ACT EMERGENCY SERVICES AGENCY",
+        "facility_attribute_date": null,
+        "facility_source": "ACT EMERGENCY SERVICES AGENCY",
+        "facility_date": null,
+        "facility_spatial_confidence": null,
+        "facility_revised": "2018-05-31T00:00:00Z",
+        "comment_": null,
+        "facility_lat": "-35.32275708699996",
+        "facility_long": "149.07815211700006",
+        "validated": null,
+        "gnaf_building_name": "CURTIN DAY CARE CENTRE",
+        "gnaf_address_detail_pid": "GAACT714941280",
+        "gnaf_formatted_address": "123 CARRUTHERS STREET",
+        "gnaf_confidence": "1",
+        "gnaf_postcode": "2605",
+        "gnaf_suburb": "CURTIN",
+        "distance_to_gnaf": 76,
+        "gnaf_lat": "-35.32341205999995",
+        "gnaf_long": "149.07791139000005"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          149.07815767348154,
+          -35.32274422291916
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "objectid": 536,
+        "featuretype": "EMERGENCY FACILITY",
+        "descripton": "An emergency management facility from which a particular agency\u2019s resources are commanded, coordinated and assigned to an incident or emergency",
+        "class": "AMBULANCE STATION",
+        "facility_name": "DICKSON AMBULANCE STN",
+        "facility_operationalstatus": "OPERATIONAL",
+        "facility_address": "9 MORPHETT STREET",
+        "abs_suburb": "DICKSON",
+        "facility_state": "AUSTRALIAN CAPITAL TERRITORY",
+        "abs_postcode": "2602",
+        "facility_attribute_source": "ACT EMERGENCY SERVICES AGENCY",
+        "facility_attribute_date": null,
+        "facility_source": "ACT EMERGENCY SERVICES AGENCY",
+        "facility_date": null,
+        "facility_spatial_confidence": null,
+        "facility_revised": "2018-05-31T00:00:00Z",
+        "comment_": null,
+        "facility_lat": "-35.253315999999984",
+        "facility_long": "149.1345559990001",
+        "validated": null,
+        "gnaf_building_name": "AMBULANCE STATION",
+        "gnaf_address_detail_pid": "GAACT714885011",
+        "gnaf_formatted_address": "9 MORPHETT STREET",
+        "gnaf_confidence": "1",
+        "gnaf_postcode": "2602",
+        "gnaf_suburb": "DICKSON",
+        "distance_to_gnaf": 41,
+        "gnaf_lat": "-35.25347704999996",
+        "gnaf_long": "149.13415253000005"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          149.13456155560343,
+          -35.25330314024922
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "objectid": 537,
+        "featuretype": "EMERGENCY FACILITY",
+        "descripton": "An emergency management facility from which a particular agency\u2019s resources are commanded, coordinated and assigned to an incident or emergency",
+        "class": "AMBULANCE STATION",
+        "facility_name": "FYSHWICK AMBULANCE STN",
+        "facility_operationalstatus": "OPERATIONAL",
+        "facility_address": "7 DALBY STREET",
+        "abs_suburb": "FYSHWICK",
+        "facility_state": "AUSTRALIAN CAPITAL TERRITORY",
+        "abs_postcode": "2609",
+        "facility_attribute_source": "ACT EMERGENCY SERVICES AGENCY",
+        "facility_attribute_date": null,
+        "facility_source": "ACT EMERGENCY SERVICES AGENCY",
+        "facility_date": null,
+        "facility_spatial_confidence": null,
+        "facility_revised": "2018-05-31T00:00:00Z",
+        "comment_": null,
+        "facility_lat": "-35.32442199999997",
+        "facility_long": "149.1532370000001",
+        "validated": null,
+        "gnaf_building_name": "FIRE STATION",
+        "gnaf_address_detail_pid": "GAACT714887662",
+        "gnaf_formatted_address": "7 DALBY STREET",
+        "gnaf_confidence": "1",
+        "gnaf_postcode": "2609",
+        "gnaf_suburb": "FYSHWICK",
+        "distance_to_gnaf": 20,
+        "gnaf_lat": "-35.32442419999995",
+        "gnaf_long": "149.15346167000007"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          149.15324254472216,
+          -35.324409142319716
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "objectid": 538,
+        "featuretype": "EMERGENCY FACILITY",
+        "descripton": "An emergency management facility from which a particular agency\u2019s resources are commanded, coordinated and assigned to an incident or emergency",
+        "class": "AMBULANCE STATION",
+        "facility_name": "GREENWAY AMBULANCE STN",
+        "facility_operationalstatus": "OPERATIONAL",
+        "facility_address": "320 REED STREET SOUTH",
+        "abs_suburb": "GREENWAY",
+        "facility_state": "AUSTRALIAN CAPITAL TERRITORY",
+        "abs_postcode": "2900",
+        "facility_attribute_source": "ACT EMERGENCY SERVICES AGENCY",
+        "facility_attribute_date": null,
+        "facility_source": "ACT EMERGENCY SERVICES AGENCY",
+        "facility_date": null,
+        "facility_spatial_confidence": null,
+        "facility_revised": "2018-05-31T00:00:00Z",
+        "comment_": null,
+        "facility_lat": "-35.41984429799993",
+        "facility_long": "149.0682001780001",
+        "validated": null,
+        "gnaf_building_name": "FIRE STATION",
+        "gnaf_address_detail_pid": "GAACT717574305",
+        "gnaf_formatted_address": "320 REED STREET",
+        "gnaf_confidence": "1",
+        "gnaf_postcode": "2900",
+        "gnaf_suburb": "GREENWAY",
+        "distance_to_gnaf": 17,
+        "gnaf_lat": "-35.41990035999993",
+        "gnaf_long": "149.06837625000003"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          149.0682057237253,
+          -35.419831433726216
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "objectid": 539,
+        "featuretype": "EMERGENCY FACILITY",
+        "descripton": "An emergency management facility from which a particular agency\u2019s resources are commanded, coordinated and assigned to an incident or emergency",
+        "class": "AMBULANCE STATION",
+        "facility_name": "GUNGAHLIN AMBULANCE STN",
+        "facility_operationalstatus": "OPERATIONAL",
+        "facility_address": "31 ANTHONY ROLFE AVENUE",
+        "abs_suburb": "GUNGAHLIN",
+        "facility_state": "AUSTRALIAN CAPITAL TERRITORY",
+        "abs_postcode": "2912",
+        "facility_attribute_source": "ACT EMERGENCY SERVICES AGENCY",
+        "facility_attribute_date": null,
+        "facility_source": "ACT EMERGENCY SERVICES AGENCY",
+        "facility_date": null,
+        "facility_spatial_confidence": null,
+        "facility_revised": "2018-05-31T00:00:00Z",
+        "comment_": null,
+        "facility_lat": "-35.18263499999995",
+        "facility_long": "149.1322590000001",
+        "validated": null,
+        "gnaf_building_name": "AMBULANCE STATION",
+        "gnaf_address_detail_pid": "GAACT715320316",
+        "gnaf_formatted_address": "31 ANTHONY ROLFE AVENUE",
+        "gnaf_confidence": "1",
+        "gnaf_postcode": "2912",
+        "gnaf_suburb": "GUNGAHLIN",
+        "distance_to_gnaf": 0,
+        "gnaf_lat": "-35.18263450999996",
+        "gnaf_long": "149.1322586000001"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          149.13226456589337,
+          -35.18262213957697
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "objectid": 540,
+        "featuretype": "EMERGENCY FACILITY",
+        "descripton": "An emergency management facility from which a particular agency\u2019s resources are commanded, coordinated and assigned to an incident or emergency",
+        "class": "AMBULANCE STATION",
+        "facility_name": "PHILLIP AMBULANCE STN",
+        "facility_operationalstatus": "OPERATIONAL",
+        "facility_address": "3 HINDMARSH DRIVE",
+        "abs_suburb": "PHILLIP",
+        "facility_state": "AUSTRALIAN CAPITAL TERRITORY",
+        "abs_postcode": "2606",
+        "facility_attribute_source": "ACT EMERGENCY SERVICES AGENCY",
+        "facility_attribute_date": null,
+        "facility_source": "ACT EMERGENCY SERVICES AGENCY",
+        "facility_date": null,
+        "facility_spatial_confidence": null,
+        "facility_revised": "2018-05-31T00:00:00Z",
+        "comment_": null,
+        "facility_lat": "-35.34923699999996",
+        "facility_long": "149.08710200100006",
+        "validated": null,
+        "gnaf_building_name": "AMBULANCE STATION",
+        "gnaf_address_detail_pid": "GAACT714955556",
+        "gnaf_formatted_address": "35 ALTREE COURT",
+        "gnaf_confidence": "1",
+        "gnaf_postcode": "2606",
+        "gnaf_suburb": "PHILLIP",
+        "distance_to_gnaf": 20,
+        "gnaf_lat": "-35.34941427999996",
+        "gnaf_long": "149.08713790000002"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          149.08710755275342,
+          -35.34922413685762
+        ]
+      }
+    }
+  ]
+}

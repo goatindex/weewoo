@@ -1,0 +1,341 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {"source": "Digital Atlas of Australia — State Emergency Services Facilities", "source_url": "https://digital.atlas.gov.au/datasets/state-emergency-services-facilities/about", "licence": "Creative Commons Attribution 4.0 International (CC BY 4.0)", "licence_url": "https://creativecommons.org/licenses/by/4.0/", "description": "SES facility building point locations, Australian Capital Territory (split from national dataset)."}, "features": [
+    {
+      "type": "Feature",
+      "id": 469,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          149.05727541208253,
+          -35.24043404659215
+        ]
+      },
+      "properties": {
+        "objectid": 469,
+        "featuretype": "EMERGENCY FACILITY",
+        "descripton": "An emergency management facility from which a particular agencyâ€™s resources are commanded, coordinated and assigned to an incident or emergency",
+        "class": "SES FACILITY",
+        "facility_name": "BELCONNEN SES UNIT",
+        "facility_operationalstatus": "OPERATIONAL",
+        "facility_address": "21 EGAN COURT",
+        "abs_suburb": "BELCONNEN",
+        "facility_state": "AUSTRALIAN CAPITAL TERRITORY",
+        "abs_postcode": "2617",
+        "facility_attribute_source": "ACT EMERGENCY SERVICES AGENCY",
+        "facility_attribute_date": null,
+        "facility_source": "ACT EMERGENCY SERVICES AGENCY",
+        "facility_date": null,
+        "facility_spatial_confidence": null,
+        "facility_revised": 1527724800000,
+        "comment_": null,
+        "facility_lat": "-35.24044691299997",
+        "facility_long": "149.0572698420001",
+        "validated": null,
+        "gnaf_building_name": null,
+        "gnaf_address_detail_pid": "GAACT714855849",
+        "gnaf_formatted_address": "21 EGAN COURT",
+        "gnaf_confidence": "1",
+        "gnaf_postcode": "2617",
+        "gnaf_suburb": "BELCONNEN",
+        "distance_to_gnaf": 51,
+        "gnaf_lat": "-35.24065387999997",
+        "gnaf_long": "149.0577652500001"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": 470,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          149.11566140359477,
+          -35.434026351855366
+        ]
+      },
+      "properties": {
+        "objectid": 470,
+        "featuretype": "EMERGENCY FACILITY",
+        "descripton": "An emergency management facility from which a particular agencyâ€™s resources are commanded, coordinated and assigned to an incident or emergency",
+        "class": "SES FACILITY",
+        "facility_name": "CALWELL SES UNIT",
+        "facility_operationalstatus": "OPERATIONAL",
+        "facility_address": "51 JOHNSON DRIVE",
+        "abs_suburb": "CALWELL",
+        "facility_state": "AUSTRALIAN CAPITAL TERRITORY",
+        "abs_postcode": "2905",
+        "facility_attribute_source": "ACT EMERGENCY SERVICES AGENCY",
+        "facility_attribute_date": null,
+        "facility_source": "ACT EMERGENCY SERVICES AGENCY",
+        "facility_date": null,
+        "facility_spatial_confidence": null,
+        "facility_revised": 1527724800000,
+        "comment_": null,
+        "facility_lat": "-35.43403921199996",
+        "facility_long": "149.1156558670001",
+        "validated": null,
+        "gnaf_building_name": "CALWELL AMBULANCE STATION",
+        "gnaf_address_detail_pid": "GAACT716851328",
+        "gnaf_formatted_address": "51 JOHNSON DRIVE",
+        "gnaf_confidence": "1",
+        "gnaf_postcode": "2905",
+        "gnaf_suburb": "CALWELL",
+        "distance_to_gnaf": 24,
+        "gnaf_lat": "-35.43384508999998",
+        "gnaf_long": "149.11577692000003"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": 471,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          149.20089358935363,
+          -35.30115075122973
+        ]
+      },
+      "properties": {
+        "objectid": 471,
+        "featuretype": "EMERGENCY FACILITY",
+        "descripton": "An emergency management facility from which a particular agencyâ€™s resources are commanded, coordinated and assigned to an incident or emergency",
+        "class": "SES FACILITY",
+        "facility_name": "PIALLIGO SES UNIT",
+        "facility_operationalstatus": "OPERATIONAL",
+        "facility_address": "17 AMBERLEY AVENUE",
+        "abs_suburb": "CANBERRA AIRPORT",
+        "facility_state": "AUSTRALIAN CAPITAL TERRITORY",
+        "abs_postcode": "2609",
+        "facility_attribute_source": "ACT EMERGENCY SERVICES AGENCY",
+        "facility_attribute_date": null,
+        "facility_source": "ACT EMERGENCY SERVICES AGENCY",
+        "facility_date": null,
+        "facility_spatial_confidence": null,
+        "facility_revised": 1527724800000,
+        "comment_": null,
+        "facility_lat": "-35.30116360499994",
+        "facility_long": "149.200888049",
+        "validated": null,
+        "gnaf_building_name": null,
+        "gnaf_address_detail_pid": "GAACT718741389",
+        "gnaf_formatted_address": "17 AMBERLEY AVENUE",
+        "gnaf_confidence": "1",
+        "gnaf_postcode": "2609",
+        "gnaf_suburb": "CANBERRA AIRPORT",
+        "distance_to_gnaf": 42,
+        "gnaf_lat": "-35.30105023999994",
+        "gnaf_long": "149.20045019000008"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": 472,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          149.13226456589337,
+          -35.18262213957697
+        ]
+      },
+      "properties": {
+        "objectid": 472,
+        "featuretype": "EMERGENCY FACILITY",
+        "descripton": "An emergency management facility from which a particular agencyâ€™s resources are commanded, coordinated and assigned to an incident or emergency",
+        "class": "SES FACILITY",
+        "facility_name": "GUNGAHLIN SES",
+        "facility_operationalstatus": "OPERATIONAL",
+        "facility_address": "31 ANTHONY ROLFE AVENUE",
+        "abs_suburb": "GUNGAHLIN",
+        "facility_state": "AUSTRALIAN CAPITAL TERRITORY",
+        "abs_postcode": "2912",
+        "facility_attribute_source": "ACT EMERGENCY SERVICES AGENCY",
+        "facility_attribute_date": null,
+        "facility_source": "ACT EMERGENCY SERVICES AGENCY",
+        "facility_date": null,
+        "facility_spatial_confidence": null,
+        "facility_revised": 1527724800000,
+        "comment_": null,
+        "facility_lat": "-35.18263499999995",
+        "facility_long": "149.1322590000001",
+        "validated": null,
+        "gnaf_building_name": "AMBULANCE STATION",
+        "gnaf_address_detail_pid": "GAACT715320316",
+        "gnaf_formatted_address": "31 ANTHONY ROLFE AVENUE",
+        "gnaf_confidence": "1",
+        "gnaf_postcode": "2912",
+        "gnaf_suburb": "GUNGAHLIN",
+        "distance_to_gnaf": 0,
+        "gnaf_lat": "-35.18263450999996",
+        "gnaf_long": "149.1322586000001"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": 473,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          149.16064470371322,
+          -35.252437124466226
+        ]
+      },
+      "properties": {
+        "objectid": 473,
+        "featuretype": "EMERGENCY FACILITY",
+        "descripton": "An emergency management facility from which a particular agencyâ€™s resources are commanded, coordinated and assigned to an incident or emergency",
+        "class": "SES FACILITY",
+        "facility_name": "MAJURA SES UNIT",
+        "facility_operationalstatus": "OPERATIONAL",
+        "facility_address": "4 HOLTZE CLOSE",
+        "abs_suburb": "HACKETT",
+        "facility_state": "AUSTRALIAN CAPITAL TERRITORY",
+        "abs_postcode": "2602",
+        "facility_attribute_source": "ACT EMERGENCY SERVICES AGENCY",
+        "facility_attribute_date": null,
+        "facility_source": "ACT EMERGENCY SERVICES AGENCY",
+        "facility_date": null,
+        "facility_spatial_confidence": null,
+        "facility_revised": 1527724800000,
+        "comment_": null,
+        "facility_lat": "-35.25244998199997",
+        "facility_long": "149.16063915100005",
+        "validated": null,
+        "gnaf_building_name": null,
+        "gnaf_address_detail_pid": "GAACT718247217",
+        "gnaf_formatted_address": "4 HOLTZE CLOSE",
+        "gnaf_confidence": "1",
+        "gnaf_postcode": "2602",
+        "gnaf_suburb": "HACKETT",
+        "distance_to_gnaf": 7,
+        "gnaf_lat": "-35.25247619999993",
+        "gnaf_long": "149.1605725600001"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": 474,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          149.05487350777307,
+          -35.372512162276905
+        ]
+      },
+      "properties": {
+        "objectid": 474,
+        "featuretype": "EMERGENCY FACILITY",
+        "descripton": "An emergency management facility from which a particular agencyâ€™s resources are commanded, coordinated and assigned to an incident or emergency",
+        "class": "SES FACILITY",
+        "facility_name": "TUGGERANONG SES UNIT",
+        "facility_operationalstatus": "OPERATIONAL",
+        "facility_address": "500 SULWOOD DRIVE",
+        "abs_suburb": "KAMBAH",
+        "facility_state": "AUSTRALIAN CAPITAL TERRITORY",
+        "abs_postcode": "2902",
+        "facility_attribute_source": "ACT EMERGENCY SERVICES AGENCY",
+        "facility_attribute_date": null,
+        "facility_source": "ACT EMERGENCY SERVICES AGENCY",
+        "facility_date": null,
+        "facility_spatial_confidence": null,
+        "facility_revised": 1527724800000,
+        "comment_": null,
+        "facility_lat": "-35.372525027999984",
+        "facility_long": "149.0548679540001",
+        "validated": null,
+        "gnaf_building_name": "FIRE STATION",
+        "gnaf_address_detail_pid": "GAACT716911018",
+        "gnaf_formatted_address": "500 SULWOOD DRIVE",
+        "gnaf_confidence": "1",
+        "gnaf_postcode": "2902",
+        "gnaf_suburb": "KAMBAH",
+        "distance_to_gnaf": 44,
+        "gnaf_lat": "-35.372919829999944",
+        "gnaf_long": "149.05487103000007"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": 475,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          149.08924915462399,
+          -35.35553977108203
+        ]
+      },
+      "properties": {
+        "objectid": 475,
+        "featuretype": "EMERGENCY FACILITY",
+        "descripton": "An emergency management facility from which a particular agencyâ€™s resources are commanded, coordinated and assigned to an incident or emergency",
+        "class": "SES FACILITY",
+        "facility_name": "WODEN SES UNIT",
+        "facility_operationalstatus": "OPERATIONAL",
+        "facility_address": "64 PARRAMATTA ROAD",
+        "abs_suburb": "PHILLIP",
+        "facility_state": "AUSTRALIAN CAPITAL TERRITORY",
+        "abs_postcode": "2606",
+        "facility_attribute_source": "ACT EMERGENCY SERVICES AGENCY",
+        "facility_attribute_date": null,
+        "facility_source": "ACT EMERGENCY SERVICES AGENCY",
+        "facility_date": null,
+        "facility_spatial_confidence": null,
+        "facility_revised": 1527724800000,
+        "comment_": null,
+        "facility_lat": "-35.355552633999935",
+        "facility_long": "149.0892436040001",
+        "validated": null,
+        "gnaf_building_name": null,
+        "gnaf_address_detail_pid": "GAACT714960432",
+        "gnaf_formatted_address": "64 PARRAMATTA STREET",
+        "gnaf_confidence": "1",
+        "gnaf_postcode": "2606",
+        "gnaf_suburb": "PHILLIP",
+        "distance_to_gnaf": 9,
+        "gnaf_lat": "-35.35549113999997",
+        "gnaf_long": "149.08917600000007"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": 476,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          149.00915567686195,
+          -35.33256109813337
+        ]
+      },
+      "properties": {
+        "objectid": 476,
+        "featuretype": "EMERGENCY FACILITY",
+        "descripton": "An emergency management facility from which a particular agencyâ€™s resources are commanded, coordinated and assigned to an incident or emergency",
+        "class": "SES FACILITY",
+        "facility_name": "RIVERS SES UNIT",
+        "facility_operationalstatus": "OPERATIONAL",
+        "facility_address": "903 COTTER ROAD",
+        "abs_suburb": "STROMLO",
+        "facility_state": "AUSTRALIAN CAPITAL TERRITORY",
+        "abs_postcode": "2611",
+        "facility_attribute_source": "ACT EMERGENCY SERVICES AGENCY",
+        "facility_attribute_date": null,
+        "facility_source": "ACT EMERGENCY SERVICES AGENCY",
+        "facility_date": null,
+        "facility_spatial_confidence": null,
+        "facility_revised": 1527724800000,
+        "comment_": null,
+        "facility_lat": "-35.33257396799996",
+        "facility_long": "149.00915011100005",
+        "validated": null,
+        "gnaf_building_name": "SES DEPOT",
+        "gnaf_address_detail_pid": "GAACT716974360",
+        "gnaf_formatted_address": "903 COTTER ROAD",
+        "gnaf_confidence": "0",
+        "gnaf_postcode": "2611",
+        "gnaf_suburb": "STROMLO",
+        "distance_to_gnaf": 27,
+        "gnaf_lat": "-35.332539269999984",
+        "gnaf_long": "149.00944760000004"
+      }
+    }
+  ]
+}
