@@ -121,7 +121,9 @@ function escapeHtml(s) {
    LAYER STATE PERSISTENCE
    ============================================================ */
 
-const STORAGE_KEY = 'weewoo_layers_v1';
+const STORAGE_KEY           = 'weewoo_layers_v1';
+const SIDEBAR_TEXT_SIZE_KEY = 'weewoo_sidebar_text_size';
+const MAP_TEXT_SIZE_KEY     = 'weewoo_map_text_size';
 
 function saveLayerState() {
   const enabled = {};
@@ -159,6 +161,41 @@ function clearLayerState() {
     li.classList.remove('checked', 'auto-enabled');
   });
   Object.keys(groupById).forEach(groupId => updateGroupCountDOM(groupId));
+}
+
+/* ============================================================
+   TEXT SIZE
+   ============================================================ */
+
+const TEXT_SIZE_STEPS = [
+  { id: 'S',  scale: 0.85 },
+  { id: 'M',  scale: 1.0  },
+  { id: 'L',  scale: 1.15 },
+  { id: 'XL', scale: 1.3  },
+];
+const TEXT_SIZE_DEFAULT = 'M';
+
+function applySidebarTextSize(sizeId) {
+  const step = TEXT_SIZE_STEPS.find(s => s.id === sizeId) || TEXT_SIZE_STEPS.find(s => s.id === TEXT_SIZE_DEFAULT);
+  document.documentElement.style.setProperty('--sidebar-font-scale', step.scale);
+}
+
+function applyMapTextSize(sizeId) {
+  const step = TEXT_SIZE_STEPS.find(s => s.id === sizeId) || TEXT_SIZE_STEPS.find(s => s.id === TEXT_SIZE_DEFAULT);
+  document.documentElement.style.setProperty('--map-font-scale', step.scale);
+}
+
+function setTextSize(target, sizeId) {
+  if (target === 'sidebar') {
+    applySidebarTextSize(sizeId);
+    localStorage.setItem(SIDEBAR_TEXT_SIZE_KEY, sizeId);
+  } else {
+    applyMapTextSize(sizeId);
+    localStorage.setItem(MAP_TEXT_SIZE_KEY, sizeId);
+  }
+  document.querySelectorAll(`.text-size-btn[data-target="${target}"]`).forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.sizeId === sizeId);
+  });
 }
 
 /* ============================================================
@@ -1115,23 +1152,23 @@ function applyGlobalSearch(query) {
    ============================================================ */
 
 const ICONS = {
-  docs: `<svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="2" width="11" height="14" rx="1.5"/><line x1="6" y1="6.5" x2="12" y2="6.5"/><line x1="6" y1="9" x2="12" y2="9"/><line x1="6" y1="11.5" x2="10" y2="11.5"/></svg>`,
-  contact: `<svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4.5" width="13" height="9" rx="1.5"/><path d="M2.5 6l6.5 4.5 6.5-4.5"/></svg>`,
-  settings: `<svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="9" cy="9" r="2.5"/><path d="M9 2v1.5M9 14.5V16M16 9h-1.5M3.5 9H2M13.6 4.4l-1.1 1.1M5.5 12.5l-1.1 1.1M13.6 13.6l-1.1-1.1M5.5 5.5L4.4 4.4"/></svg>`,
-  flip: `<svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h12M12 3l3 3-3 3"/><path d="M15 12H3M6 9l-3 3 3 3"/></svg>`,
-  reset: `<svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 3 3 6 3"/><path d="M3 3a8 8 0 1 1-1 5"/></svg>`,
+  docs: `<svg width="27" height="27" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="2" width="11" height="14" rx="1.5"/><line x1="6" y1="6.5" x2="12" y2="6.5"/><line x1="6" y1="9" x2="12" y2="9"/><line x1="6" y1="11.5" x2="10" y2="11.5"/></svg>`,
+  contact: `<svg width="27" height="27" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4.5" width="13" height="9" rx="1.5"/><path d="M2.5 6l6.5 4.5 6.5-4.5"/></svg>`,
+  settings: `<svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`,
+  flip: `<svg width="27" height="27" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h12M12 3l3 3-3 3"/><path d="M15 12H3M6 9l-3 3 3 3"/></svg>`,
+  reset: `<svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>`,
 };
 
 function minimizeSVG(pointLeft) {
   return pointLeft
-    ? `<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2L4 7l5 5"/><path d="M13 2L8 7l5 5"/></svg>`
-    : `<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2l5 5-5 5"/><path d="M1 2l5 5-5 5"/></svg>`;
+    ? `<svg width="21" height="21" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2L4 7l5 5"/><path d="M13 2L8 7l5 5"/></svg>`
+    : `<svg width="21" height="21" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2l5 5-5 5"/><path d="M1 2l5 5-5 5"/></svg>`;
 }
 
 function restoreTabSVG(pointRight) {
   return pointRight
-    ? `<svg width="10" height="14" viewBox="0 0 10 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2l5 5-5 5"/></svg>`
-    : `<svg width="10" height="14" viewBox="0 0 10 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2L2 7l5 5"/></svg>`;
+    ? `<svg width="15" height="21" viewBox="0 0 10 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2l5 5-5 5"/></svg>`
+    : `<svg width="15" height="21" viewBox="0 0 10 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2L2 7l5 5"/></svg>`;
 }
 
 /* ============================================================
@@ -1172,7 +1209,7 @@ const MODAL_CONTENT = {
     <button class="settings-btn" data-open-modal="docs" style="margin-bottom:16px;">‹ Back to Documentation</button>
     <h3 class="modal-section-title">Data sources &amp; licences</h3>
     <p>All layers use open licences. <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" style="color:#4a90ff;">CC BY 4.0</a> requires attribution when distributing the app.</p>
-    <table style="width:100%;border-collapse:collapse;font-size:11px;margin-top:12px;">
+    <table style="width:100%;border-collapse:collapse;font-size:0.846rem;margin-top:12px;">
       <thead>
         <tr style="color:#c0cce0;border-bottom:1px solid #1e3050;">
           <th style="text-align:left;padding:5px 6px;font-weight:600;">Dataset</th>
@@ -1204,14 +1241,29 @@ const MODAL_CONTENT = {
     <p>If you notice a facility that is missing, incorrectly located, or has wrong details, please include the facility name, state, and the correct information in your report.</p>
 
   `,
-  settings: `
+  settings: () => {
+    const sidebarCurrent = localStorage.getItem(SIDEBAR_TEXT_SIZE_KEY) || TEXT_SIZE_DEFAULT;
+    const mapCurrent     = localStorage.getItem(MAP_TEXT_SIZE_KEY)     || TEXT_SIZE_DEFAULT;
+    const makeBtns = (target, current) => TEXT_SIZE_STEPS.map(s =>
+      `<button class="settings-btn text-size-btn${s.id === current ? ' active' : ''}" data-target="${target}" data-size-id="${s.id}">${s.id}</button>`
+    ).join(' ');
+    return `
     <h3 class="modal-section-title">Saved layers</h3>
     <p>Your active layer selections are saved automatically and restored the next time you open the app.</p>
     <button id="btn-clear-layers" class="settings-btn settings-btn-danger">Clear saved layers</button>
 
+    <h3 class="modal-section-title">Sidebar text size</h3>
+    <p>Adjusts the size of text in the sidebar panel.</p>
+    <div style="display:flex;gap:6px;margin-top:4px;">${makeBtns('sidebar', sidebarCurrent)}</div>
+
+    <h3 class="modal-section-title">Map text size</h3>
+    <p>Adjusts the size of text in map popups.</p>
+    <div style="display:flex;gap:6px;margin-top:4px;">${makeBtns('map', mapCurrent)}</div>
+
     <h3 class="modal-section-title">Sidebar position</h3>
     <p>Use the <strong style="color:#c0cce0;">&#x21C4;</strong> button in the sidebar footer to move the sidebar between the left and right sides of the screen. Your preference is saved automatically.</p>
-  `,
+    `;
+  },
 };
 
 /* ============================================================
@@ -1252,6 +1304,10 @@ function initSidebarState() {
   document.getElementById('btn-settings').innerHTML = ICONS.settings;
   document.getElementById('btn-flip').innerHTML     = ICONS.flip;
   document.getElementById('btn-reset').innerHTML    = ICONS.reset;
+
+  // Restore persisted text sizes
+  applySidebarTextSize(localStorage.getItem(SIDEBAR_TEXT_SIZE_KEY) || TEXT_SIZE_DEFAULT);
+  applyMapTextSize(localStorage.getItem(MAP_TEXT_SIZE_KEY) || TEXT_SIZE_DEFAULT);
 
   // Restore persisted side preference
   if (localStorage.getItem('weewoo_sidebar_side') === 'right') {
@@ -1303,7 +1359,8 @@ function toggleSide() {
 function openModal(type) {
   const titles = { docs: 'Documentation', datacoverage: 'Data Sources', contact: 'Contact', settings: 'Settings' };
   document.getElementById('modal-title').textContent = titles[type] || type;
-  document.getElementById('modal-body').innerHTML    = MODAL_CONTENT[type] || '';
+  const _mc = MODAL_CONTENT[type];
+  document.getElementById('modal-body').innerHTML = (typeof _mc === 'function' ? _mc() : _mc) || '';
   document.getElementById('modal-overlay').classList.remove('hidden');
 
   document.querySelectorAll('.footer-btn').forEach(b => b.classList.remove('active'));
@@ -1434,6 +1491,9 @@ async function initApp() {
       clearLayerState();
       e.target.textContent = 'Cleared';
       e.target.disabled = true;
+    }
+    if (e.target.classList.contains('text-size-btn')) {
+      setTextSize(e.target.dataset.target, e.target.dataset.sizeId);
     }
     const openTarget = e.target.dataset.openModal;
     if (openTarget) openModal(openTarget);
