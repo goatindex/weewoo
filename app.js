@@ -124,6 +124,7 @@ function escapeHtml(s) {
 const STORAGE_KEY           = 'weewoo_layers_v1';
 const SIDEBAR_TEXT_SIZE_KEY = 'weewoo_sidebar_text_size';
 const MAP_TEXT_SIZE_KEY     = 'weewoo_map_text_size';
+const BASEMAP_KEY           = 'weewoo_basemap';
 
 function saveLayerState() {
   const enabled = {};
@@ -209,10 +210,56 @@ function initMap() {
     zoomSnap: 0,
   });
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  applyBasemap(localStorage.getItem(BASEMAP_KEY) || BASEMAP_DEFAULT);
+}
+
+/* ============================================================
+   BASEMAP
+   ============================================================ */
+
+const BASEMAPS = [
+  {
+    id: 'osm',
+    label: 'Standard',
+    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     maxZoom: 19,
+  },
+  {
+    id: 'carto',
+    label: 'Positron',
+    url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    maxZoom: 20,
+  },
+  {
+    id: 'satellite',
+    label: 'Satellite',
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    attribution: 'Tiles &copy; Esri &mdash; Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+    maxZoom: 20,
+  },
+];
+const BASEMAP_DEFAULT = 'osm';
+
+let activeBasemapLayer = null;
+
+function applyBasemap(id) {
+  const bm = BASEMAPS.find(b => b.id === id) || BASEMAPS.find(b => b.id === BASEMAP_DEFAULT);
+  if (activeBasemapLayer) map.removeLayer(activeBasemapLayer);
+  activeBasemapLayer = L.tileLayer(bm.url, {
+    attribution: bm.attribution,
+    maxZoom: bm.maxZoom,
   }).addTo(map);
+  activeBasemapLayer.bringToBack();
+}
+
+function setBasemap(id) {
+  applyBasemap(id);
+  localStorage.setItem(BASEMAP_KEY, id);
+  document.querySelectorAll('.basemap-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.basemapId === id);
+  });
 }
 
 /* ============================================================
@@ -1242,10 +1289,14 @@ const MODAL_CONTENT = {
 
   `,
   settings: () => {
-    const sidebarCurrent = localStorage.getItem(SIDEBAR_TEXT_SIZE_KEY) || TEXT_SIZE_DEFAULT;
-    const mapCurrent     = localStorage.getItem(MAP_TEXT_SIZE_KEY)     || TEXT_SIZE_DEFAULT;
+    const sidebarCurrent  = localStorage.getItem(SIDEBAR_TEXT_SIZE_KEY) || TEXT_SIZE_DEFAULT;
+    const mapCurrent      = localStorage.getItem(MAP_TEXT_SIZE_KEY)     || TEXT_SIZE_DEFAULT;
+    const basemapCurrent  = localStorage.getItem(BASEMAP_KEY)           || BASEMAP_DEFAULT;
     const makeBtns = (target, current) => TEXT_SIZE_STEPS.map(s =>
       `<button class="settings-btn text-size-btn${s.id === current ? ' active' : ''}" data-target="${target}" data-size-id="${s.id}">${s.id}</button>`
+    ).join(' ');
+    const basemapBtns = BASEMAPS.map(b =>
+      `<button class="settings-btn basemap-btn${b.id === basemapCurrent ? ' active' : ''}" data-basemap-id="${b.id}">${b.label}</button>`
     ).join(' ');
     return `
     <h3 class="modal-section-title">Saved layers</h3>
@@ -1259,6 +1310,10 @@ const MODAL_CONTENT = {
     <h3 class="modal-section-title">Map text size</h3>
     <p>Adjusts the size of text in map popups.</p>
     <div style="display:flex;gap:6px;margin-top:4px;">${makeBtns('map', mapCurrent)}</div>
+
+    <h3 class="modal-section-title">Base map</h3>
+    <p>Standard is the default OpenStreetMap view. Positron is a light grey map that makes coloured overlays easier to read. Satellite shows ESRI aerial imagery.</p>
+    <div style="display:flex;gap:6px;margin-top:4px;">${basemapBtns}</div>
 
     <h3 class="modal-section-title">Sidebar position</h3>
     <p>Use the <strong style="color:#c0cce0;">&#x21C4;</strong> button in the sidebar footer to move the sidebar between the left and right sides of the screen. Your preference is saved automatically.</p>
@@ -1494,6 +1549,9 @@ async function initApp() {
     }
     if (e.target.classList.contains('text-size-btn')) {
       setTextSize(e.target.dataset.target, e.target.dataset.sizeId);
+    }
+    if (e.target.classList.contains('basemap-btn')) {
+      setBasemap(e.target.dataset.basemapId);
     }
     const openTarget = e.target.dataset.openModal;
     if (openTarget) openModal(openTarget);

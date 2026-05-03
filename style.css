@@ -886,7 +886,8 @@ html, body {
   cursor: default;
 }
 
-.text-size-btn.active {
+.text-size-btn.active,
+.basemap-btn.active {
   background: #1e4080;
   border-color: #3a6ab0;
   color: #ffffff;
