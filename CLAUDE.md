@@ -102,6 +102,32 @@ Query pattern:
 /MapServer/{layerId}/query?where=1%3D1&outFields=*&f=geojson&resultOffset={offset}&resultRecordCount=1000
 ```
 
+## Deploying Changes
+
+After merging to master, GitHub Pages rebuilds automatically. However, browsers cache `app.js` and `style.css` for ~10 minutes. To force users to get fresh assets after a significant change, bump the `?v=N` query string on the relevant tags in `index.html`:
+
+```html
+<link rel="stylesheet" href="style.css?v=3" />
+<script src="app.js?v=3"></script>
+```
+
+Increment N by 1 each time. `index.html` itself is served with short cache headers so browsers always pick up the new version number.
+
+## Layer Ordering Convention
+
+Top-level states in `config/layers.json` must follow this order:
+1. National
+2. All states/territories alphabetically (ACT, NSW, NT, QLD, SA, TAS, VIC, WA)
+
+Within each state, groups must follow this order:
+1. SES (zones, then facilities)
+2. Fire service (CFA, NSWRFS, etc. — whatever applies to that state)
+3. LGA
+4. FRV Coverage (VIC only — sits between LGA and Ambulance)
+5. Ambulance
+6. Police (VIC only)
+7. Flood (VIC only)
+
 ## Skills
 
 - **`anthropic-skills:leaflet`** — invoke for any Leaflet.js implementation work (layer loading, plugins, map interactions)
