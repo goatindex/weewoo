@@ -1204,6 +1204,8 @@ const ICONS = {
   settings: `<svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`,
   flip: `<svg width="27" height="27" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h12M12 3l3 3-3 3"/><path d="M15 12H3M6 9l-3 3 3 3"/></svg>`,
   reset: `<svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>`,
+  save: `<svg width="27" height="27" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 2.5h8l3 3v10.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5z"/><rect x="5.5" y="2.5" width="4.5" height="3.5" rx=".3"/><rect x="5.5" y="10" width="7" height="5.5" rx=".5"/></svg>`,
+  load: `<svg width="27" height="27" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7.5q0-1 1-1h5l1.5-1.5h4.5q1 0 1 1v6.5q0 1-1 1H3q-1 0-1-1z"/><line x1="9" y1="8.5" x2="9" y2="11.5"/><polyline points="7 10 9 12 11 10"/></svg>`,
 };
 
 function minimizeSVG(pointLeft) {
@@ -1246,6 +1248,15 @@ const MODAL_CONTENT = {
     <h3 class="modal-section-title">Sidebar layout</h3>
     <p>The arrow button in the top-right of the sidebar collapses it so you have a full-screen map view. A small tab appears on the edge of the screen — click it to bring the sidebar back.</p>
     <p>The double-arrow button in the footer moves the sidebar from the left side to the right side of the screen. This preference is remembered when you return.</p>
+
+    <h3 class="modal-section-title">Saving and loading your map state</h3>
+    <p>Use the save button (floppy disk icon in the sidebar footer) to save your current active layers, map view, and display preferences to this device. Saves are stored in your browser and persist between sessions.</p>
+    <p>Use the load button (folder icon) to open a saved map, import a save file from your device, or export a save to share with someone. Saves can also be stored in Google Drive, OneDrive, or Dropbox — select a storage option in the load dialog.</p>
+    <p>Saves on this device are stored in your browser. They will be lost if you clear your browser data — export to file for a permanent copy.</p>
+
+    <h3 class="modal-section-title">Sharing a map view</h3>
+    <p>Use the "Copy share link" option in the save dialog to generate a URL you can send to anyone. They open the link in WeeWoo and are offered the option to load the shared layers — no account needed.</p>
+    <p>A share link includes: which layers are turned on. It does not include: your custom markers, your map position and zoom, or your basemap and display preferences. The person you share with sees the same layers on their own view.</p>
 
     <h3 class="modal-section-title">Data coverage</h3>
     <p>Victoria has the most complete data set, including SES zones, all major emergency service facilities, and flood overlays. All other states and territories currently have SES facilities and ambulance stations. More layers are being added.</p>
@@ -1319,6 +1330,39 @@ const MODAL_CONTENT = {
     <p>Use the <strong style="color:#c0cce0;">&#x21C4;</strong> button in the sidebar footer to move the sidebar between the left and right sides of the screen. Your preference is saved automatically.</p>
     `;
   },
+  save: function() {
+    const suffix      = `_${toZuluSuffix(new Date())}`;
+    const layerCount  = Object.values(state.featureEnabled).filter(Boolean).length;
+    const center      = map ? map.getCenter() : null;
+    const zoom        = map ? map.getZoom() : null;
+    const viewStr     = center
+      ? `zoom ${zoom}, ${center.lat.toFixed(2)}°, ${center.lng.toFixed(2)}°`
+      : 'not available';
+    return `
+      <label class="save-label" for="save-name-input">Save name</label>
+      <div class="save-name-row">
+        <input id="save-name-input" class="save-input" type="text" maxlength="64"
+               placeholder="e.g. incident_alpha" autocomplete="off" spellcheck="false" />
+        <span class="save-suffix" id="save-suffix-label">${suffix}</span>
+      </div>
+      <div class="save-name-preview" id="save-name-preview"></div>
+      <div class="save-summary">
+        <div class="save-summary-row"><span class="save-tick">✓</span> ${layerCount} active layer${layerCount !== 1 ? 's' : ''}</div>
+        <div class="save-summary-row"><span class="save-tick">✓</span> Map view (${viewStr})</div>
+        <div class="save-summary-row"><span class="save-tick">✓</span> Display preferences</div>
+      </div>
+      <div id="save-error" class="save-error hidden"></div>
+      <div class="save-actions">
+        <button class="settings-btn save-btn-primary" id="save-commit-btn">Save to device</button>
+      </div>
+    `;
+  },
+  load: buildLoadModalContent,
+};
+
+const MODAL_POST_OPEN = {
+  save: wireSaveModal,
+  load: wireLoadModal,
 };
 
 /* ============================================================
@@ -1357,6 +1401,8 @@ function initSidebarState() {
   document.getElementById('btn-docs').innerHTML     = ICONS.docs;
   document.getElementById('btn-contact').innerHTML  = ICONS.contact;
   document.getElementById('btn-settings').innerHTML = ICONS.settings;
+  document.getElementById('btn-save').innerHTML     = ICONS.save;
+  document.getElementById('btn-load').innerHTML     = ICONS.load;
   document.getElementById('btn-flip').innerHTML     = ICONS.flip;
   document.getElementById('btn-reset').innerHTML    = ICONS.reset;
 
@@ -1408,18 +1454,278 @@ function toggleSide() {
 }
 
 /* ============================================================
+   SAVE / LOAD — localStorage helpers
+   ============================================================ */
+
+const SAVE_INDEX_KEY  = 'weewoo_saves_index_v1';
+const SAVE_KEY_PREFIX = 'weewoo_save_';
+
+function toZuluSuffix(date) {
+  return date.toISOString().replace(/[-:]/g, '').slice(0, 15) + 'Z';
+}
+
+function formatSaveName(prefix) {
+  const clean = prefix.trim().replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 64) || 'save';
+  return `${clean}_${toZuluSuffix(new Date())}`;
+}
+
+function buildSaveObject(name) {
+  const enabled = Object.fromEntries(
+    Object.entries(state.featureEnabled).filter(([, v]) => v)
+  );
+  const ses = Object.fromEntries(
+    Object.entries(state.sesFlags).filter(([, f]) => f.manualEnabled || f.zoneEnabled)
+  );
+  const center = map ? map.getCenter() : null;
+  return {
+    version: 1,
+    name,
+    createdAt: new Date().toISOString(),
+    layers: { enabled, ses },
+    customMarkers: [],
+    mapView: center ? { center: [center.lat, center.lng], zoom: map.getZoom() } : null,
+    ui: {
+      basemap:         localStorage.getItem('weewoo_basemap')            || 'osm',
+      sidebarSide:     localStorage.getItem('weewoo_sidebar_side')       || 'left',
+      sidebarTextSize: localStorage.getItem('weewoo_sidebar_text_size')  || 'M',
+      mapTextSize:     localStorage.getItem('weewoo_map_text_size')      || 'M',
+    },
+  };
+}
+
+function readSavesIndex() {
+  try { return JSON.parse(localStorage.getItem(SAVE_INDEX_KEY) || '[]'); }
+  catch { return []; }
+}
+
+function saveToLocalStorage(prefix) {
+  const name    = formatSaveName(prefix);
+  const saveObj = buildSaveObject(name);
+  const json    = JSON.stringify(saveObj);
+  const layerCount = Object.keys(saveObj.layers.enabled).length;
+  try {
+    localStorage.setItem(`${SAVE_KEY_PREFIX}${name}`, json);
+    const index    = readSavesIndex().filter(e => e.name !== name);
+    index.unshift({ name, createdAt: saveObj.createdAt, byteSize: json.length, layerCount });
+    localStorage.setItem(SAVE_INDEX_KEY, JSON.stringify(index));
+    return { ok: true, name };
+  } catch (e) {
+    if (e.name === 'QuotaExceededError') return { ok: false, error: 'quota' };
+    throw e;
+  }
+}
+
+function parseSaveObject(json) {
+  const obj = typeof json === 'string' ? JSON.parse(json) : json;
+  if (!obj || typeof obj.version !== 'number') throw new Error('Invalid save file');
+  if (obj.version > 1) console.warn('WeeWoo: save created with newer version — some features may not restore correctly');
+  return obj;
+}
+
+function deleteSave(name) {
+  localStorage.removeItem(`${SAVE_KEY_PREFIX}${name}`);
+  const index = readSavesIndex().filter(e => e.name !== name);
+  localStorage.setItem(SAVE_INDEX_KEY, JSON.stringify(index));
+}
+
+function exportSaveFile(saveObj) {
+  const blob = new Blob([JSON.stringify(saveObj, null, 2)], { type: 'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = `${saveObj.name}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function applySave(saveObj, opts = { restoreView: true }) {
+  clearLayerState();
+  Object.assign(state.featureEnabled, saveObj.layers?.enabled || {});
+  Object.assign(state.sesFlags,       saveObj.layers?.ses     || {});
+  saveLayerState();
+
+  // Collect groupIds that have at least one enabled feature in this save
+  const groupsWithEnabledFeatures = new Set();
+  Object.keys(state.featureEnabled).forEach(fid => {
+    if (state.featureEnabled[fid]) groupsWithEnabledFeatures.add(fid.split('::')[0]);
+  });
+  Object.keys(state.sesFlags).forEach(fid => {
+    const f = state.sesFlags[fid];
+    if (f && (f.manualEnabled || f.zoneEnabled)) groupsWithEnabledFeatures.add(fid.split('::')[0]);
+  });
+
+  Object.keys(groupById).forEach(groupId => {
+    if (state.loadState[groupId] !== 'loaded') {
+      // Trigger load for unloaded groups that have enabled features — ensureGroupLoaded
+      // will call addLayerToMap for each visible feature once the GeoJSON arrives.
+      if (groupsWithEnabledFeatures.has(groupId)) ensureGroupLoaded(groupId);
+      return;
+    }
+    (state.features[groupId] || []).forEach((_, idx) => {
+      if (isFeatureVisible(groupId, idx)) addLayerToMap(groupId, idx);
+    });
+    updateGroupCountDOM(groupId);
+  });
+
+  Object.entries(state.featureElements).forEach(([fid, li]) => {
+    const cb = li.querySelector('.feature-checkbox');
+    if (!cb) return;
+    const [groupId] = fid.split('::');
+    const group = groupById[groupId];
+    let checked;
+    if (group && group.isSESFacilityGroup) {
+      const f = state.sesFlags[fid];
+      checked = f ? (f.manualEnabled || f.zoneEnabled) : false;
+      li.classList.toggle('auto-enabled', !!(f && f.zoneEnabled && !f.manualEnabled));
+    } else {
+      checked = !!state.featureEnabled[fid];
+    }
+    cb.checked = checked;
+    li.classList.toggle('checked', checked);
+  });
+
+  if (opts.restoreView && saveObj.mapView && map) {
+    map.setView(saveObj.mapView.center, saveObj.mapView.zoom);
+  }
+}
+
+function buildLoadModalContent() {
+  const index = readSavesIndex();
+  const listHtml = index.length === 0
+    ? '<div class="load-empty">No saves yet — use the save button to get started.</div>'
+    : index.map(entry => {
+        const dateStr = new Date(entry.createdAt).toLocaleString('en-AU', {
+          weekday: 'short', day: 'numeric', month: 'short', year: 'numeric',
+          hour: '2-digit', minute: '2-digit', timeZoneName: 'short',
+        });
+        return `
+          <div class="load-save-entry" data-save-name="${escapeHtml(entry.name)}">
+            <div class="load-save-name">${escapeHtml(entry.name)}</div>
+            <div class="load-save-meta">${escapeHtml(dateStr)} · ${entry.layerCount} layer${entry.layerCount !== 1 ? 's' : ''}</div>
+            <div class="load-save-actions">
+              <button class="settings-btn" data-action="load">Load</button>
+              <button class="settings-btn" data-action="export">Export</button>
+              <button class="settings-btn settings-btn-danger" data-action="delete">Delete</button>
+            </div>
+          </div>`;
+      }).join('');
+  return `
+    <button class="settings-btn load-import-btn" id="load-import-btn">Import from file…</button>
+    <input type="file" id="load-file-input" accept=".json" style="display:none">
+    <div class="load-divider">Saved on this device</div>
+    <div class="load-save-list">${listHtml}</div>`;
+}
+
+let _loadModalAbort = null;
+
+function wireLoadModal() {
+  if (_loadModalAbort) _loadModalAbort.abort();
+  _loadModalAbort = new AbortController();
+
+  const body      = document.getElementById('modal-body');
+  const importBtn = document.getElementById('load-import-btn');
+  const fileInput = document.getElementById('load-file-input');
+
+  importBtn.addEventListener('click', () => fileInput.click());
+  fileInput.addEventListener('change', () => {
+    const file = fileInput.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        applySave(parseSaveObject(e.target.result));
+        closeModal();
+      } catch {
+        alert('Could not read save file — it may be corrupted or from an incompatible version.');
+      }
+    };
+    reader.readAsText(file);
+  });
+
+  body.addEventListener('click', e => {
+    const btn   = e.target.closest('[data-action]');
+    if (!btn) return;
+    const entry = btn.closest('[data-save-name]');
+    const name  = entry?.dataset.saveName;
+    if (!name) return;
+
+    if (btn.dataset.action === 'load') {
+      const raw = localStorage.getItem(`${SAVE_KEY_PREFIX}${name}`);
+      if (!raw) { entry.remove(); return; }
+      try { applySave(parseSaveObject(raw)); closeModal(); }
+      catch { alert('Could not load this save.'); }
+
+    } else if (btn.dataset.action === 'export') {
+      const raw = localStorage.getItem(`${SAVE_KEY_PREFIX}${name}`);
+      if (raw) exportSaveFile(parseSaveObject(raw));
+
+    } else if (btn.dataset.action === 'delete') {
+      btn.textContent     = 'Delete?';
+      btn.dataset.action  = 'delete-confirm';
+
+    } else if (btn.dataset.action === 'delete-confirm') {
+      deleteSave(name);
+      entry.remove();
+      const list = body.querySelector('.load-save-list');
+      if (list && !list.querySelector('.load-save-entry')) {
+        list.innerHTML = '<div class="load-empty">No saves yet — use the save button to get started.</div>';
+      }
+    }
+  }, { signal: _loadModalAbort.signal });
+}
+
+function wireSaveModal() {
+  const input     = document.getElementById('save-name-input');
+  const preview   = document.getElementById('save-name-preview');
+  const suffix    = document.getElementById('save-suffix-label').textContent;
+  const commitBtn = document.getElementById('save-commit-btn');
+  const errorEl   = document.getElementById('save-error');
+
+  function updatePreview() {
+    const clean = input.value.trim().replace(/[^a-zA-Z0-9_-]/g, '_');
+    preview.textContent = clean
+      ? `${SAVE_KEY_PREFIX}${clean}${suffix}`
+      : '';
+  }
+
+  input.addEventListener('input', updatePreview);
+  input.focus();
+
+  commitBtn.addEventListener('click', () => {
+    const prefix = input.value.trim();
+    if (!prefix) { input.focus(); return; }
+
+    commitBtn.textContent = 'Saving…';
+    commitBtn.disabled = true;
+    errorEl.classList.add('hidden');
+
+    const result = saveToLocalStorage(prefix);
+    if (result.ok) {
+      commitBtn.textContent = 'Saved ✓';
+      setTimeout(closeModal, 900);
+    } else {
+      errorEl.textContent = 'Device storage is full — delete old saves or export to file.';
+      errorEl.classList.remove('hidden');
+      commitBtn.textContent = 'Save to device';
+      commitBtn.disabled = false;
+    }
+  });
+}
+
+/* ============================================================
    MODAL
    ============================================================ */
 
 function openModal(type) {
-  const titles = { docs: 'Documentation', datacoverage: 'Data Sources', contact: 'Contact', settings: 'Settings' };
+  const titles = { docs: 'Documentation', datacoverage: 'Data Sources', contact: 'Contact', settings: 'Settings', save: 'Save map state', load: 'Load map state' };
   document.getElementById('modal-title').textContent = titles[type] || type;
   const _mc = MODAL_CONTENT[type];
   document.getElementById('modal-body').innerHTML = (typeof _mc === 'function' ? _mc() : _mc) || '';
   document.getElementById('modal-overlay').classList.remove('hidden');
+  if (MODAL_POST_OPEN[type]) MODAL_POST_OPEN[type]();
 
   document.querySelectorAll('.footer-btn').forEach(b => b.classList.remove('active'));
-  const btnIds = { docs: 'btn-docs', datacoverage: 'btn-docs', contact: 'btn-contact', settings: 'btn-settings' };
+  const btnIds = { docs: 'btn-docs', datacoverage: 'btn-docs', contact: 'btn-contact', settings: 'btn-settings', save: 'btn-save', load: 'btn-load' };
   if (btnIds[type]) document.getElementById(btnIds[type]).classList.add('active');
 }
 
@@ -1530,7 +1836,7 @@ async function initApp() {
 
   document.getElementById('btn-reset').addEventListener('click', () => {
     Object.keys(localStorage)
-      .filter(k => k.startsWith('weewoo_'))
+      .filter(k => k.startsWith('weewoo_') && !k.startsWith('weewoo_save'))
       .forEach(k => localStorage.removeItem(k));
     location.reload();
   });
@@ -1539,6 +1845,8 @@ async function initApp() {
   document.getElementById('btn-docs').addEventListener('click',     () => openModal('docs'));
   document.getElementById('btn-contact').addEventListener('click',  () => openModal('contact'));
   document.getElementById('btn-settings').addEventListener('click', () => openModal('settings'));
+  document.getElementById('btn-save').addEventListener('click',     () => openModal('save'));
+  document.getElementById('btn-load').addEventListener('click',     () => openModal('load'));
 
   // Settings modal actions (event delegation — body is re-rendered on each open)
   document.getElementById('modal-body').addEventListener('click', e => {
