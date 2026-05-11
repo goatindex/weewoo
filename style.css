@@ -561,8 +561,9 @@ html, body {
    ============================================================ */
 #sidebar-footer {
   flex-shrink: 0;
-  display: flex;
-  gap: 6px;
+  display: grid;
+  grid-template-columns: repeat(5, 36px);
+  gap: 4px;
   padding: 8px 10px;
   background: #0d1a2e;
   border-top: 1px solid #0d2040;
@@ -906,6 +907,173 @@ html, body {
 #modal-body::-webkit-scrollbar { width: 5px; }
 #modal-body::-webkit-scrollbar-track { background: #16213e; }
 #modal-body::-webkit-scrollbar-thumb { background: #1e3a6a; border-radius: 3px; }
+
+/* ============================================================
+   SAVE MODAL
+   ============================================================ */
+
+.save-label {
+  display: block;
+  font-size: 0.846rem;
+  color: #8aaac8;
+  margin-bottom: 6px;
+}
+
+.save-name-row {
+  display: flex;
+  align-items: stretch;
+}
+
+.save-input {
+  flex: 1;
+  min-width: 0;
+  padding: 7px 10px;
+  background: #0d1a2e;
+  border: 1px solid #1e3a6a;
+  border-radius: 5px 0 0 5px;
+  color: #d0d8e8;
+  font-size: 0.923rem;
+  outline: none;
+  font-family: inherit;
+}
+
+.save-input:focus {
+  border-color: #3a6ab0;
+}
+
+.save-suffix {
+  padding: 7px 8px;
+  background: #111e30;
+  border: 1px solid #1e3a6a;
+  border-left: none;
+  border-radius: 0 5px 5px 0;
+  color: #6a8ab0;
+  font-size: 0.769rem;
+  white-space: nowrap;
+  font-family: monospace;
+  display: flex;
+  align-items: center;
+}
+
+.save-name-preview {
+  margin-top: 5px;
+  font-size: 0.769rem;
+  color: #6a7a8a;
+  font-family: monospace;
+  word-break: break-all;
+  min-height: 1.2em;
+}
+
+.save-summary {
+  margin: 16px 0 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.save-summary-row {
+  font-size: 0.846rem;
+  color: #8aaac8;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.save-tick { color: #4aaa70; font-weight: bold; }
+
+.save-error {
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  background: #2a1020;
+  border: 1px solid #6a2030;
+  border-radius: 5px;
+  color: #e08090;
+  font-size: 0.846rem;
+}
+
+.save-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.save-btn-primary {
+  margin-top: 0;
+  min-width: 130px;
+  text-align: center;
+}
+
+/* ============================================================
+   LOAD MODAL
+   ============================================================ */
+
+.load-import-btn {
+  width: 100%;
+  text-align: center;
+  margin-top: 0;
+  box-sizing: border-box;
+}
+
+.load-divider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #4a6a8a;
+  font-size: 0.769rem;
+  margin: 14px 0 12px;
+}
+
+.load-divider::before,
+.load-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #1e3050;
+}
+
+.load-save-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.load-save-entry {
+  background: #0d1a2e;
+  border: 1px solid #1e3050;
+  border-radius: 6px;
+  padding: 10px 12px;
+}
+
+.load-save-name {
+  font-size: 0.769rem;
+  color: #c0cce0;
+  font-family: monospace;
+  word-break: break-all;
+  margin-bottom: 3px;
+}
+
+.load-save-meta {
+  font-size: 0.769rem;
+  color: #6a8ab0;
+  margin-bottom: 8px;
+}
+
+.load-save-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.load-save-actions .settings-btn {
+  margin-top: 0;
+  padding: 5px 12px;
+  font-size: 0.846rem;
+}
+
+.load-empty {
+  color: #4a6a8a;
+  font-size: 0.846rem;
+  text-align: center;
+  padding: 16px 0;
+}
 
 /* ============================================================
    KEYBOARD FOCUS — tree navigation
