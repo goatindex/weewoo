@@ -1204,7 +1204,359 @@ const ICONS = {
   settings: `<svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`,
   flip: `<svg width="27" height="27" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h12M12 3l3 3-3 3"/><path d="M15 12H3M6 9l-3 3 3 3"/></svg>`,
   reset: `<svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>`,
+  pins: `<svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.69 2 6 4.69 6 8c0 4.5 6 12 6 12s6-7.5 6-12c0-3.31-2.69-6-6-6z"/><circle cx="12" cy="8" r="2.2"/></svg>`,
 };
+
+/* ============================================================
+   CUSTOM PINS
+   ============================================================ */
+
+const CUSTOM_PINS_KEY = 'weewoo_custom_pins';
+
+const PIN_COLORS = [
+  '#e94560',  // Alarm Red
+  '#ff6b35',  // Emergency Orange
+  '#f5c518',  // Hazard Yellow
+  '#27ae60',  // Safe Green
+  '#2980b9',  // Flood Blue
+  '#1abc9c',  // Teal
+  '#8e44ad',  // Purple
+  '#c0cce0',  // White-Grey
+];
+
+// Inner SVG markup only (no outer <svg> tag). ViewBox 0 0 16 16.
+const PIN_SYMBOLS = {
+  fire: {
+    label: 'Fire',
+    svg: `<path d="M8 1.5C7 3.5 4.5 6.5 4.5 9.5a3.5 3.5 0 0 0 7 0C11.5 6.5 9 3.5 8 1.5z" fill="white" stroke="none"/><path d="M8 7.5c-.7 1-1 1.8-1 2.5a1 1 0 0 0 2 0c0-.7-.3-1.5-1-2.5z" fill="\${color}" stroke="none"/>`,
+  },
+  wave: {
+    label: 'Flood / Wave',
+    svg: `<path d="M1 6.5Q3 4.5 5 6.5Q7 8.5 9 6.5Q11 4.5 13 6.5Q15 8.5 16 7.5" stroke="white" fill="none" stroke-width="2" stroke-linecap="round"/><path d="M1 10.5Q3 8.5 5 10.5Q7 12.5 9 10.5Q11 8.5 13 10.5Q15 12.5 16 11.5" stroke="white" fill="none" stroke-width="2" stroke-linecap="round"/>`,
+  },
+  houseCrack: {
+    label: 'Structural Damage',
+    svg: `<polyline points="1,9 8,2 15,9" stroke="white" fill="none" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><rect x="3" y="9" width="10" height="6" stroke="white" fill="none" stroke-width="2" stroke-linejoin="round"/><polyline points="8,4 7,8 9,9.5 7.5,14" stroke="white" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`,
+  },
+  chainsaw: {
+    label: 'Chainsaw',
+    svg: `<rect x="2" y="7" width="7" height="4" rx="1.5" stroke="white" fill="none" stroke-width="2"/><path d="M9 9h5" stroke="white" stroke-width="2" stroke-linecap="round"/><path d="M11 9V7M13 9V7" stroke="white" stroke-width="1.5" stroke-linecap="round"/><path d="M3.5 7V5.5C3.5 4.7 4.5 4 6 4s2.5.7 2.5 1.5V7" stroke="white" fill="none" stroke-width="1.5" stroke-linecap="round"/>`,
+  },
+  carCrash: {
+    label: 'Vehicle Incident',
+    svg: `<path d="M3 10h10v3H3z" stroke="white" fill="none" stroke-width="2" stroke-linejoin="round"/><path d="M3 10L4.5 6.5H12L13 10" stroke="white" fill="none" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M5 10L4 8" stroke="white" stroke-width="1.5" stroke-linecap="round"/><circle cx="5.5" cy="13" r="1.2" stroke="white" fill="none" stroke-width="1.5"/><circle cx="10.5" cy="13" r="1.2" stroke="white" fill="none" stroke-width="1.5"/>`,
+  },
+};
+
+const pinState = {
+  pins:            [],
+  markers:         {},      // pinId → L.Marker
+  pinLayer:        null,    // L.LayerGroup added to map
+  placementActive: false,
+  pendingColor:    PIN_COLORS[0],
+  pendingSymbols:  [],
+  pendingLatLng:   null,
+};
+
+function generatePinId() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+}
+
+function loadPins() {
+  try {
+    return JSON.parse(localStorage.getItem(CUSTOM_PINS_KEY) || '[]');
+  } catch (_) {
+    return [];
+  }
+}
+
+function savePins(pins) {
+  localStorage.setItem(CUSTOM_PINS_KEY, JSON.stringify(pins));
+}
+
+function createPinIcon(color, symbols) {
+  const uid = '_' + Math.random().toString(36).slice(2, 8);
+  let symbolsHtml = '';
+
+  if (symbols.length === 1) {
+    const inner = PIN_SYMBOLS[symbols[0]]?.svg.replace(/\$\{color\}/g, color) || '';
+    symbolsHtml = `<svg x="4" y="4" width="24" height="24" viewBox="0 0 16 16" overflow="visible">${inner}</svg>`;
+  } else if (symbols.length === 2) {
+    symbols.forEach((sym, i) => {
+      const inner = PIN_SYMBOLS[sym]?.svg.replace(/\$\{color\}/g, color) || '';
+      symbolsHtml += `<svg x="${i === 0 ? 4 : 16}" y="10" width="12" height="12" viewBox="0 0 16 16" overflow="visible">${inner}</svg>`;
+    });
+  } else if (symbols.length === 3) {
+    symbols.forEach((sym, i) => {
+      const inner = PIN_SYMBOLS[sym]?.svg.replace(/\$\{color\}/g, color) || '';
+      symbolsHtml += `<svg x="${4 + i * 8}" y="12" width="8" height="8" viewBox="0 0 16 16" overflow="visible">${inner}</svg>`;
+    });
+  }
+
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 42" width="32" height="42">
+    <defs><clipPath id="pc${uid}"><circle cx="16" cy="16" r="12"/></clipPath></defs>
+    <circle cx="16" cy="16" r="14" fill="${color}" stroke="rgba(0,0,0,0.35)" stroke-width="1.5"/>
+    <polygon points="10,27 16,42 22,27" fill="${color}"/>
+    <g clip-path="url(#pc${uid})">${symbolsHtml}</g>
+  </svg>`;
+
+  return L.divIcon({
+    html: svg,
+    className: 'custom-pin-icon',
+    iconSize:    [32, 42],
+    iconAnchor:  [16, 42],
+    popupAnchor: [0, -44],
+  });
+}
+
+function buildPinPopupHtml(pin) {
+  const title = escapeHtml(pin.title || 'Untitled Pin');
+  const addr  = pin.address  ? `<div class="pin-popup-meta">${escapeHtml(pin.address)}</div>` : '';
+  const dt    = pin.datetime ? `<div class="pin-popup-meta">${escapeHtml(pin.datetime)}</div>` : '';
+  const desc  = pin.description ? `<div class="pin-popup-desc">${escapeHtml(pin.description)}</div>` : '';
+  return `<div class="pin-popup">
+    <div class="pin-popup-title">${title}</div>
+    ${addr}${dt}${desc}
+    <div class="pin-popup-actions">
+      <button class="pin-popup-btn" data-pin-action="edit" data-pin-id="${pin.id}">Edit</button>
+      <button class="pin-popup-btn danger" data-pin-action="delete" data-pin-id="${pin.id}">Delete</button>
+    </div>
+  </div>`;
+}
+
+function buildPinEditHtml(pin) {
+  return `<div class="pin-edit-form">
+    <input id="pin-edit-title"    type="text" placeholder="Title" value="${escapeHtml(pin.title || '')}" maxlength="120"/>
+    <input id="pin-edit-address"  type="text" placeholder="Address / Location" value="${escapeHtml(pin.address || '')}" maxlength="200"/>
+    <input id="pin-edit-datetime" type="text" placeholder="Date &amp; Time" value="${escapeHtml(pin.datetime || '')}" maxlength="60"/>
+    <textarea id="pin-edit-desc" placeholder="Description…" maxlength="1000">${escapeHtml(pin.description || '')}</textarea>
+    <div class="pin-popup-actions">
+      <button class="pin-popup-btn" data-pin-action="save-edit" data-pin-id="${pin.id}">Save</button>
+      <button class="pin-popup-btn" data-pin-action="cancel-edit" data-pin-id="${pin.id}">Cancel</button>
+    </div>
+  </div>`;
+}
+
+function addPinMarker(pin) {
+  const marker = L.marker([pin.lat, pin.lng], { icon: createPinIcon(pin.color, pin.symbols) });
+  marker.bindPopup(buildPinPopupHtml(pin), { maxWidth: 280 });
+  marker.addTo(pinState.pinLayer);
+  pinState.markers[pin.id] = marker;
+}
+
+function removePinMarker(pinId) {
+  const m = pinState.markers[pinId];
+  if (m) {
+    m.remove();
+    delete pinState.markers[pinId];
+  }
+}
+
+function activatePinPlacement() {
+  pinState.placementActive = true;
+  document.getElementById('map').classList.add('pin-placement-mode');
+  document.getElementById('btn-pins').classList.add('active');
+  map.once('click', onMapPinClick);
+}
+
+function deactivatePinPlacement() {
+  if (!pinState.placementActive) return;
+  pinState.placementActive = false;
+  document.getElementById('map').classList.remove('pin-placement-mode');
+  document.getElementById('btn-pins').classList.remove('active');
+  map.off('click', onMapPinClick);
+}
+
+function togglePinPlacement() {
+  if (pinState.placementActive) {
+    deactivatePinPlacement();
+  } else {
+    activatePinPlacement();
+  }
+}
+
+function onMapPinClick(e) {
+  pinState.pendingLatLng = e.latlng;
+  deactivatePinPlacement();
+  openPinStep1();
+}
+
+function openPinStep1() {
+  // Reset symbol selection but keep color if returning from step 2
+  if (!pinState.pendingColor) pinState.pendingColor = PIN_COLORS[0];
+
+  const colorSwatches = PIN_COLORS.map(c =>
+    `<button class="pin-color-swatch${c === pinState.pendingColor ? ' selected' : ''}" style="background:${c}" data-color="${c}" title="${c}" aria-label="Colour ${c}"></button>`
+  ).join('');
+
+  const symbolBtns = Object.entries(PIN_SYMBOLS).map(([id, sym]) => {
+    const sel = pinState.pendingSymbols.includes(id);
+    const dis = !sel && pinState.pendingSymbols.length >= 3;
+    return `<button class="pin-symbol-btn${sel ? ' selected' : ''}${dis ? ' disabled-max' : ''}" data-symbol-id="${id}" title="${escapeHtml(sym.label)}" aria-label="${escapeHtml(sym.label)}">
+      <svg width="24" height="24" viewBox="0 0 16 16" overflow="visible">${sym.svg.replace(/\$\{color\}/g, '#666')}</svg>
+    </button>`;
+  }).join('');
+
+  document.getElementById('modal-title').textContent = 'New Pin — Style';
+  document.getElementById('modal-body').innerHTML = `
+    <p class="pin-step-label">Choose a colour</p>
+    <div class="pin-color-grid">${colorSwatches}</div>
+    <p class="pin-step-label">Choose 1–3 symbols</p>
+    <div class="pin-symbol-grid">${symbolBtns}</div>
+    <div class="pin-modal-actions">
+      <button class="pin-btn-secondary" id="pin-cancel">Cancel</button>
+      <button class="pin-btn-primary" id="pin-step1-next">Next →</button>
+    </div>`;
+  document.getElementById('modal-overlay').classList.remove('hidden');
+  document.querySelectorAll('.footer-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('btn-pins').classList.add('active');
+
+  document.querySelectorAll('.pin-color-swatch').forEach(btn => {
+    btn.addEventListener('click', () => {
+      pinState.pendingColor = btn.dataset.color;
+      document.querySelectorAll('.pin-color-swatch').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+    });
+  });
+
+  document.querySelectorAll('.pin-symbol-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (btn.classList.contains('disabled-max')) return;
+      const id = btn.dataset.symbolId;
+      if (btn.classList.contains('selected')) {
+        pinState.pendingSymbols = pinState.pendingSymbols.filter(s => s !== id);
+        btn.classList.remove('selected');
+      } else {
+        pinState.pendingSymbols.push(id);
+        btn.classList.add('selected');
+      }
+      const atMax = pinState.pendingSymbols.length >= 3;
+      document.querySelectorAll('.pin-symbol-btn:not(.selected)').forEach(b => {
+        b.classList.toggle('disabled-max', atMax);
+      });
+    });
+  });
+
+  document.getElementById('pin-cancel').addEventListener('click', closeModal);
+  document.getElementById('pin-step1-next').addEventListener('click', () => {
+    if (pinState.pendingSymbols.length === 0) {
+      document.querySelector('.pin-symbol-grid').style.outline = '2px solid #e94560';
+      document.querySelector('.pin-symbol-grid').style.borderRadius = '6px';
+      return;
+    }
+    openPinStep2();
+  });
+}
+
+function openPinStep2() {
+  const now = new Date().toLocaleString('en-AU', {
+    day: '2-digit', month: '2-digit', year: 'numeric',
+    hour: '2-digit', minute: '2-digit', hour12: true,
+  });
+
+  document.getElementById('modal-title').textContent = 'New Pin — Details';
+  document.getElementById('modal-body').innerHTML = `
+    <div class="pin-form-field">
+      <label for="pin-title">Title</label>
+      <input class="pin-form-input" id="pin-title" type="text" placeholder="e.g. Fallen tree blocking road" maxlength="120"/>
+    </div>
+    <div class="pin-form-field">
+      <label for="pin-address">Address / Location</label>
+      <input class="pin-form-input" id="pin-address" type="text" placeholder="e.g. 42 Smith St, Ballarat" maxlength="200"/>
+    </div>
+    <div class="pin-form-field">
+      <label for="pin-datetime">Date &amp; Time</label>
+      <input class="pin-form-input" id="pin-datetime" type="text" value="${escapeHtml(now)}" maxlength="60"/>
+    </div>
+    <div class="pin-form-field">
+      <label for="pin-desc">Description</label>
+      <textarea class="pin-form-textarea" id="pin-desc" placeholder="Additional notes…" maxlength="1000"></textarea>
+    </div>
+    <div class="pin-modal-actions">
+      <button class="pin-btn-secondary" id="pin-step2-back">← Back</button>
+      <button class="pin-btn-primary" id="pin-step2-save">Save Pin</button>
+    </div>`;
+
+  document.getElementById('pin-step2-back').addEventListener('click', openPinStep1);
+  document.getElementById('pin-step2-save').addEventListener('click', () => {
+    const pin = {
+      id:          generatePinId(),
+      lat:         pinState.pendingLatLng.lat,
+      lng:         pinState.pendingLatLng.lng,
+      color:       pinState.pendingColor,
+      symbols:     [...pinState.pendingSymbols],
+      title:       document.getElementById('pin-title').value.trim(),
+      address:     document.getElementById('pin-address').value.trim(),
+      datetime:    document.getElementById('pin-datetime').value.trim(),
+      description: document.getElementById('pin-desc').value.trim(),
+      createdAt:   new Date().toISOString(),
+    };
+    pinState.pins.push(pin);
+    savePins(pinState.pins);
+    addPinMarker(pin);
+    closeModal();
+    pinState.markers[pin.id].openPopup();
+  });
+
+  // Focus title for quick entry
+  setTimeout(() => document.getElementById('pin-title')?.focus(), 50);
+}
+
+function onPinPopupAction(e) {
+  const action = e.target.dataset.pinAction;
+  const pinId  = e.target.dataset.pinId;
+  if (!action || !pinId) return;
+
+  const pin    = pinState.pins.find(p => p.id === pinId);
+  const marker = pinState.markers[pinId];
+  if (!pin || !marker) return;
+
+  if (action === 'edit') {
+    marker.getPopup().setContent(buildPinEditHtml(pin));
+  }
+
+  if (action === 'save-edit') {
+    pin.title       = document.getElementById('pin-edit-title')?.value.trim()    || '';
+    pin.address     = document.getElementById('pin-edit-address')?.value.trim()  || '';
+    pin.datetime    = document.getElementById('pin-edit-datetime')?.value.trim() || '';
+    pin.description = document.getElementById('pin-edit-desc')?.value.trim()     || '';
+    savePins(pinState.pins);
+    marker.getPopup().setContent(buildPinPopupHtml(pin));
+  }
+
+  if (action === 'cancel-edit') {
+    marker.getPopup().setContent(buildPinPopupHtml(pin));
+  }
+
+  if (action === 'delete') {
+    const actionsEl = e.target.closest('.pin-popup-actions');
+    if (actionsEl) {
+      actionsEl.innerHTML = `
+        <span style="font-size:11px;color:#c03050;align-self:center;">Delete this pin?</span>
+        <button class="pin-popup-btn danger" data-pin-action="delete-confirm" data-pin-id="${pinId}">Yes</button>
+        <button class="pin-popup-btn" data-pin-action="delete-cancel" data-pin-id="${pinId}">No</button>`;
+    }
+  }
+
+  if (action === 'delete-confirm') {
+    pinState.pins = pinState.pins.filter(p => p.id !== pinId);
+    savePins(pinState.pins);
+    removePinMarker(pinId);
+    map.closePopup();
+  }
+
+  if (action === 'delete-cancel') {
+    marker.getPopup().setContent(buildPinPopupHtml(pin));
+  }
+}
+
+function initCustomPins() {
+  pinState.pinLayer = L.layerGroup().addTo(map);
+  pinState.pins     = loadPins();
+  pinState.pins.forEach(p => addPinMarker(p));
+  document.getElementById('btn-pins').innerHTML = ICONS.pins;
+  document.getElementById('btn-pins').addEventListener('click', togglePinPlacement);
+}
 
 function minimizeSVG(pointLeft) {
   return pointLeft
@@ -1357,6 +1709,7 @@ function initSidebarState() {
   document.getElementById('btn-docs').innerHTML     = ICONS.docs;
   document.getElementById('btn-contact').innerHTML  = ICONS.contact;
   document.getElementById('btn-settings').innerHTML = ICONS.settings;
+  document.getElementById('btn-pins').innerHTML     = ICONS.pins;
   document.getElementById('btn-flip').innerHTML     = ICONS.flip;
   document.getElementById('btn-reset').innerHTML    = ICONS.reset;
 
@@ -1424,6 +1777,7 @@ function openModal(type) {
 }
 
 function closeModal() {
+  deactivatePinPlacement();
   document.getElementById('modal-overlay').classList.add('hidden');
   document.querySelectorAll('.footer-btn').forEach(b => b.classList.remove('active'));
 }
@@ -1514,6 +1868,7 @@ async function initApp() {
   initMap();
   buildSidebar();
   initSidebarState();
+  initCustomPins();
   initOnboarding();
 
   // Global search
@@ -1564,6 +1919,11 @@ async function initApp() {
   });
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') closeModal();
+  });
+
+  // Pin popup actions (delegated at document level — survives popup setContent)
+  document.addEventListener('click', e => {
+    if (e.target?.dataset?.pinAction) onPinPopupAction(e);
   });
 
   if ('serviceWorker' in navigator) {

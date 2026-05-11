@@ -974,6 +974,257 @@ html, body {
 }
 
 /* ============================================================
+   CUSTOM PINS
+   ============================================================ */
+
+.custom-pin-icon {
+  background: none;
+  border: none;
+}
+
+#map.pin-placement-mode {
+  cursor: crosshair;
+}
+
+.pin-step-label {
+  color: #8aaac8;
+  font-size: 0.846rem;
+  font-weight: 600;
+  margin: 0 0 6px;
+  letter-spacing: 0.2px;
+}
+
+.pin-color-grid {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.pin-color-swatch {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.1s, border-color 0.1s;
+  flex-shrink: 0;
+}
+
+.pin-color-swatch:hover {
+  transform: scale(1.15);
+}
+
+.pin-color-swatch.selected {
+  border-color: #ffffff;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.35);
+}
+
+.pin-symbol-grid {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.pin-symbol-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background: #1a2a4a;
+  border: 2px solid #1e3a6a;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.12s, border-color 0.12s;
+}
+
+.pin-symbol-btn:hover {
+  background: #243a60;
+  border-color: #3a6ab0;
+}
+
+.pin-symbol-btn.selected {
+  background: #1e4080;
+  border-color: #ffffff;
+}
+
+.pin-symbol-btn.disabled-max {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.pin-form-field {
+  margin-bottom: 12px;
+}
+
+.pin-form-field label {
+  display: block;
+  font-size: 0.846rem;
+  color: #8aaac8;
+  margin-bottom: 4px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+.pin-form-input,
+.pin-form-textarea {
+  width: 100%;
+  padding: 7px 10px;
+  background: #1a2a4a;
+  border: 1px solid #1e3a6a;
+  border-radius: 5px;
+  color: #d0d8e8;
+  font-size: 0.923rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s;
+  box-sizing: border-box;
+}
+
+.pin-form-input:focus,
+.pin-form-textarea:focus {
+  border-color: #3a6ab0;
+}
+
+.pin-form-textarea {
+  resize: vertical;
+  min-height: 72px;
+}
+
+.pin-modal-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.pin-btn-primary {
+  flex: 1;
+  padding: 8px 0;
+  background: #e94560;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 0.923rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+
+.pin-btn-primary:hover {
+  background: #c73550;
+}
+
+.pin-btn-secondary {
+  padding: 8px 16px;
+  background: #1a2a4a;
+  color: #8aaac8;
+  border: 1px solid #1e3a6a;
+  border-radius: 5px;
+  font-size: 0.923rem;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+}
+
+.pin-btn-secondary:hover {
+  background: #243a60;
+  color: #d0d8e8;
+}
+
+/* Pin popup (light-themed — inside Leaflet's white popup) */
+.pin-popup {
+  min-width: 180px;
+  max-width: 260px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.pin-popup-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1a2a3e;
+  margin-bottom: 5px;
+  line-height: 1.3;
+}
+
+.pin-popup-meta {
+  font-size: 11.5px;
+  color: #5a6a7a;
+  margin-bottom: 2px;
+  line-height: 1.4;
+}
+
+.pin-popup-desc {
+  font-size: 12px;
+  color: #2a3a50;
+  margin-top: 6px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.4;
+}
+
+.pin-popup-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid #e0e8f0;
+}
+
+.pin-popup-btn {
+  flex: 1;
+  padding: 5px 0;
+  border-radius: 4px;
+  border: 1px solid #c8d6e4;
+  background: #f0f4f8;
+  color: #3a5068;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.pin-popup-btn:hover {
+  background: #dde8f0;
+}
+
+.pin-popup-btn.danger {
+  border-color: #e0b0b8;
+  color: #b03050;
+}
+
+.pin-popup-btn.danger:hover {
+  background: #fceef0;
+}
+
+/* Edit form inside popup */
+.pin-edit-form input,
+.pin-edit-form textarea {
+  display: block;
+  width: 100%;
+  margin-bottom: 6px;
+  padding: 5px 7px;
+  border: 1px solid #c8d6e4;
+  border-radius: 4px;
+  font-size: 12px;
+  font-family: inherit;
+  outline: none;
+  box-sizing: border-box;
+  color: #1a2a3e;
+}
+
+.pin-edit-form input:focus,
+.pin-edit-form textarea:focus {
+  border-color: #4a90ff;
+}
+
+.pin-edit-form textarea {
+  min-height: 56px;
+  resize: vertical;
+}
+
+/* ============================================================
    RESPONSIVE — narrow screens
    ============================================================ */
 
