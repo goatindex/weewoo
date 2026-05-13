@@ -159,6 +159,57 @@ Each cloud backend requires a one-time app registration with the GitHub Pages or
 
 Register `https://goatindex.github.io` for production and `http://localhost` (separate client ID) for local dev. Client IDs and App keys are public values — safe to ship in JS source.
 
+## Sectorisation tool
+
+The Sectorisation tool subdivides a zone polygon (or a union of several) into named "sectors" by letting the user draw dividing lines across it. Sectors get NATO phonetic names (Alpha, Bravo, Charlie…) and user-chosen colours, and persist to localStorage so they survive page reloads and tool deactivation.
+
+### Files
+
+| File | Role |
+|------|------|
+| `sectorisation.js` (root) | Feature implementation — plain IIFE that attaches `window.SectorisationTool` |
+| `index.html` | Loads JSTS + turf CDNs and `sectorisation.js` before `app.js` |
+| `app.js` | Calls `SectorisationTool.init(map)` and wires the footer "Sectorise" button |
+
+`sectorisation.js` is already in `scripts/build.js`'s copy list, so changes auto-sync to `www/` and the Android bundle on `npm run build`.
+
+### Geometry library stack
+
+| Lib | Used for | Where |
+|-----|----------|-------|
+| **JSTS 2.12** | Robust noding + polygonize (handles T/X-junctions and vertex-touches) | ONLY inside `computeSectors()` — `jsts.io.GeoJSONReader/Writer`, `LineString.union()`, `jsts.operation.polygonize.Polygonizer` |
+| **Turf v6** | Centroids, area, point-in-polygon, polygon/feature wrapping | ~18 calls across the file (sector centroids, sector hit-tests, merge-inheritance area comparisons) |
+| **Leaflet 1.9.4** | Map, panes, polygons, polylines, circle markers, div icons | Rendering only |
+
+JSTS is loaded after Leaflet and before Turf in `index.html`:
+
+```html
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/jsts@2.12.1/dist/jsts.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+<script src="sectorisation.js?v=N"></script>
+```
+
+### localStorage keys
+
+| Key | Value |
+|-----|-------|
+| `weewoo:sectorisation:{polygonId}` | Per-parent graph: `{ nodes, lines, nameOverrides, colorOverrides, opacityOverrides, parentRing, parentHash }` |
+
+`polygonId` is the sorted-joined `{groupId}::{featureName}` parts for the polygon(s) used as parent (e.g. `VIC__ses_zones::ALEXANDRA` or `VIC__ses_zones::ZoneA|VIC__ses_zones::ZoneB`). The sort makes the ID order-independent for multi-polygon selections.
+
+`parentHash` is a fingerprint of the parent ring's coordinates, used to warn the user if the source polygon boundary has drifted since the sectorisation was saved (FR-43).
+
+### Cache busting
+
+After significant changes to `sectorisation.js`, bump the version in `index.html`:
+
+```html
+<script src="sectorisation.js?v=N"></script>
+```
+
+Then `npm run build` to propagate. The current version is whatever's in `index.html`.
+
 ## Layer Ordering Convention
 
 Top-level states in `config/layers.json` must follow this order:

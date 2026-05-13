@@ -1204,6 +1204,7 @@ const ICONS = {
   settings: `<svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`,
   flip: `<svg width="27" height="27" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h12M12 3l3 3-3 3"/><path d="M15 12H3M6 9l-3 3 3 3"/></svg>`,
   reset: `<svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>`,
+  sectorise: `<svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 3 21 8.5 21 15.5 12 21 3 15.5 3 8.5"/><line x1="3" y1="8.5" x2="21" y2="15.5"/><line x1="12" y1="3" x2="12" y2="21"/></svg>`,
   pins: `<svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.69 2 6 4.69 6 8c0 4.5 6 12 6 12s6-7.5 6-12c0-3.31-2.69-6-6-6z"/><circle cx="12" cy="8" r="2.2"/></svg>`,
   save: `<svg width="27" height="27" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 2.5h8l3 3v10.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5z"/><rect x="5.5" y="2.5" width="4.5" height="3.5" rx=".3"/><rect x="5.5" y="10" width="7" height="5.5" rx=".5"/></svg>`,
   load: `<svg width="27" height="27" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7.5q0-1 1-1h5l1.5-1.5h4.5q1 0 1 1v6.5q0 1-1 1H3q-1 0-1-1z"/><line x1="9" y1="8.5" x2="9" y2="11.5"/><polyline points="7 10 9 12 11 10"/></svg>`,
@@ -1756,8 +1757,9 @@ function initSidebarState() {
   document.getElementById('btn-pins').innerHTML     = ICONS.pins;
   document.getElementById('btn-save').innerHTML     = ICONS.save;
   document.getElementById('btn-load').innerHTML     = ICONS.load;
-  document.getElementById('btn-flip').innerHTML     = ICONS.flip;
-  document.getElementById('btn-reset').innerHTML    = ICONS.reset;
+  document.getElementById('btn-flip').innerHTML      = ICONS.flip;
+  document.getElementById('btn-reset').innerHTML     = ICONS.reset;
+  document.getElementById('btn-sectorise').innerHTML = ICONS.sectorise;
 
   // Restore persisted text sizes
   applySidebarTextSize(localStorage.getItem(SIDEBAR_TEXT_SIZE_KEY) || TEXT_SIZE_DEFAULT);
@@ -1830,6 +1832,16 @@ function buildSaveObject(name) {
     Object.entries(state.sesFlags).filter(([, f]) => f.manualEnabled || f.zoneEnabled)
   );
   const center = map ? map.getCenter() : null;
+
+  /* Collect all sectorisation data from localStorage */
+  const sectorisation = {};
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (k && k.startsWith('weewoo:sectorisation:')) {
+      try { sectorisation[k] = JSON.parse(localStorage.getItem(k)); } catch {}
+    }
+  }
+
   return {
     version: 1,
     name,
@@ -1843,6 +1855,7 @@ function buildSaveObject(name) {
       sidebarTextSize: localStorage.getItem('weewoo_sidebar_text_size')  || 'M',
       mapTextSize:     localStorage.getItem('weewoo_map_text_size')      || 'M',
     },
+    sectorisation,
   };
 }
 
@@ -1939,6 +1952,14 @@ function applySave(saveObj, opts = { restoreView: true }) {
 
   if (opts.restoreView && saveObj.mapView && map) {
     map.setView(saveObj.mapView.center, saveObj.mapView.zoom);
+  }
+
+  /* Restore sectorisation data if present */
+  if (saveObj.sectorisation && typeof saveObj.sectorisation === 'object') {
+    Object.entries(saveObj.sectorisation).forEach(([key, val]) => {
+      try { localStorage.setItem(key, JSON.stringify(val)); } catch {}
+    });
+    SectorisationTool.reloadFromStorage();
   }
 }
 
@@ -2172,6 +2193,7 @@ async function initApp() {
   restoreLayerState();
 
   initMap();
+  SectorisationTool.init(map);
   buildSidebar();
   initSidebarState();
   initCustomPins();
@@ -2197,11 +2219,12 @@ async function initApp() {
   });
 
   // Footer modal buttons
-  document.getElementById('btn-docs').addEventListener('click',     () => openModal('docs'));
-  document.getElementById('btn-contact').addEventListener('click',  () => openModal('contact'));
-  document.getElementById('btn-settings').addEventListener('click', () => openModal('settings'));
-  document.getElementById('btn-save').addEventListener('click',     () => openModal('save'));
-  document.getElementById('btn-load').addEventListener('click',     () => openModal('load'));
+  document.getElementById('btn-docs').addEventListener('click',      () => openModal('docs'));
+  document.getElementById('btn-contact').addEventListener('click',   () => openModal('contact'));
+  document.getElementById('btn-settings').addEventListener('click',  () => openModal('settings'));
+  document.getElementById('btn-save').addEventListener('click',      () => openModal('save'));
+  document.getElementById('btn-load').addEventListener('click',      () => openModal('load'));
+  document.getElementById('btn-sectorise').addEventListener('click', () => SectorisationTool.enterGroupSelect());
 
   // Settings modal actions (event delegation — body is re-rendered on each open)
   document.getElementById('modal-body').addEventListener('click', e => {

@@ -17,7 +17,7 @@ function copyDir(src, dest) {
 
 if (!fs.existsSync(DEST)) fs.mkdirSync(DEST, { recursive: true });
 
-const files = ['index.html', 'app.js', 'style.css', 'manifest.json', 'sw.js'];
+const files = ['index.html', 'app.js', 'style.css', 'manifest.json', 'sw.js', 'sectorisation.js'];
 const dirs  = ['icons', 'geojson', 'config'];
 
 for (const f of files) {

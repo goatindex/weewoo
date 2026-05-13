@@ -34,15 +34,18 @@
 
       <div id="layer-tree"></div>
 
+      <div id="sectors-section" class="hidden"></div>
+
       <div id="sidebar-footer">
         <button class="footer-btn" id="btn-docs"     title="Documentation"   aria-label="Documentation"></button>
         <button class="footer-btn" id="btn-contact"  title="Contact"         aria-label="Contact"></button>
         <button class="footer-btn" id="btn-settings" title="Settings"        aria-label="Settings"></button>
         <button class="footer-btn" id="btn-pins"     title="Custom pins"       aria-label="Custom pins"></button>
-        <button class="footer-btn" id="btn-save"     title="Save map state"    aria-label="Save map state"></button>
-        <button class="footer-btn" id="btn-load"     title="Load map state"    aria-label="Load map state"></button>
-        <button class="footer-btn" id="btn-flip"     title="Flip sidebar side" aria-label="Flip sidebar side"></button>
-        <button class="footer-btn" id="btn-reset"    title="Clear all saved data and restart" aria-label="Clear saved data"></button>
+        <button class="footer-btn" id="btn-save"      title="Save map state"      aria-label="Save map state"></button>
+        <button class="footer-btn" id="btn-load"      title="Load map state"      aria-label="Load map state"></button>
+        <button class="footer-btn" id="btn-sectorise" title="Sectorise polygon"   aria-label="Sectorise polygon"></button>
+        <button class="footer-btn" id="btn-flip"      title="Flip sidebar side"   aria-label="Flip sidebar side"></button>
+        <button class="footer-btn" id="btn-reset"     title="Clear all saved data and restart" aria-label="Clear saved data"></button>
       </div>
     </div>
 
@@ -86,6 +89,9 @@
   </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/jsts@2.12.1/dist/jsts.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+  <script src="sectorisation.js?v=2"></script>
   <script src="app.js?v=3"></script>
 </body>
 </html>

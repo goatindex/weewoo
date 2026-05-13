@@ -1413,3 +1413,452 @@ html, body {
     max-width: 40vw;
   }
 }
+
+/* ============================================================
+   SECTORISATION TOOL
+   ============================================================ */
+
+/* Group-select cursor mode */
+#map.ww-gs-mode {
+  cursor: cell;
+}
+
+/* Draw-hint mode — shows user where to click to start a line */
+#map.ww-draw-hint {
+  cursor: crosshair;
+}
+
+/* Floating sectorisation toolbar (top-right of map) */
+#ww-sector-toolbar {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #0f1e38;
+  border: 1px solid #1e3a6a;
+  border-radius: 8px;
+  padding: 6px 8px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.5);
+  pointer-events: auto;
+}
+
+#ww-sector-toolbar button {
+  height: 32px;
+  padding: 0 10px;
+  border-radius: 5px;
+  border: 1px solid #1e3a6a;
+  background: #1a2a4a;
+  color: #c0cce0;
+  font-size: 0.846rem;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
+  white-space: nowrap;
+}
+
+#ww-sector-toolbar button:hover {
+  background: #243a60;
+  border-color: #3a6ab0;
+}
+
+#ww-sector-toolbar button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+#ww-sector-toolbar .ww-st-primary {
+  background: #1e4080;
+  border-color: #3a6ab0;
+  color: #fff;
+  font-weight: 600;
+}
+
+#ww-sector-toolbar .ww-st-primary:hover {
+  background: #2a5aaa;
+}
+
+#ww-sector-toolbar .ww-st-active {
+  background: #1e4080;
+  border-color: #3a6ab0;
+  color: #fff;
+}
+
+/* Group-select instruction bar (bottom-centre of map) */
+#ww-gs-bar {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #0f1e38;
+  border: 1px solid #1e3a6a;
+  border-radius: 8px;
+  padding: 8px 14px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.5);
+  pointer-events: auto;
+  white-space: nowrap;
+}
+
+.ww-gs-hint {
+  font-size: 0.846rem;
+  color: #8aaac8;
+}
+
+#ww-gs-bar button {
+  height: 30px;
+  padding: 0 12px;
+  border-radius: 5px;
+  border: 1px solid #1e3a6a;
+  background: #1a2a4a;
+  color: #c0cce0;
+  font-size: 0.846rem;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
+}
+
+#ww-gs-bar button:hover {
+  background: #243a60;
+  border-color: #3a6ab0;
+}
+
+#ww-gs-bar #ww-gs-confirm {
+  background: #1e4080;
+  border-color: #3a6ab0;
+  color: #fff;
+  font-weight: 600;
+}
+
+#ww-gs-bar #ww-gs-confirm:hover:not(:disabled) {
+  background: #2a5aaa;
+}
+
+#ww-gs-bar #ww-gs-confirm:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* Sector fill labels */
+.ww-sector-label {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+.ww-sector-label span {
+  display: inline-block;
+  background: rgba(10, 20, 40, 0.72);
+  color: #e8f0ff;
+  font-size: calc(11px * var(--map-font-scale, 1));
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 3px;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* Sector name/colour popover */
+.ww-sector-popover {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2000;
+  background: #0f1e38;
+  border: 1px solid #1e3a6a;
+  border-radius: 8px;
+  padding: 14px 16px;
+  min-width: 240px;
+  max-width: 320px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.6);
+  color: #c0cce0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.ww-sp-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.ww-sp-prefix {
+  font-size: 0.923rem;
+  font-weight: 700;
+  color: #8aaac8;
+}
+
+.ww-sp-close {
+  background: none;
+  border: none;
+  color: #4a6080;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: color 0.1s;
+}
+
+.ww-sp-close:hover { color: #d0d8e8; }
+
+.ww-sp-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.846rem;
+  color: #8aaac8;
+  margin-bottom: 12px;
+}
+
+.ww-sp-name {
+  padding: 6px 8px;
+  background: #0d1a2e;
+  border: 1px solid #1e3a6a;
+  border-radius: 5px;
+  color: #d0d8e8;
+  font-size: 0.923rem;
+  font-family: inherit;
+  outline: none;
+}
+
+.ww-sp-name:focus { border-color: #3a6ab0; }
+
+.ww-sp-swatches {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.ww-sp-swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 5px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.1s, border-color 0.1s;
+}
+
+.ww-sp-swatch:hover { transform: scale(1.15); }
+
+.ww-sp-swatch.sel {
+  border-color: #fff;
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.3);
+}
+
+.ww-sp-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.ww-sp-save {
+  padding: 6px 18px;
+  background: #1e4080;
+  border: 1px solid #3a6ab0;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 0.923rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+
+.ww-sp-save:hover { background: #2a5aaa; }
+
+.ww-sp-opacity-row {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.ww-sp-opacity {
+  flex: 1;
+  accent-color: #3a6ab0;
+  cursor: pointer;
+  height: 4px;
+}
+.ww-sp-opacity-val {
+  font-size: 0.8rem;
+  color: #8aaac8;
+  min-width: 32px;
+  text-align: right;
+}
+
+.ww-sector-popover--info .ww-sp-header {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+/* Context menu (right-click on lines, nodes, sectors) */
+.ww-sector-menu {
+  position: fixed;
+  z-index: 2100;
+  background: #0f1e38;
+  border: 1px solid #1e3a6a;
+  border-radius: 6px;
+  padding: 4px 0;
+  min-width: 190px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.55);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.ww-sector-menu button {
+  display: block;
+  width: 100%;
+  padding: 7px 14px;
+  background: none;
+  border: none;
+  color: #c0cce0;
+  font-size: 0.846rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.ww-sector-menu button:hover {
+  background: rgba(255,255,255,0.07);
+}
+
+/* Toast notifications */
+.ww-sector-toast {
+  position: fixed;
+  bottom: 72px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2200;
+  padding: 9px 18px;
+  border-radius: 6px;
+  font-size: 0.846rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.5);
+  animation: ww-toast-in 0.2s ease;
+  white-space: nowrap;
+  max-width: 90vw;
+  white-space: normal;
+  text-align: center;
+}
+
+.ww-sector-toast-info {
+  background: #0f2a50;
+  border: 1px solid #1e4a8a;
+  color: #a0c8f0;
+}
+
+.ww-sector-toast-warn {
+  background: #2a200a;
+  border: 1px solid #6a4a10;
+  color: #e0c060;
+}
+
+.ww-sector-toast-error {
+  background: #2a0f18;
+  border: 1px solid #6a1a2a;
+  color: #e08090;
+}
+
+@keyframes ww-toast-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(8px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* ============================================================
+   SECTORS SIDEBAR SECTION
+   ============================================================ */
+
+#sectors-section {
+  flex-shrink: 0;
+  border-top: 1px solid #0d2040;
+  background: #131d34;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+#sectors-section::-webkit-scrollbar { width: 5px; }
+#sectors-section::-webkit-scrollbar-track { background: #131d34; }
+#sectors-section::-webkit-scrollbar-thumb { background: #1e3a6a; border-radius: 3px; }
+
+.sectors-heading {
+  padding: 7px 12px 5px;
+  font-size: 0.769rem;
+  font-weight: 700;
+  color: #6a88a8;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  user-select: none;
+}
+
+.sectors-list {
+  padding: 0 0 6px;
+}
+
+.sector-entry {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px 5px 12px;
+  transition: background 0.1s;
+}
+
+.sector-entry:hover {
+  background: rgba(255,255,255,0.04);
+}
+
+.sector-entry-name {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.823rem;
+  color: #b0c4d8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sector-entry-meta {
+  font-size: 0.723rem;
+  color: #4a6a8a;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.sector-entry-actions {
+  display: flex;
+  gap: 3px;
+  flex-shrink: 0;
+}
+
+.sector-btn {
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  border: none;
+  background: none;
+  color: #4a6a8a;
+  cursor: pointer;
+  font-size: 0.769rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: background 0.1s, color 0.1s;
+}
+
+.sector-btn:hover {
+  background: rgba(255,255,255,0.08);
+  color: #c0cce0;
+}
+
+.sector-btn.hidden-state {
+  opacity: 0.35;
+}
+
+.sector-btn-del:hover {
+  color: #e08090;
+}
