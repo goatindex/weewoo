@@ -68,8 +68,16 @@ window.SectorisationTool = (function () {
      ============================================================ */
 
   const STORE_PREFIX   = 'weewoo:sectorisation:';
+  /* Snap tolerances in screen pixels. Priority order during a draw click is
+     node > edge > line: an emergency planner is most likely to want to start
+     from an existing node, then from the parent perimeter, and least often
+     from the middle of an existing dividing line. Tolerances differ slightly
+     so that when a click is near two snap targets, the higher-priority one
+     wins — but the differences are small enough that fine cursor control
+     still lands on the intended target. */
+  const SNAP_NODE_PX   = 10;
   const SNAP_EDGE_PX   = 8;
-  const SNAP_NODE_PX   = 6;
+  const SNAP_LINE_PX   = 6;
   const DRAG_THRESHOLD = 4;
   const MAX_UNDO       = 50;
   const COORD_PREC     = 7;
@@ -294,6 +302,52 @@ window.SectorisationTool = (function () {
       if (d < SNAP_NODE_PX && d < bestD) { bestD = d; best = { latlng: L.latLng(n.lat, n.lng), id: n.id }; }
     }
     return best;
+  }
+
+  /* Snap to the nearest dividing-line segment. Returns { latlng, lineId, coord }
+     where coord is the snap point in [lng, lat] form already rounded — caller
+     passes this to _insertNodeInLine to split the segment with a junction node. */
+  function snapLine(ll) {
+    if (!_graph) return null;
+    const pPx = _map.latLngToLayerPoint(ll);
+    let best = null, bestD = Infinity;
+    for (const line of Object.values(_graph.lines)) {
+      const ids = line.nodeIds;
+      for (let i = 0; i < ids.length - 1; i++) {
+        const na = _graph.nodes[ids[i]], nb = _graph.nodes[ids[i + 1]];
+        if (!na || !nb) continue;
+        const aPx = _map.latLngToLayerPoint(L.latLng(na.lat, na.lng));
+        const bPx = _map.latLngToLayerPoint(L.latLng(nb.lat, nb.lng));
+        const abx = bPx.x - aPx.x, aby = bPx.y - aPx.y;
+        const len2 = abx * abx + aby * aby;
+        if (len2 < 1e-10) continue;
+        const t = Math.max(0, Math.min(1, ((pPx.x - aPx.x) * abx + (pPx.y - aPx.y) * aby) / len2));
+        const d = Math.hypot(aPx.x + t * abx - pPx.x, aPx.y + t * aby - pPx.y);
+        if (d < SNAP_LINE_PX && d < bestD) {
+          bestD = d;
+          /* Interpolate in latlng space so the snap point lies exactly on
+             the segment between the two nodes (Mercator round-trip would
+             quantize and miss the target segment at low zooms). */
+          const lat = na.lat + t * (nb.lat - na.lat);
+          const lng = na.lng + t * (nb.lng - na.lng);
+          best = { latlng: L.latLng(lat, lng), lineId: line.id, coord: rndC([lng, lat]) };
+        }
+      }
+    }
+    return best;
+  }
+
+  /* Combined snap with priority: node > edge > line. Returns a discriminated
+     union: { type: 'node', latlng, id } | { type: 'edge', latlng } |
+     { type: 'line', latlng, lineId, coord } | null. */
+  function snapAny(ll) {
+    const ns = snapNode(ll);
+    if (ns) return { type: 'node', latlng: ns.latlng, id: ns.id };
+    const es = snapEdge(ll);
+    if (es) return { type: 'edge', latlng: es };
+    const ls = snapLine(ll);
+    if (ls) return { type: 'line', latlng: ls.latlng, lineId: ls.lineId, coord: ls.coord };
+    return null;
   }
 
   /* ============================================================
@@ -642,10 +696,10 @@ window.SectorisationTool = (function () {
       .on('click', e => {
         L.DomEvent.stopPropagation(e);
         if (_mode === 'READY') {
-          /* Boundary/node clicks always start a new line — even when the click
-             lands inside a sector. Without this guard, turf.booleanPointInPolygon
+          /* Boundary/node/line clicks always start a new line — even when the
+             click lands inside a sector. Without this guard, turf.booleanPointInPolygon
              returns true for points ON the boundary and the popover fires. */
-          if (snapEdge(e.latlng) || snapNode(e.latlng)) {
+          if (snapAny(e.latlng)) {
             _onReadyClick(e);
             return;
           }
@@ -713,12 +767,15 @@ window.SectorisationTool = (function () {
       } catch {}
     });
 
-    /* Render current session sectors */
+    /* Render current session sectors. We still need _lastSectors populated
+       (for hit-testing, merge-inheritance, etc.) even when hidden — only the
+       on-map fills and labels are suppressed. */
     if (!_graph || !_parentRing) { _lastSectors = []; return; }
 
     const faces   = computeSectors(_parentRing, _allLineCoords());
     const sectors = _assignSectors(faces);
     _lastSectors  = sectors;
+    if (_parentId && _hiddenSectors.has(_parentId)) return;
     const editing = _isEditing();
 
     for (const s of sectors) {
@@ -1047,9 +1104,8 @@ window.SectorisationTool = (function () {
 
   function _onReadyMM(e) {
     if (_mode !== 'READY') return;
-    const es = snapEdge(e.latlng);
-    const ns = snapNode(e.latlng);
-    let snapLL = es || (ns ? ns.latlng : null);
+    const snap = snapAny(e.latlng);
+    let snapLL = snap ? snap.latlng : null;
     if (!snapLL && _drawHintActive && _parentTurf &&
         turf.booleanPointInPolygon(turf.point([e.latlng.lng, e.latlng.lat]), _parentTurf)) {
       snapLL = _nearestBoundaryPoint(e.latlng);
@@ -1059,27 +1115,41 @@ window.SectorisationTool = (function () {
 
   function _onReadyClick(e) {
     if (_mode !== 'READY') return;
-    const es = snapEdge(e.latlng);
-    const ns = snapNode(e.latlng);
-    let snapLL = es || (ns ? ns.latlng : null);
+    let snap = snapAny(e.latlng);
 
-    if (!snapLL && _drawHintActive) {
+    if (!snap && _drawHintActive) {
       /* Draw-hint mode: accept any click inside the polygon and snap to nearest boundary */
       if (turf.booleanPointInPolygon(turf.point([e.latlng.lng, e.latlng.lat]), _parentTurf)) {
-        snapLL = _nearestBoundaryPoint(e.latlng);
+        const ll = _nearestBoundaryPoint(e.latlng);
+        if (ll) snap = { type: 'edge', latlng: ll };
       }
     }
 
-    if (!snapLL) return;
+    if (!snap) return;
     _clearDrawHint();
-    _enterDrawing(rndC([snapLL.lng, snapLL.lat]), ns ? ns.id : null);
+    _enterDrawing(snap);
   }
 
   /* ============================================================
      STATE MACHINE — DRAWING
      ============================================================ */
 
-  function _enterDrawing(startCoord, existingNodeId) {
+  /* Resolve a snap result to a node id, creating + inserting nodes as needed.
+     Newly-created nodes go into _drawNewNodes so _cancelDrawing can roll back. */
+  function _nodeFromSnap(snap) {
+    if (snap.type === 'node') return snap.id;
+    const coord = snap.coord || rndC([snap.latlng.lng, snap.latlng.lat]);
+    const ex = _nodeAt(coord);
+    if (ex) return ex.id;
+    const id = _newId('n');
+    const type = snap.type === 'line' ? 'junction' : 'edge_snap';
+    _graph.nodes[id] = { id, lat: coord[1], lng: coord[0], type };
+    _drawNewNodes.add(id);
+    if (snap.type === 'line') _insertNodeInLine(snap.lineId, id, coord);
+    return id;
+  }
+
+  function _enterDrawing(snap) {
     /* Capture pre-change snapshot before any node creation so undo restores
        to the state before this line was drawn. _commit() at line completion
        (or _cancelDrawing) consumes this snapshot. */
@@ -1087,19 +1157,7 @@ window.SectorisationTool = (function () {
     _mode         = 'DRAWING';
     _drawNodeIds  = [];
     _drawNewNodes = new Set();
-
-    let startId = existingNodeId;
-    if (!startId) {
-      const ex = _nodeAt(startCoord);
-      if (ex) {
-        startId = ex.id;
-      } else {
-        startId = _newId('n');
-        _graph.nodes[startId] = { id: startId, lat: startCoord[1], lng: startCoord[0], type: 'edge_snap' };
-        _drawNewNodes.add(startId);
-      }
-    }
-    _drawNodeIds = [startId];
+    _drawNodeIds  = [_nodeFromSnap(snap)];
 
     _map.off('click',     _onReadyClick);
     _map.off('mousemove', _onReadyMM);
@@ -1109,32 +1167,17 @@ window.SectorisationTool = (function () {
 
   function _onDrawingMM(e) {
     if (_mode !== 'DRAWING') return;
-    const es = snapEdge(e.latlng);
-    const ns = snapNode(e.latlng);
-    _renderSnap(es || (ns ? ns.latlng : null));
+    const snap = snapAny(e.latlng);
+    _renderSnap(snap ? snap.latlng : null);
     _renderPreview(e.latlng);
   }
 
   function _onDrawingClick(e) {
     if (_mode !== 'DRAWING') return;
-    const es = snapEdge(e.latlng);
-    const ns = snapNode(e.latlng);
+    const snap = snapAny(e.latlng);
 
-    if (es || ns) {
-      const endLL    = es || ns.latlng;
-      const endCoord = rndC([endLL.lng, endLL.lat]);
-
-      let endId = ns ? ns.id : null;
-      if (!endId) {
-        const ex = _nodeAt(endCoord);
-        if (ex) {
-          endId = ex.id;
-        } else {
-          endId = _newId('n');
-          _graph.nodes[endId] = { id: endId, lat: endCoord[1], lng: endCoord[0], type: 'edge_snap' };
-          _drawNewNodes.add(endId);
-        }
-      }
+    if (snap) {
+      const endId = _nodeFromSnap(snap);
       _drawNodeIds.push(endId);
 
       const lineId = _newId('l');
@@ -1164,6 +1207,22 @@ window.SectorisationTool = (function () {
   function _cancelDrawing() {
     if (_mode !== 'DRAWING') return;
     _clearDrawHint();
+    /* If the user started the line by clicking on an existing dividing line,
+       _nodeFromSnap inserted a junction node into that line. Roll those
+       insertions back: remove the new junction nodes from any line they were
+       spliced into so the existing geometry returns to its pre-draw state. */
+    _drawNewNodes.forEach(id => {
+      if (_graph.nodes[id]?.type === 'junction') {
+        for (const lineId of Object.keys(_graph.lines)) {
+          const line = _graph.lines[lineId];
+          const idx = line.nodeIds.indexOf(id);
+          if (idx >= 0) {
+            _graph.lines[lineId] = { ...line, nodeIds: line.nodeIds.filter((_, j) => j !== idx) };
+          }
+        }
+      }
+    });
+    /* Drop orphan nodes (nodes from this draw not used by any line). */
     _drawNewNodes.forEach(id => {
       if (!Object.values(_graph.lines).some(l => l.nodeIds.includes(id)))
         delete _graph.nodes[id];
@@ -1222,7 +1281,7 @@ window.SectorisationTool = (function () {
       } else {
         _mode = 'READY';
         const n = _graph.nodes[_activeNodeId];
-        _enterDrawing([n.lng, n.lat], _activeNodeId);
+        _enterDrawing({ type: 'node', latlng: L.latLng(n.lat, n.lng), id: _activeNodeId });
       }
       _activeNodeId = null;
     };
@@ -1238,15 +1297,117 @@ window.SectorisationTool = (function () {
   function _onLineCtx(e, lineId) {
     if (_mode !== 'READY') return;
     L.DomEvent.stopPropagation(e);
-    _showMenu([{ label: 'Delete line', fn: () => _deleteLine(lineId) }], e.originalEvent);
+    _showMenu([{
+      label: 'Delete line',
+      fn: () => _confirmMergeAndApply(
+        () => _applyDeleteLine(lineId),
+        () => _deleteLine(lineId),
+      ),
+    }], e.originalEvent);
   }
 
   function _onNodeCtx(e, nodeId) {
     if (_mode !== 'READY') return;
     L.DomEvent.stopPropagation(e);
     const node = _graph.nodes[nodeId];
-    if (node?.type !== 'interior') return;
-    _showMenu([{ label: 'Delete node', fn: () => _deleteNode(nodeId) }], e.originalEvent);
+    if (!node) return;
+    /* Label varies by node type. The underlying _deleteNode handles all three
+       correctly: interior/junction → line stays with one fewer node;
+       edge_snap (endpoint) → line is removed (its only 2 nodes drop below
+       the minimum). The merge-confirm flow catches the cases that would
+       collapse a sector. */
+    const label = node.type === 'interior'  ? 'Delete waypoint'
+                : node.type === 'junction'  ? 'Disconnect junction'
+                : node.type === 'edge_snap' ? 'Delete endpoint (removes line)'
+                : 'Delete node';
+    _showMenu([{
+      label,
+      fn: () => _confirmMergeAndApply(
+        () => _applyDeleteNode(nodeId),
+        () => _deleteNode(nodeId),
+      ),
+    }], e.originalEvent);
+  }
+
+  /* ============================================================
+     MERGE PREVIEW + CONFIRMATION
+     ============================================================ */
+
+  /* Simulate `applyFn` on a clone of _graph, recompute sectors, and return the
+     list of merges the operation would cause (empty array means no merges).
+     Each merge entry: { sources: string[], winner: string } where the winner
+     is the largest old sector contained in the new face (whose name and
+     overrides survive per _assignSectors's inheritance rules). */
+  function _previewMerges(applyFn) {
+    if (!_lastSectors.length || !_parentRing) return [];
+    const before = _lastSectors.slice();
+    const saved  = _clone(_graph);
+    try { applyFn(); } catch { _graph = saved; return []; }
+    let newFaces;
+    try { newFaces = computeSectors(_parentRing, _allLineCoords()); }
+    finally { _graph = saved; }
+
+    const merges = [];
+    for (const face of newFaces) {
+      const inside = before.filter(s => {
+        try { return turf.booleanPointInPolygon(turf.point([s.lng, s.lat]), face); }
+        catch { return false; }
+      });
+      if (inside.length <= 1) continue;
+      const winner = inside.reduce((best, s) => {
+        try { return turf.area(s.face) > turf.area(best.face) ? s : best; }
+        catch { return best; }
+      });
+      const sources = inside.filter(s => s !== winner).map(s => s.name);
+      merges.push({ sources, winner: winner.name });
+    }
+    return merges;
+  }
+
+  /* Run applyFn (a pure mutation that just touches _graph), preview the
+     merges it would cause, and if any are detected ask the user before
+     calling commitFn (the full _deleteX wrapper that pushes history,
+     persists, and re-renders). */
+  function _confirmMergeAndApply(applyFn, commitFn) {
+    const merges = _previewMerges(applyFn);
+    if (merges.length === 0) { commitFn(); return; }
+    _showMergeConfirm(merges, commitFn);
+  }
+
+  function _showMergeConfirm(merges, onConfirm) {
+    document.querySelector('.ww-sector-popover')?.remove();
+    const pop = document.createElement('div');
+    pop.className = 'ww-sector-popover ww-sector-popover--merge';
+    pop.innerHTML = `
+      <div class="ww-sp-header">
+        <span class="ww-sp-prefix">Confirm merge</span>
+        <button class="ww-sp-close" title="Cancel">&times;</button>
+      </div>
+      <div class="ww-sp-row">
+        <span>This change will merge the following sectors:</span>
+      </div>
+      <ul class="ww-sp-merge-list">
+        ${merges.map(m => `
+          <li>
+            <strong>${_esc([...m.sources, m.winner].join(' + '))}</strong>
+            &nbsp;→&nbsp;
+            <strong>${_esc(m.winner)}</strong>
+          </li>
+        `).join('')}
+      </ul>
+      <div class="ww-sp-row">
+        <span>The merged sector keeps the largest source's name, colour, and opacity. Continue?</span>
+      </div>
+      <div class="ww-sp-footer ww-sp-footer-merge">
+        <button class="ww-sp-cancel">Cancel</button>
+        <button class="ww-sp-save ww-sp-confirm-merge">Merge sectors</button>
+      </div>
+    `;
+    const close = () => pop.remove();
+    pop.querySelector('.ww-sp-close').addEventListener('click', close);
+    pop.querySelector('.ww-sp-cancel').addEventListener('click', close);
+    pop.querySelector('.ww-sp-confirm-merge').addEventListener('click', () => { close(); onConfirm(); });
+    document.body.appendChild(pop);
   }
 
   function _onSectorCtx(e, sectorKey) {
@@ -1304,10 +1465,13 @@ window.SectorisationTool = (function () {
     }, 0);
   }
 
-  function _deleteLine(lineId) {
+  /* "Apply" variants mutate _graph in place without _beginOp/_commit. The
+     wrappers below add history + persistence + re-render around them.
+     The pure-mutation variants are reusable for merge-preview simulations
+     (run on a deep clone of _graph, throw the clone away). */
+  function _applyDeleteLine(lineId) {
     const line = _graph.lines[lineId];
     if (!line) return;
-    _beginOp();
     line.nodeIds.forEach(id => {
       const n = _graph.nodes[id];
       if (n?.type === 'interior') {
@@ -1317,11 +1481,9 @@ window.SectorisationTool = (function () {
       }
     });
     delete _graph.lines[lineId];
-    _commit();
   }
 
-  function _deleteNode(nodeId) {
-    _beginOp();
+  function _applyDeleteNode(nodeId) {
     for (const [lid, line] of Object.entries(_graph.lines)) {
       const i = line.nodeIds.indexOf(nodeId);
       if (i < 0) continue;
@@ -1329,8 +1491,10 @@ window.SectorisationTool = (function () {
       _graph.lines[lid] = { ...line, nodeIds: line.nodeIds.filter((_, j) => j !== i) };
     }
     delete _graph.nodes[nodeId];
-    _commit();
   }
+
+  function _deleteLine(lineId) { _beginOp(); _applyDeleteLine(lineId); _commit(); }
+  function _deleteNode(nodeId) { _beginOp(); _applyDeleteNode(nodeId); _commit(); }
 
   /* ============================================================
      SECTOR POPOVER (name + colour editor)

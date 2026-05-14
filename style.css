@@ -1697,6 +1697,54 @@ html, body {
   border-bottom: none;
 }
 
+/* Merge confirmation modal — shown when a delete would collapse sectors. */
+.ww-sector-popover--merge {
+  min-width: 280px;
+  max-width: 360px;
+}
+.ww-sp-merge-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 12px 0;
+  background: #0d1a2e;
+  border: 1px solid #1e3a6a;
+  border-radius: 5px;
+  font-size: 0.846rem;
+}
+.ww-sp-merge-list li {
+  padding: 6px 10px;
+  color: #d0d8e8;
+  border-bottom: 1px solid #1a2e4e;
+}
+.ww-sp-merge-list li:last-child { border-bottom: none; }
+.ww-sp-merge-list li strong {
+  color: #c8d8ee;
+  font-weight: 600;
+}
+.ww-sp-footer-merge {
+  justify-content: space-between;
+  gap: 8px;
+}
+.ww-sp-cancel {
+  padding: 6px 14px;
+  background: transparent;
+  border: 1px solid #2a3a5a;
+  border-radius: 5px;
+  color: #8aaac8;
+  font-size: 0.923rem;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
+}
+.ww-sp-cancel:hover {
+  background: #1a2840;
+  border-color: #3a5078;
+}
+.ww-sp-confirm-merge {
+  background: #8b3a1e;
+  border-color: #b04a2a;
+}
+.ww-sp-confirm-merge:hover { background: #a44a2a; }
+
 /* Context menu (right-click on lines, nodes, sectors) */
 .ww-sector-menu {
   position: fixed;
