@@ -57,8 +57,10 @@ const sharedAppGlobals = {
   SIDEBAR_TEXT_SIZE_KEY:'writable',
   MAP_TEXT_SIZE_KEY:   'writable',
   BASEMAP_KEY:         'writable',
+  // Data loading (data-loading.js)
+  ensureGroupLoaded:       'writable',
   // Still in app.js — will move out in later steps
-  ensureGroupLoaded:       'writable',  // → data-loading.js (step 3)
+  renderFeatureList:       'writable',  // → sidebar.js (step 7)
   updateFeatureCheckboxDOM:'writable',  // → sidebar.js (step 7)
   updateGroupCountDOM:     'writable',  // → sidebar.js (step 7)
   updateStateCountDOM:     'writable',  // → sidebar.js (step 7)
@@ -86,7 +88,7 @@ export default [
 
   // Main app + core + future modules — all share the global namespace
   {
-    files: ['app.js', 'core.js', 'map-view.js', 'save-backends.js'],
+    files: ['app.js', 'core.js', 'map-view.js', 'data-loading.js', 'save-backends.js'],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: 'script',
