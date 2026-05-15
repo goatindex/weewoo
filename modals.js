@@ -43,6 +43,12 @@ const MODAL_CONTENT = {
     <p>Victoria has the most complete data set, including SES zones, all major emergency service facilities, and flood overlays. All other states and territories currently have SES facilities and ambulance stations. More layers are being added.</p>
     <p>All data is sourced from publicly available government datasets.</p>
     <button class="settings-btn" data-open-modal="datacoverage">View data sources &amp; licences ›</button>
+
+    <h3 class="modal-section-title">Privacy &amp; accessibility</h3>
+    <p>
+      <button class="settings-btn" data-open-modal="privacy">Privacy notice</button>
+      <button class="settings-btn" data-open-modal="accessibility">Accessibility statement</button>
+    </p>
   `,
   datacoverage: `
     <button class="settings-btn" data-open-modal="docs" style="margin-bottom:16px;">‹ Back to Documentation</button>
@@ -74,11 +80,90 @@ const MODAL_CONTENT = {
   contact: `
     <h3 class="modal-section-title">Get in touch</h3>
     <p>For bug reports, data corrections, or feature requests, please open an issue on GitHub:</p>
-    <p><a href="https://github.com/weewoo-map/weewoo/issues" style="color:#4a90ff;">github.com/weewoo-map/weewoo/issues</a></p>
+    <p><a href="https://github.com/goatindex/weewoo/issues" style="color:#4a90ff;">github.com/goatindex/weewoo/issues</a></p>
 
     <h3 class="modal-section-title">Data corrections</h3>
     <p>If you notice a facility that is missing, incorrectly located, or has wrong details, please include the facility name, state, and the correct information in your report.</p>
 
+    <h3 class="modal-section-title">Privacy &amp; accessibility</h3>
+    <p>
+      <button class="settings-btn" data-open-modal="privacy">Privacy notice</button>
+      <button class="settings-btn" data-open-modal="accessibility">Accessibility statement</button>
+    </p>
+  `,
+
+  privacy: `
+    <h3 class="modal-section-title">Who runs this site</h3>
+    <p>WeeWoo is operated by <a href="https://github.com/goatindex" style="color:#4a90ff;">goatindex</a> as a public-interest project, hosted on GitHub Pages.</p>
+
+    <h3 class="modal-section-title">What we collect</h3>
+    <p><strong>Anonymous analytics</strong> via <a href="https://www.goatcounter.com/" target="_blank" rel="noopener" style="color:#4a90ff;">GoatCounter</a>:</p>
+    <ul>
+      <li>Visit count, browser/OS, country (derived from your IP — the IP is hashed and never retained).</li>
+      <li>The page path you're on (the app is a single page, so this is always the same).</li>
+      <li>Five custom events: a data layer being loaded, a map state being saved, a save being loaded, and the sectorisation tool being entered.</li>
+    </ul>
+    <p><strong>Data on your device only</strong> (via your browser's localStorage):</p>
+    <ul>
+      <li>Active layer selections, saved map states, custom pins, sectorisation data, and display preferences.</li>
+      <li>This data stays on your device. It is never transmitted to us or to anyone else.</li>
+    </ul>
+
+    <h3 class="modal-section-title">Why</h3>
+    <p>To understand which features people use, so we know what to improve. No advertising. No profiling. No sale or sharing of data with third parties beyond what's listed below.</p>
+
+    <h3 class="modal-section-title">Third parties</h3>
+    <p>Your browser makes requests to the following services when you use WeeWoo. Each can see your IP address as a normal part of HTTP:</p>
+    <ul>
+      <li><a href="https://www.goatcounter.com/help/gdpr" target="_blank" rel="noopener" style="color:#4a90ff;">GoatCounter</a> — anonymous analytics.</li>
+      <li><a href="https://unpkg.com/" target="_blank" rel="noopener" style="color:#4a90ff;">unpkg.com</a> and <a href="https://www.jsdelivr.com/" target="_blank" rel="noopener" style="color:#4a90ff;">jsDelivr</a> — content delivery networks that serve the Leaflet, JSTS, and Turf JavaScript libraries.</li>
+      <li><a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener" style="color:#4a90ff;">OpenStreetMap</a> tile servers (and CARTO / Esri for the alternative basemaps) — serve the map tiles your browser draws.</li>
+    </ul>
+
+    <h3 class="modal-section-title">Retention</h3>
+    <ul>
+      <li><strong>GoatCounter</strong>: aggregate visit and event counts are retained indefinitely. IP addresses are hashed for daily-visitor counting and never stored in raw form.</li>
+      <li><strong>On your device</strong>: your saves, pins, and preferences persist until you clear your browser data, or until you use the <strong>Clear saved data &amp; restart</strong> button (the circular arrow in the sidebar footer).</li>
+    </ul>
+
+    <h3 class="modal-section-title">Your rights and opt-out</h3>
+    <ul>
+      <li>Browser ad / analytics blockers (uBlock Origin, Pi-hole, etc.) prevent GoatCounter from loading. The app works normally with analytics blocked.</li>
+      <li>GoatCounter honours the <em>Do Not Track</em> (DNT) and <em>Global Privacy Control</em> (Sec-GPC) signals — if your browser sends either, analytics are suppressed.</li>
+      <li>The sidebar footer's circular-arrow button clears all locally stored WeeWoo data and reloads the app.</li>
+    </ul>
+
+    <h3 class="modal-section-title">Questions</h3>
+    <p>File an issue at <a href="https://github.com/goatindex/weewoo/issues" target="_blank" rel="noopener" style="color:#4a90ff;">github.com/goatindex/weewoo/issues</a>.</p>
+
+    <p style="color:#8aaac8;font-size:0.85rem;margin-top:24px;">Last updated: 16 May 2026</p>
+  `,
+
+  accessibility: `
+    <h3 class="modal-section-title">Commitment</h3>
+    <p>WeeWoo aims to be usable by everyone, including people who use screen readers, keyboard-only navigation, or non-standard display settings. We work toward <a href="https://www.w3.org/WAI/standards-guidelines/wcag/" target="_blank" rel="noopener" style="color:#4a90ff;">WCAG 2.1 AA</a> conformance. We don't claim full conformance — this is an evolving public-interest project, not a formally audited one.</p>
+
+    <h3 class="modal-section-title">What's supported</h3>
+    <ul>
+      <li>The sidebar layer tree is keyboard-navigable: <kbd>↑</kbd> / <kbd>↓</kbd> to move between items, <kbd>Home</kbd> / <kbd>End</kbd> to jump to the start or end of the visible list, <kbd>Enter</kbd> or <kbd>Space</kbd> to toggle a feature, <kbd>→</kbd> / <kbd>←</kbd> to expand or collapse groups.</li>
+      <li>All footer buttons have accessible names (<code>aria-label</code>).</li>
+      <li>The search field has an accessible name and can be filled with the keyboard like any text input.</li>
+      <li>Modal dialogs use <code>role="dialog"</code> and <code>aria-modal="true"</code> so screen readers announce them correctly. <kbd>Escape</kbd> closes any open modal.</li>
+      <li>Three text-size adjustment levels for both the sidebar and the map popups, via <strong>Settings</strong> → <em>Sidebar text size</em> / <em>Map text size</em>.</li>
+      <li>Three basemap options including a light (Positron) variant that gives stronger contrast for the coloured overlay layers.</li>
+    </ul>
+
+    <h3 class="modal-section-title">Known limitations</h3>
+    <ul>
+      <li>The Leaflet map's pan / zoom controls and individual feature popups have only partial keyboard and screen-reader support. This is a limitation of the underlying library; we track improvements upstream.</li>
+      <li>The sectorisation tool is mouse-and-touch driven (it relies on clicking to place dividing lines on a polygon). There is no keyboard equivalent at present.</li>
+      <li>The colour-coded dots next to each layer group are decorative — the layer's text label is the primary signal — but some colour pairings against certain basemaps may not meet AA contrast.</li>
+    </ul>
+
+    <h3 class="modal-section-title">Reporting an issue</h3>
+    <p>If you encounter an accessibility barrier, please open an issue at <a href="https://github.com/goatindex/weewoo/issues" target="_blank" rel="noopener" style="color:#4a90ff;">github.com/goatindex/weewoo/issues</a> with the prefix "Accessibility:" in the title. We prioritise these.</p>
+
+    <p style="color:#8aaac8;font-size:0.85rem;margin-top:24px;">Last updated: 16 May 2026</p>
   `,
   settings: () => {
     const sidebarCurrent  = localStorage.getItem(SIDEBAR_TEXT_SIZE_KEY) || TEXT_SIZE_DEFAULT;
@@ -123,7 +208,16 @@ const MODAL_POST_OPEN = {};
    ============================================================ */
 
 function openModal(type) {
-  const titles = { docs: 'Documentation', datacoverage: 'Data Sources', contact: 'Contact', settings: 'Settings', save: 'Save map state', load: 'Load map state' };
+  const titles = {
+    docs:          'Documentation',
+    datacoverage:  'Data Sources',
+    contact:       'Contact',
+    settings:      'Settings',
+    save:          'Save map state',
+    load:          'Load map state',
+    privacy:       'Privacy notice',
+    accessibility: 'Accessibility statement',
+  };
   document.getElementById('modal-title').textContent = titles[type] || type;
   const _mc = MODAL_CONTENT[type];
   document.getElementById('modal-body').innerHTML = (typeof _mc === 'function' ? _mc() : _mc) || '';
