@@ -113,6 +113,8 @@ After merging to master, GitHub Pages rebuilds automatically. However, browsers 
 
 Increment N by 1 each time. `index.html` itself is served with short cache headers so browsers always pick up the new version number.
 
+**Also bump `SHELL_CACHE` in `sw.js`** when you bump `?v=N` — format is `'weewoo-shell-vN'` where N matches the highest version number across all three assets. This tells installed service workers to discard the old app shell and precache the new one on next visit.
+
 ## Save / Load and URL Sharing
 
 ### localStorage keys

@@ -7,7 +7,9 @@
   <meta name="description" content="Australian emergency services map layers" />
   <title>WeeWoo</title>
   <link rel="manifest" href="manifest.json" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H"
+        crossorigin="anonymous" />
   <link rel="stylesheet" href="style.css?v=5" />
 </head>
 <body>
@@ -88,9 +90,18 @@
     </div>
   </div>
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="https://unpkg.com/jsts@2.12.1/dist/jsts.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+  <script data-goatcounter="https://weewoo.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+          integrity="sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH"
+          crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/jsts@2.12.1/dist/jsts.min.js"
+          integrity="sha384-I7ft1UOqQwie3GUC8oKNQUi88IO6RlVT6MxBDrT91bSyUJykpqmFuHOzIZTZfQ0b"
+          crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6.5.0/turf.min.js"
+          integrity="sha384-82q0nm29xZzIo5BMtDYnh2/NxeO6FoaK1S/0nF84w3cEsqbBfun3JdMyDVYWfVY5"
+          crossorigin="anonymous"></script>
   <script src="sectorisation.js?v=3"></script>
   <script src="app.js?v=4"></script>
 </body>

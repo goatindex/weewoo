@@ -764,7 +764,7 @@ window.SectorisationTool = (function () {
       try {
         const data = JSON.parse(localStorage.getItem(key));
         if (data && data.parentRing) _renderStoredEntry(id, data);
-      } catch {}
+      } catch (e) { console.warn('WeeWoo: failed to render stored sectorisation entry', key, e); }
     });
 
     /* Render current session sectors. We still need _lastSectors populated
@@ -1026,6 +1026,7 @@ window.SectorisationTool = (function () {
         if (!union) throw new Error('union returned null');
       }
     } catch (e) {
+      console.warn('WeeWoo: polygon union failed', e);
       _toast('Could not compute polygon union.', 'error');
       _mode = 'IDLE';
       document.getElementById('btn-sectorise').classList.remove('active');
@@ -1410,7 +1411,7 @@ window.SectorisationTool = (function () {
     document.body.appendChild(pop);
   }
 
-  function _onSectorCtx(e, sectorKey) {
+  function _onSectorCtx(e, _sectorKey) {
     L.DomEvent.stopPropagation(e);
     if (_mode === 'IDLE' && _parentId) {
       _showMenu([
@@ -1746,7 +1747,7 @@ window.SectorisationTool = (function () {
   function exportSectorBundle() {
     const sectors = {};
     _allSectorKeys().forEach(key => {
-      try { sectors[key] = JSON.parse(localStorage.getItem(key)); } catch {}
+      try { sectors[key] = JSON.parse(localStorage.getItem(key)); } catch (e) { console.warn('WeeWoo: malformed sector data in localStorage', key, e); }
     });
     if (!Object.keys(sectors).length) { _toast('No sector data to export.', 'info'); return; }
     const bundle = { type: 'weewoo-sector-bundle', version: 1, createdAt: new Date().toISOString(), sectors };
@@ -1794,12 +1795,12 @@ window.SectorisationTool = (function () {
     if (data.sectorisation && typeof data.sectorisation === 'object') {
       // Full WeeWoo save file
       Object.entries(data.sectorisation).forEach(([key, val]) => {
-        try { localStorage.setItem(key, JSON.stringify(val)); count++; } catch {}
+        try { localStorage.setItem(key, JSON.stringify(val)); count++; } catch (e) { console.warn('WeeWoo: failed to import sectorisation key', key, e); }
       });
     } else if (data.type === 'weewoo-sector-bundle' && data.sectors) {
       // Standalone sector bundle exported by "Sector data"
       Object.entries(data.sectors).forEach(([key, val]) => {
-        try { localStorage.setItem(key, JSON.stringify(val)); count++; } catch {}
+        try { localStorage.setItem(key, JSON.stringify(val)); count++; } catch (e) { console.warn('WeeWoo: failed to import sector bundle key', key, e); }
       });
     }
 
@@ -1837,7 +1838,7 @@ window.SectorisationTool = (function () {
           displayName: _idToDisplayName(id),
           lineCount:   Object.keys(data.lines || {}).length,
         });
-      } catch {}
+      } catch (e) { console.warn('WeeWoo: malformed sector summary entry', key, e); }
     });
     return sums;
   }
