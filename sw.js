@@ -16,7 +16,6 @@ const MAX_TILES    = 500;
 const SHELL_PATHS = [
   './',
   './index.html',
-  './app.js?v=4',
   './core.js?v=1',
   './map-view.js?v=1',
   './data-loading.js?v=1',
@@ -24,6 +23,7 @@ const SHELL_PATHS = [
   './persistence.js?v=1',
   './pins.js?v=1',
   './sidebar.js?v=1',
+  './init.js?v=1',
   './style.css?v=5',
   './sectorisation.js?v=3',
   './manifest.json',

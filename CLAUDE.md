@@ -2,30 +2,48 @@
 
 WeeWoo is a multi-state Australian emergency services map built on Leaflet 1.9.4. It shows CFA, FRV, SES, ambulance, and police layers for all states and territories.
 
-## Critical: Two Codebases
+## Critical: Source layout and build outputs
 
-There are two separate `app.js` files with different architectures. **Never edit `www/app.js` or `android/.../app.js` directly** — they are build outputs.
+The browser-side source is split across these files, all at repo root,
+loaded in dependency order by `index.html`:
 
-| File | Purpose | Config source |
-|------|---------|---------------|
-| `app.js` (root) | GitHub Pages (live web app) | Fetches `config/layers.json` at runtime |
-| `www/app.js` | Capacitor web bundle — built by `scripts/build.js` | Config inlined at build time |
-| `android/app/src/main/assets/public/app.js` | Android APK bundle | Config inlined at build time |
+```
+sectorisation.js → core.js → map-view.js → data-loading.js →
+modals.js → persistence.js → pins.js → sidebar.js → init.js
+```
 
-`scripts/build.js` copies `app.js`, `index.html`, `style.css`, `manifest.json`, `sw.js`, `icons/`, `geojson/`, and `config/` from root → `www/`.
+- **`core.js`** — `state`, `groupById`, `LAYER_CONFIG`, helpers, text-size, SVG icons. Loaded first; declares the shared globals every other file consumes.
+- **`map-view.js`** — `let map`, `initMap`, basemap, layer add/remove, popup builder, SES zone↔facility linking.
+- **`data-loading.js`** — `ensureGroupLoaded` (fetch + filter + sort GeoJSON).
+- **`modals.js`** — `MODAL_CONTENT` (static: docs / contact / settings), `openModal`, `closeModal`.
+- **`persistence.js`** — layer state save/restore (`weewoo_layers_v1`), save/load map state (`weewoo_save_*`), and attaches `MODAL_CONTENT.save` + `MODAL_CONTENT.load` to the shared object.
+- **`pins.js`** — custom pin placement, popup, edit/delete flow.
+- **`sidebar.js`** — sidebar DOM tree, toggle handlers, DOM update helpers, search, minimize/flip state.
+- **`init.js`** — `STATE_BOUNDS`, onboarding overlay, `initApp`, the `DOMContentLoaded` listener.
+- **`sectorisation.js`** — separate IIFE (`window.SectorisationTool`); reads `state` and `groupById` as globals.
+
+**Never edit the copies under `www/` or `android/`** — they are build outputs of `scripts/build.js` and `npm run cap:sync`.
+
+| Location | Purpose | Config source |
+|----------|---------|---------------|
+| repo root (`core.js`, `sidebar.js`, etc.) | GitHub Pages (live web app) | Fetches `config/layers.json` at runtime |
+| `www/*.js` | Capacitor web bundle — built by `scripts/build.js` | Config inlined at build time |
+| `android/app/src/main/assets/public/*.js` | Android APK bundle | Config inlined at build time |
+
+`scripts/build.js` copies `index.html`, `style.css`, `manifest.json`, `sw.js`, and every JS file listed above, plus `icons/`, `geojson/`, `config/` from root → `www/`.
 
 ## Adding or Modifying Layers
 
 All layer changes require edits in **two places**, then a build:
 
 1. **`config/layers.json`** — add/edit the layer entry
-2. **`app.js` `FILTERS` map** (top of file) — only if the layer needs a named filter function
+2. **`core.js` `FILTERS` map** (top of file) — only if the layer needs a named filter function
 
 Then run:
 - `npm run build` — syncs everything to `www/` (GitHub Pages + Capacitor web)
 - `npm run cap:sync` — also propagates to the Android project
 
-`www/app.js` and `android/.../app.js` are build outputs — never edit them directly.
+The copies under `www/` and `android/` are build outputs — never edit them directly.
 
 ## GeoJSON Files — Three Locations
 

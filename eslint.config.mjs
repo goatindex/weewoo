@@ -129,6 +129,11 @@ const sharedAppGlobals = {
   toggleSide:              'writable',
   minimizeSVG:             'writable',
   restoreTabSVG:           'writable',
+  // Bootstrap (init.js)
+  STATE_BOUNDS:            'writable',
+  openStateSection:        'writable',
+  initOnboarding:          'writable',
+  initApp:                 'writable',
 };
 
 // Treat top-level cross-file declarations as legitimately "unused" from a
@@ -153,7 +158,7 @@ export default [
 
   // Main app + core + future modules — all share the global namespace
   {
-    files: ['app.js', 'core.js', 'map-view.js', 'data-loading.js', 'modals.js', 'persistence.js', 'pins.js', 'sidebar.js', 'save-backends.js'],
+    files: ['core.js', 'map-view.js', 'data-loading.js', 'modals.js', 'persistence.js', 'pins.js', 'sidebar.js', 'init.js', 'save-backends.js'],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: 'script',
