@@ -74,7 +74,7 @@ After creating or updating a GeoJSON file, copy it to all three locations. The b
   "singleFeature": false,
   "isSESFacilityGroup": false,
   "sesLinking": null,
-  "filter": null              // string key into FILTERS map in app.js, or null
+  "filter": null              // string key into FILTERS map in core.js, or null
 }
 ```
 
@@ -122,16 +122,16 @@ Query pattern:
 
 ## Deploying Changes
 
-After merging to master, GitHub Pages rebuilds automatically. However, browsers cache `app.js` and `style.css` for ~10 minutes. To force users to get fresh assets after a significant change, bump the `?v=N` query string on the relevant tags in `index.html`:
+After merging to master, GitHub Pages rebuilds automatically. However, browsers cache the JS modules and `style.css` for ~10 minutes. To force users to get fresh assets after a significant change, bump the `?v=N` query string on the relevant `<script>` / `<link>` tag in `index.html`:
 
 ```html
-<link rel="stylesheet" href="style.css?v=3" />
-<script src="app.js?v=3"></script>
+<link rel="stylesheet" href="style.css?v=5" />
+<script src="modals.js?v=2"></script>
 ```
 
-Increment N by 1 each time. `index.html` itself is served with short cache headers so browsers always pick up the new version number.
+Bump only the file(s) you changed; the cache-busters are independent per file. `index.html` itself is served with short cache headers so browsers always pick up the new version numbers.
 
-**Also bump `SHELL_CACHE` in `sw.js`** when you bump `?v=N` — format is `'weewoo-shell-vN'` where N matches the highest version number across all three assets. This tells installed service workers to discard the old app shell and precache the new one on next visit.
+**Also bump `SHELL_CACHE` in `sw.js`** whenever you bump any `?v=N` — format is `'weewoo-shell-vN'`, monotonically increasing across releases. This tells installed service workers to discard the old app shell and precache the new one on next visit.
 
 ## Save / Load and URL Sharing
 
@@ -149,7 +149,7 @@ The app uses these keys in addition to `weewoo_layers_v1` and other existing pre
 
 ### `save-backends.js`
 
-A new root-level plain global script (not an ES module). Load it in `index.html` before `app.js`, with `?v=1` cache-busting:
+A new root-level plain global script (not an ES module). Load it in `index.html` after `core.js` and before `init.js`, with `?v=1` cache-busting:
 
 ```html
 <script src="save-backends.js?v=1"></script>
@@ -188,8 +188,8 @@ The Sectorisation tool subdivides a zone polygon (or a union of several) into na
 | File | Role |
 |------|------|
 | `sectorisation.js` (root) | Feature implementation — plain IIFE that attaches `window.SectorisationTool` |
-| `index.html` | Loads JSTS + turf CDNs and `sectorisation.js` before `app.js` |
-| `app.js` | Calls `SectorisationTool.init(map)` and wires the footer "Sectorise" button |
+| `index.html` | Loads JSTS + turf CDNs and `sectorisation.js` before the rest of the WeeWoo source files |
+| `init.js` | Calls `SectorisationTool.init(map)` and wires the footer "Sectorise" button |
 
 `sectorisation.js` is already in `scripts/build.js`'s copy list, so changes auto-sync to `www/` and the Android bundle on `npm run build`.
 

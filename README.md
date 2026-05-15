@@ -37,9 +37,18 @@ These commands run `npm run build` (copies web assets to `www/`), sync to the na
 
 ```
 /
-├── app.js              # All application logic
-├── index.html          # HTML shell
+├── core.js             # Shared globals (state, lookups, helpers, text size, icons)
+├── map-view.js         # Map init, basemap, layer add/remove, SES↔facility linking
+├── data-loading.js     # GeoJSON fetch/filter/sort pipeline
+├── modals.js           # Static MODAL_CONTENT (docs, contact, settings, privacy, accessibility)
+├── persistence.js      # Layer state + save/load + save/load modal generators
+├── pins.js             # Custom pin placement, popup, edit/delete
+├── sidebar.js          # Sidebar DOM tree, toggle handlers, search, minimize/flip
+├── init.js             # Bootstrap entry point (DOMContentLoaded → initApp)
+├── sectorisation.js    # Polygon sectorisation tool (IIFE; window.SectorisationTool)
+├── index.html          # HTML shell; loads the JS files in dependency order
 ├── style.css           # All styles
+├── sw.js               # Service worker (app shell precache, tile/GeoJSON cache)
 ├── config/
 │   └── layers.json     # Layer definitions — edit this to add data layers
 ├── geojson/            # GeoJSON data files, organised by state
@@ -52,7 +61,7 @@ These commands run `npm run build` (copies web assets to `www/`), sync to the na
 │   ├── build.js        # Copies web assets to www/ for Capacitor
 │   └── generate-icons.js
 ├── www/                # Built output — do not edit directly
-└── android/            # Native Android project
+└── android/            # Native Android project (gitignored)
 ```
 
 ---
@@ -117,7 +126,7 @@ Find the state entry (e.g. `"id": "NSW"`) and add a new object to its `groups` a
 
 ### Step 3 — Add a popup template (optional)
 
-For point layers using the standard facility schema (`facility_name`, `facility_address`, etc.), the popup renders automatically. For polygon layers or custom schemas, add a `case` to the `buildPopup` function in `app.js`.
+For point layers using the standard facility schema (`facility_name`, `facility_address`, etc.), the popup renders automatically. For polygon layers or custom schemas, add a `case` to the `buildPopup` function in `map-view.js`.
 
 ---
 
