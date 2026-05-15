@@ -9,7 +9,7 @@
     "cap:android": "npm run build && npx cap sync android && npx cap open android",
     "cap:ios": "npm run build && npx cap sync ios && npx cap open ios",
     "icons": "node scripts/generate-icons.js",
-    "lint": "eslint app.js sectorisation.js scripts/"
+    "lint": "eslint ."
   },
   "dependencies": {
     "@capacitor/android": "^6.0.0",
