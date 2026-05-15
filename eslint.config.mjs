@@ -102,13 +102,33 @@ const sharedAppGlobals = {
   openPinStep2:            'writable',
   onPinPopupAction:        'writable',
   initCustomPins:          'writable',
-  // Still in app.js — will move out in step 7
-  minimizeSVG:             'writable',  // → sidebar.js (step 7, sidebar state)
-  restoreTabSVG:           'writable',  // → sidebar.js (step 7, sidebar state)
-  renderFeatureList:       'writable',  // → sidebar.js (step 7)
-  updateFeatureCheckboxDOM:'writable',  // → sidebar.js (step 7)
-  updateGroupCountDOM:     'writable',  // → sidebar.js (step 7)
-  updateStateCountDOM:     'writable',  // → sidebar.js (step 7)
+  // Sidebar (sidebar.js)
+  getVisibleTreeItems:     'writable',
+  buildSidebar:            'writable',
+  buildStateSection:       'writable',
+  buildSubSection:         'writable',
+  buildGroupSection:       'writable',
+  buildFeatureItem:        'writable',
+  renderFeatureList:       'writable',
+  onFeatureCheckboxChange: 'writable',
+  onGroupCheckboxChange:   'writable',
+  onStateCheckboxChange:   'writable',
+  onSubSectionCheckboxChange: 'writable',
+  updateFeatureCheckboxDOM:'writable',
+  updateGroupCountDOM:     'writable',
+  updateStateCountDOM:     'writable',
+  updateSubSectionCountDOM:'writable',
+  applySearchFilter:       'writable',
+  applyGlobalSearch:       'writable',
+  isSidebarRight:          'writable',
+  isSidebarMinimized:      'writable',
+  updateMinimizeIcon:      'writable',
+  updateRestoreTabIcon:    'writable',
+  initSidebarState:        'writable',
+  toggleMinimize:          'writable',
+  toggleSide:              'writable',
+  minimizeSVG:             'writable',
+  restoreTabSVG:           'writable',
 };
 
 // Treat top-level cross-file declarations as legitimately "unused" from a
@@ -133,7 +153,7 @@ export default [
 
   // Main app + core + future modules — all share the global namespace
   {
-    files: ['app.js', 'core.js', 'map-view.js', 'data-loading.js', 'modals.js', 'persistence.js', 'pins.js', 'save-backends.js'],
+    files: ['app.js', 'core.js', 'map-view.js', 'data-loading.js', 'modals.js', 'persistence.js', 'pins.js', 'sidebar.js', 'save-backends.js'],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: 'script',
