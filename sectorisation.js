@@ -17,7 +17,8 @@
      - Leaflet 1.9.4 (window.L) — map, panes, polygons, polylines, circle
        markers, div icons.
      Why both: JSTS is the right tool for noding/polygonize but heavyweight;
-     turf is fine for everything else and is already loaded for app.js.
+     turf is fine for everything else and is already loaded for the rest
+     of the app.
 
    STATE MACHINE
      IDLE

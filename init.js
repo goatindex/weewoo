@@ -1,6 +1,7 @@
 /* Browser-side source files are loaded in this order via index.html:
-   sectorisation.js → core.js → map-view.js → app.js → init.js (final).
-   See CLAUDE.md for the full split plan. */
+   sectorisation.js → core.js → map-view.js → data-loading.js → modals.js
+   → persistence.js → pins.js → sidebar.js → init.js (final).
+   See CLAUDE.md for the file-by-file split. */
 
 /* ============================================================
    INIT
