@@ -52,11 +52,6 @@ const sharedAppGlobals = {
   enableFeature:       'writable',
   disableFeature:      'writable',
   onSESZoneToggle:     'writable',
-  // Persistence storage keys (currently app.js; moves to persistence.js in step 5)
-  STORAGE_KEY:         'writable',
-  SIDEBAR_TEXT_SIZE_KEY:'writable',
-  MAP_TEXT_SIZE_KEY:   'writable',
-  BASEMAP_KEY:         'writable',
   // Data loading (data-loading.js)
   ensureGroupLoaded:       'writable',
   // Modals (modals.js)
@@ -64,15 +59,32 @@ const sharedAppGlobals = {
   MODAL_POST_OPEN:         'writable',
   openModal:               'writable',
   closeModal:              'writable',
+  // Persistence (persistence.js)
+  STORAGE_KEY:             'writable',
+  SIDEBAR_TEXT_SIZE_KEY:   'writable',
+  MAP_TEXT_SIZE_KEY:       'writable',
+  BASEMAP_KEY:             'writable',
+  SAVE_INDEX_KEY:          'writable',
+  SAVE_KEY_PREFIX:         'writable',
+  saveLayerState:          'writable',
+  restoreLayerState:       'writable',
+  clearLayerState:         'writable',
+  toZuluSuffix:            'writable',
+  formatSaveName:          'writable',
+  buildSaveObject:         'writable',
+  readSavesIndex:          'writable',
+  saveToLocalStorage:      'writable',
+  parseSaveObject:         'writable',
+  deleteSave:              'writable',
+  exportSaveFile:          'writable',
+  applySave:               'writable',
+  buildLoadModalContent:   'writable',
+  wireSaveModal:           'writable',
+  wireLoadModal:           'writable',
   // Still in app.js — will move out in later steps
   deactivatePinPlacement:  'writable',  // → pins.js (step 6)
-  toZuluSuffix:            'writable',  // → persistence.js (step 5)
-  buildLoadModalContent:   'writable',  // → persistence.js (step 5)
-  wireSaveModal:           'writable',  // → persistence.js (step 5)
-  wireLoadModal:           'writable',  // → persistence.js (step 5)
   minimizeSVG:             'writable',  // → sidebar.js (step 7, sidebar state)
   restoreTabSVG:           'writable',  // → sidebar.js (step 7, sidebar state)
-  // Still in app.js — will move out in later steps
   renderFeatureList:       'writable',  // → sidebar.js (step 7)
   updateFeatureCheckboxDOM:'writable',  // → sidebar.js (step 7)
   updateGroupCountDOM:     'writable',  // → sidebar.js (step 7)
@@ -101,7 +113,7 @@ export default [
 
   // Main app + core + future modules — all share the global namespace
   {
-    files: ['app.js', 'core.js', 'map-view.js', 'data-loading.js', 'modals.js', 'save-backends.js'],
+    files: ['app.js', 'core.js', 'map-view.js', 'data-loading.js', 'modals.js', 'persistence.js', 'save-backends.js'],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: 'script',
