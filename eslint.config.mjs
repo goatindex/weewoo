@@ -39,13 +39,29 @@ const sharedAppGlobals = {
   setTextSize:         'writable',
   // SVG icons (core.js)
   ICONS:               'writable',
-  // Map instance (currently app.js; moves to map-view.js in step 2)
+  // Map instance + basemap + layer management + SES linking (map-view.js)
   map:                 'writable',
+  initMap:             'writable',
+  BASEMAPS:            'writable',
+  BASEMAP_DEFAULT:     'writable',
+  applyBasemap:        'writable',
+  setBasemap:          'writable',
+  buildPopup:          'writable',
+  addLayerToMap:       'writable',
+  removeLayerFromMap:  'writable',
+  enableFeature:       'writable',
+  disableFeature:      'writable',
+  onSESZoneToggle:     'writable',
   // Persistence storage keys (currently app.js; moves to persistence.js in step 5)
   STORAGE_KEY:         'writable',
   SIDEBAR_TEXT_SIZE_KEY:'writable',
   MAP_TEXT_SIZE_KEY:   'writable',
   BASEMAP_KEY:         'writable',
+  // Still in app.js — will move out in later steps
+  ensureGroupLoaded:       'writable',  // → data-loading.js (step 3)
+  updateFeatureCheckboxDOM:'writable',  // → sidebar.js (step 7)
+  updateGroupCountDOM:     'writable',  // → sidebar.js (step 7)
+  updateStateCountDOM:     'writable',  // → sidebar.js (step 7)
 };
 
 // Treat top-level cross-file declarations as legitimately "unused" from a
@@ -70,7 +86,7 @@ export default [
 
   // Main app + core + future modules — all share the global namespace
   {
-    files: ['app.js', 'core.js', 'save-backends.js'],
+    files: ['app.js', 'core.js', 'map-view.js', 'save-backends.js'],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: 'script',
