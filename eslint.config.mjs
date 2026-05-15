@@ -81,8 +81,28 @@ const sharedAppGlobals = {
   buildLoadModalContent:   'writable',
   wireSaveModal:           'writable',
   wireLoadModal:           'writable',
-  // Still in app.js — will move out in later steps
-  deactivatePinPlacement:  'writable',  // → pins.js (step 6)
+  // Custom pins (pins.js)
+  CUSTOM_PINS_KEY:         'writable',
+  PIN_COLORS:              'writable',
+  PIN_SYMBOLS:             'writable',
+  pinState:                'writable',
+  generatePinId:           'writable',
+  loadPins:                'writable',
+  savePins:                'writable',
+  createPinIcon:           'writable',
+  buildPinPopupHtml:       'writable',
+  buildPinEditHtml:        'writable',
+  addPinMarker:            'writable',
+  removePinMarker:         'writable',
+  activatePinPlacement:    'writable',
+  deactivatePinPlacement:  'writable',
+  togglePinPlacement:      'writable',
+  onMapPinClick:           'writable',
+  openPinStep1:            'writable',
+  openPinStep2:            'writable',
+  onPinPopupAction:        'writable',
+  initCustomPins:          'writable',
+  // Still in app.js — will move out in step 7
   minimizeSVG:             'writable',  // → sidebar.js (step 7, sidebar state)
   restoreTabSVG:           'writable',  // → sidebar.js (step 7, sidebar state)
   renderFeatureList:       'writable',  // → sidebar.js (step 7)
@@ -113,7 +133,7 @@ export default [
 
   // Main app + core + future modules — all share the global namespace
   {
-    files: ['app.js', 'core.js', 'map-view.js', 'data-loading.js', 'modals.js', 'persistence.js', 'save-backends.js'],
+    files: ['app.js', 'core.js', 'map-view.js', 'data-loading.js', 'modals.js', 'persistence.js', 'pins.js', 'save-backends.js'],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: 'script',

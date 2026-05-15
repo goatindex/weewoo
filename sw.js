@@ -22,6 +22,7 @@ const SHELL_PATHS = [
   './data-loading.js?v=1',
   './modals.js?v=1',
   './persistence.js?v=1',
+  './pins.js?v=1',
   './style.css?v=5',
   './sectorisation.js?v=3',
   './manifest.json',
