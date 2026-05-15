@@ -6,7 +6,7 @@
 // get fresh JS/CSS.  Format: 'weewoo-shell-vN' where N matches the highest
 // ?v= number across app.js / style.css / sectorisation.js.
 
-const SHELL_CACHE  = 'weewoo-shell-v5';
+const SHELL_CACHE  = 'weewoo-shell-v6';
 const GEOJSON_CACHE = 'weewoo-geojson-v1';
 const TILE_CACHE   = 'weewoo-tiles-v1';
 const MAX_TILES    = 500;
@@ -16,7 +16,14 @@ const MAX_TILES    = 500;
 const SHELL_PATHS = [
   './',
   './index.html',
-  './app.js?v=4',
+  './core.js?v=1',
+  './map-view.js?v=1',
+  './data-loading.js?v=1',
+  './modals.js?v=1',
+  './persistence.js?v=1',
+  './pins.js?v=1',
+  './sidebar.js?v=1',
+  './init.js?v=1',
   './style.css?v=5',
   './sectorisation.js?v=3',
   './manifest.json',
