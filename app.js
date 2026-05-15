@@ -117,6 +117,15 @@ function escapeHtml(s) {
     .replace(/"/g, '&quot;');
 }
 
+function trackEvent(name, extra) {
+  if (typeof window.goatcounter === 'undefined') return;
+  window.goatcounter.count({
+    path:  name,
+    title: extra ? `${name} — ${extra}` : name,
+    event: true,
+  });
+}
+
 /* ============================================================
    LAYER STATE PERSISTENCE
    ============================================================ */
@@ -677,6 +686,7 @@ async function ensureGroupLoaded(groupId) {
 
       state.features[groupId] = features;
       state.loadState[groupId] = 'loaded';
+      trackEvent('layer_loaded', groupId);
 
       // Build facility name index for SES-linked groups
       if (group.isSESFacilityGroup) {
@@ -1838,7 +1848,7 @@ function buildSaveObject(name) {
   for (let i = 0; i < localStorage.length; i++) {
     const k = localStorage.key(i);
     if (k && k.startsWith('weewoo:sectorisation:')) {
-      try { sectorisation[k] = JSON.parse(localStorage.getItem(k)); } catch {}
+      try { sectorisation[k] = JSON.parse(localStorage.getItem(k)); } catch (e) { console.warn('WeeWoo: malformed sectorisation data in localStorage', k, e); }
     }
   }
 
@@ -1874,6 +1884,7 @@ function saveToLocalStorage(prefix) {
     const index    = readSavesIndex().filter(e => e.name !== name);
     index.unshift({ name, createdAt: saveObj.createdAt, byteSize: json.length, layerCount });
     localStorage.setItem(SAVE_INDEX_KEY, JSON.stringify(index));
+    trackEvent('save_created', `${layerCount} layers`);
     return { ok: true, name };
   } catch (e) {
     if (e.name === 'QuotaExceededError') return { ok: false, error: 'quota' };
@@ -1957,7 +1968,7 @@ function applySave(saveObj, opts = { restoreView: true }) {
   /* Restore sectorisation data if present */
   if (saveObj.sectorisation && typeof saveObj.sectorisation === 'object') {
     Object.entries(saveObj.sectorisation).forEach(([key, val]) => {
-      try { localStorage.setItem(key, JSON.stringify(val)); } catch {}
+      try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) { console.warn('WeeWoo: failed to restore sectorisation key', key, e); }
     });
     SectorisationTool.reloadFromStorage();
   }
@@ -2026,7 +2037,7 @@ function wireLoadModal() {
     if (btn.dataset.action === 'load') {
       const raw = localStorage.getItem(`${SAVE_KEY_PREFIX}${name}`);
       if (!raw) { entry.remove(); return; }
-      try { applySave(parseSaveObject(raw)); closeModal(); }
+      try { applySave(parseSaveObject(raw)); trackEvent('save_loaded'); closeModal(); }
       catch { alert('Could not load this save.'); }
 
     } else if (btn.dataset.action === 'export') {
@@ -2224,7 +2235,7 @@ async function initApp() {
   document.getElementById('btn-settings').addEventListener('click',  () => openModal('settings'));
   document.getElementById('btn-save').addEventListener('click',      () => openModal('save'));
   document.getElementById('btn-load').addEventListener('click',      () => openModal('load'));
-  document.getElementById('btn-sectorise').addEventListener('click', () => SectorisationTool.enterGroupSelect());
+  document.getElementById('btn-sectorise').addEventListener('click', () => { trackEvent('sectorise_entered'); SectorisationTool.enterGroupSelect(); });
 
   // Settings modal actions (event delegation — body is re-rendered on each open)
   document.getElementById('modal-body').addEventListener('click', e => {
@@ -2258,7 +2269,9 @@ async function initApp() {
   });
 
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').catch(() => {});
+    navigator.serviceWorker.register('sw.js').catch(err =>
+      console.warn('WeeWoo: service worker registration failed', err)
+    );
   }
 }
 
