@@ -2,9 +2,11 @@
 // Caches the app shell at install time, GeoJSON stale-while-revalidate,
 // and OSM tiles cache-first (bounded to MAX_TILES entries).
 //
-// IMPORTANT: bump SHELL_CACHE when you bump ?v=N in index.html so users
-// get fresh JS/CSS.  Format: 'weewoo-shell-vN' where N matches the highest
-// ?v= number across app.js / style.css / sectorisation.js.
+// IMPORTANT: bump SHELL_CACHE when you bump any ?v=N in index.html so
+// installed service workers evict the old shell and precache the new one.
+// Format: 'weewoo-shell-vN' where N is monotonically increasing across
+// releases — it does not need to match any individual asset's ?v= number,
+// just be different from the last SHELL_CACHE value.
 
 const SHELL_CACHE  = 'weewoo-shell-v7';
 const GEOJSON_CACHE = 'weewoo-geojson-v1';
