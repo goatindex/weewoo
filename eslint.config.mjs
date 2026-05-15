@@ -59,6 +59,19 @@ const sharedAppGlobals = {
   BASEMAP_KEY:         'writable',
   // Data loading (data-loading.js)
   ensureGroupLoaded:       'writable',
+  // Modals (modals.js)
+  MODAL_CONTENT:           'writable',
+  MODAL_POST_OPEN:         'writable',
+  openModal:               'writable',
+  closeModal:              'writable',
+  // Still in app.js — will move out in later steps
+  deactivatePinPlacement:  'writable',  // → pins.js (step 6)
+  toZuluSuffix:            'writable',  // → persistence.js (step 5)
+  buildLoadModalContent:   'writable',  // → persistence.js (step 5)
+  wireSaveModal:           'writable',  // → persistence.js (step 5)
+  wireLoadModal:           'writable',  // → persistence.js (step 5)
+  minimizeSVG:             'writable',  // → sidebar.js (step 7, sidebar state)
+  restoreTabSVG:           'writable',  // → sidebar.js (step 7, sidebar state)
   // Still in app.js — will move out in later steps
   renderFeatureList:       'writable',  // → sidebar.js (step 7)
   updateFeatureCheckboxDOM:'writable',  // → sidebar.js (step 7)
@@ -88,7 +101,7 @@ export default [
 
   // Main app + core + future modules — all share the global namespace
   {
-    files: ['app.js', 'core.js', 'map-view.js', 'data-loading.js', 'save-backends.js'],
+    files: ['app.js', 'core.js', 'map-view.js', 'data-loading.js', 'modals.js', 'save-backends.js'],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: 'script',

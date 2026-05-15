@@ -20,6 +20,7 @@ const SHELL_PATHS = [
   './core.js?v=1',
   './map-view.js?v=1',
   './data-loading.js?v=1',
+  './modals.js?v=1',
   './style.css?v=5',
   './sectorisation.js?v=3',
   './manifest.json',
