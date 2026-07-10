@@ -2,6 +2,14 @@
 
 Per-project decision log. Newest first. Format: `D-YYYY-MM-DD-n`.
 
+## D-2026-07-11-1 — EMV data repo: `emergency-history`, private, raw-capture schema
+- **Status:** open
+- **Context:** FEATURE_EMV_HISTORY.md left repo name/visibility open pending the feed-licensing question; user also asked whether the archive would hold everything the feed emits.
+- **Options considered:** public repo (rejected for now — licensing of the EMV feed unresolved; public also forces the licensing check before day one) · curated-fields-only schema (rejected — drops warning polygons, incident size, resources etc. for negligible savings) · **private `emergency-history` repo, archive verbatim raw features, derive curated tables nightly (chosen)**
+- **Why:** private sidesteps publication/licensing until checked; raw capture means no future view is foreclosed. Known limits: 30-min polling still misses inter-poll versions (inherent to a snapshot feed), and private Actions minutes cap polling at ~30-min intervals on the free tier.
+- **Expected outcome:** collector runs a full month within the 2,000 free Actions minutes and the raw archive answers a question the curated schema would have dropped.
+- **Revisit:** when EMV feed terms are checked, or if 30-min resolution proves too coarse for briefings.
+
 ## D-2026-07-10-2 — CI drift guard checks asset lists, not build outputs
 - **Status:** open
 - **Context:** The May review's Theme A proposed guarding against stale `www/` builds, but `www/` and `android/` turned out to be gitignored — there is nothing committed to diff, and GitHub Pages serves the repo root, so the live site can't go stale.

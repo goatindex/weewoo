@@ -22,15 +22,17 @@ Note: an earlier schema draft mentioned in NEXT.md was never committed to the re
 
 ## 3. Record schema (applies to all options)
 
-One row per incident *version*, deduplicated on `(sourceId, updated)`:
+**Archive raw, derive curated.** The collector stores the **complete raw feature** (full `properties` object plus geometry — including warning polygons and burn areas, not just point coords) for each incident *version*, deduplicated on `(sourceId, updated)`, wrapped with a `capturedAt` timestamp:
 
 ```
-{ sourceId, feedType, sourceOrg, category1, category2, status,
-  location, name, created, updated, capturedAt, lon, lat }
+{ capturedAt, feature: <verbatim GeoJSON feature> }
 ```
 
-- Append-only NDJSON, partitioned monthly (`incidents/2026-07.ndjson`) — trivially convertible to Parquet/DuckDB later, diff-friendly in git.
-- A nightly derive step assigns each incident to SES response areas by point-in-polygon against the boundary GeoJSON already in the repo, and pre-bakes `summaries/{zoneId}/last-{7,30}d.json` for the client.
+- Append-only NDJSON, partitioned monthly (`raw/2026-07.ndjson`) — trivially convertible to Parquet/DuckDB later, diff-friendly in git. The repo is private and the feed is small, so keeping everything costs almost nothing and no future view is foreclosed.
+- A derived, flattened table (`incidents/2026-07.ndjson`: `sourceId, feedType, sourceOrg, category1, category2, status, location, name, created, updated, capturedAt, lon, lat`) is regenerated from the raw archive by the nightly job — it is a convenience artifact, never the source of truth.
+- The same nightly step assigns incidents to SES response areas by point-in-polygon against the boundary GeoJSON already in the repo, and pre-bakes `summaries/{zoneId}/last-{7,30}d.json` for the client.
+
+**Completeness caveat:** even with raw capture, the archive contains everything the collector *observes*, not everything EMV ever emits — a 30-min poll misses incident versions superseded between polls, and can miss very short-lived incidents entirely. This is inherent to a snapshot feed; a finer poll interval shrinks but never closes the window.
 
 ## 4. Options
 
@@ -41,7 +43,7 @@ One row per incident *version*, deduplicated on `(sourceId, updated)`:
 | **Effort to first data** | S — one workflow file + ~100-line Node script | M — account, wrangler setup, schema, deploy pipeline | S | M |
 | **Effort to shipped feature** | M — summariser + briefing UI (3–5 days total) | M–L | S but the feature doesn't work (see risks) | L |
 | **Capabilities** | Fixed pre-baked queries (per-zone, per-window); arbitrary queries only by adding bake steps or duckdb-wasm later | Arbitrary SQL at request time; flexible filters for free | Only what one browser happened to see | Arbitrary SQL, auth, realtime — all unneeded |
-| **Indicative cost** | **$0** (public repo: Actions and Pages free; ~17.5k runs/yr well within limits; data ≈ 5–20 MB/yr) | **$0** on free tier (cron + 100k req/day + D1 5 GB); paid ~US$5/mo if exceeded | $0 | $0 tier pauses on inactivity; realistic US$25/mo to keep alive |
+| **Indicative cost** | **$0** public; **private repo caveat:** free tier is 2,000 Actions min/mo and each run bills a 1-min minimum, so 30-min polling ≈ 1,490 min/mo — fits, but 15-min polling (~2,980 min/mo) would cost ~US$8/mo or need a public repo. Data ≈ 5–20 MB/yr (raw archive) | **$0** on free tier (cron + 100k req/day + D1 5 GB); paid ~US$5/mo if exceeded | $0 | $0 tier pauses on inactivity; realistic US$25/mo to keep alive |
 | **Maintenance** | Low — YAML + script in-repo; failures surface as Actions emails; **gotcha: GitHub disables cron after 60 days without repo activity** (the data commits themselves prevent this) | Low–moderate — separate deploy surface, wrangler/API-token rot, dashboard to remember | None | Highest — schema migrations, dashboard, billing |
 | **Key risks** | Cron jitter (runs can be delayed/skipped under GH load → occasional 30–60 min gaps in the record); repo size growth if partitioning is neglected | Vendor lock-in for the query layer; secrets management; free-tier terms drift | **Fatal:** records only while a tab is open — "last week" will be mostly empty; per-device data, no shared record | Overkill; inactivity pausing directly conflicts with an always-on collector |
 | **Fits "no backend" doctrine** | Yes — stays static-files-on-Pages | No (introduces a runtime service, albeit tiny) | Yes | No |
@@ -57,11 +59,19 @@ One row per incident *version*, deduplicated on `(sourceId, updated)`:
 
 **Escape hatch:** if pre-baked summaries prove too rigid (users want arbitrary date ranges/filters the bake step doesn't cover and duckdb-wasm feels heavy), Option B can be added *in front of the same NDJSON archive* later — the collector and schema are identical, so nothing is wasted.
 
-## 6. Automation
+## 6. Automation and collector behaviour
 
-- Collection, dedupe, summarising, and Parquet conversion are all scheduled workflows — zero manual steps in steady state.
-- **Schema-drift canary:** collector validates expected fields on every run and fails loudly (Actions email) if EMV changes the feed shape.
-- **Gap monitor:** nightly job checks capture timestamps for holes > 2h and flags them in a `STATUS.md` the workflow rewrites — visible at a glance.
+Polling etiquette (decided 2026-07-11):
+
+- **Interval:** every 30 min, **jittered off the hour** (e.g. `7,37 * * * *`) — on-the-hour crons get the worst GitHub scheduling delays, and the offset blurs the cadence fingerprint.
+- **No conditional requests:** the feed regenerates ~every minute (verified: `Last-Modified` was 20 s old on inspection), so at a 30-min cadence an `If-None-Match` would return a full 200 essentially every time — dead code. Dedupe on `(sourceId, updated)` already makes redundant payloads harmless. Retrofit (~10 lines) only if logs show identical-payload streaks.
+
+Scheduled workflows (zero manual steps in steady state):
+
+- Collection, dedupe, summarising, and Parquet conversion are all cron workflows.
+- **Failure / block alerting:** the collector inspects the HTTP status and exits non-zero with an explicit reason — `403`/`429` → `POSSIBLY BLOCKED`, timeout/5xx → `FEED UNREACHABLE`, anything else unexpected → `SCHEMA/FETCH ERROR`. A failing scheduled workflow triggers GitHub's built-in failure email to the repo owner, so a block is known within one poll cycle with no extra infrastructure. `STATUS.md` (below) tracks **consecutive** failures to separate a transient CDN hiccup from a sustained block.
+- **Schema-drift canary:** collector validates expected fields on every run and fails loudly if EMV changes the feed shape.
+- **Gap monitor:** nightly job checks capture timestamps for holes > 2h and flags them in a `STATUS.md` the workflow rewrites — visible at a glance, and the first place to look after any failure email.
 - Repo-size guard: nightly job asserts the current monthly partition < 5 MB.
 
 ## 7. Extensibility — what the historic DB enables later
@@ -73,8 +83,8 @@ One row per incident *version*, deduplicated on `(sourceId, updated)`:
 - **Cross-source enrichment** — the feed already carries CFA/RFS incidents; the same archive serves fire-service views with zero collector changes
 - **Alerting** — a workflow step that notifies when incident count in a watched zone spikes (email/webhook), no new infrastructure
 
-## 8. Open decisions
+## 8. Decisions and open items
 
-- Confirm EMV feed terms of use before the archive repo is public → **decision needed** (fallback: keep the data repo private and serve summaries through the main repo)
+- **Decided 2026-07-11 (D-2026-07-11-1):** data repo is `emergency-history`, **private** for now. Private status sidesteps the publication/licensing question for the archive itself; summaries served to the app will need either the licensing check completed or to be proxied through the main repo.
+- Confirm EMV feed terms of use before anything derived from the archive is published → **still open**
 - Poll interval 15 vs 30 min (finer incident-lifecycle resolution vs politeness) → default 30 min unless told otherwise
-- Data repo name (`weewoo-data`?) and public/private → **decision needed** (interacts with licensing)
