@@ -755,6 +755,11 @@ window.SectorisationTool = (function () {
   }
 
   function _renderSectors() {
+    /* Guard against detached groups: every render assumes both groups are on
+       the map, and a group removed elsewhere would otherwise make all sector
+       rendering (and the sidebar visibility toggles) silently no-op. */
+    if (!_map.hasLayer(_fillGroup))  _fillGroup.addTo(_map);
+    if (!_map.hasLayer(_labelGroup)) _labelGroup.addTo(_map);
     _fillGroup.clearLayers();
     _labelGroup.clearLayers();
 
@@ -1417,12 +1422,8 @@ window.SectorisationTool = (function () {
     if (_mode === 'IDLE' && _parentId) {
       _showMenu([
         { label: 'Re-sectorise',            fn: _reentrySectorise },
-        { label: 'Hide sector overlay',     fn: () => { _fillGroup.remove(); _labelGroup.remove(); } },
-        { label: 'Show sector overlay',     fn: () => {
-            if (!_map.hasLayer(_fillGroup))  _fillGroup.addTo(_map);
-            if (!_map.hasLayer(_labelGroup)) _labelGroup.addTo(_map);
-          }
-        },
+        { label: 'Hide sector overlay',     fn: () => { _hiddenSectors.add(_parentId);    reloadFromStorage(); } },
+        { label: 'Show sector overlay',     fn: () => { _hiddenSectors.delete(_parentId); reloadFromStorage(); } },
         { label: 'Clear sectorisation',     fn: _clearSectorisation },
         { label: 'Export sectors (GeoJSON)', fn: exportGeoJSON },
       ], e.originalEvent);

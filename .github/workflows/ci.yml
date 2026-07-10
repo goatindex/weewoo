@@ -21,5 +21,8 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Asset sync check (index.html ↔ sw.js ↔ build.js)
+        run: node scripts/check-sync.js
+
       - name: Build (verify script succeeds on clean checkout)
         run: npm run build

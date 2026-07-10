@@ -133,7 +133,11 @@ Bump only the file(s) you changed; the cache-busters are independent per file. `
 
 **Also bump `SHELL_CACHE` in `sw.js`** whenever you bump any `?v=N` — format is `'weewoo-shell-vN'`, monotonically increasing across releases. This tells installed service workers to discard the old app shell and precache the new one on next visit.
 
-## Save / Load and URL Sharing
+`node scripts/check-sync.js` (run by CI on every push/PR) fails if the `?v=N` versions in `index.html`, the `SHELL_PATHS` list in `sw.js`, and the copy list in `scripts/build.js` disagree — run it locally after any version bump.
+
+## Save / Load
+
+Implemented in `persistence.js` (localStorage only — no cloud backends, no URL sharing; see *Planned, not built* below).
 
 ### localStorage keys
 
@@ -143,41 +147,10 @@ The app uses these keys in addition to `weewoo_layers_v1` and other existing pre
 |-----|-------|
 | `weewoo_saves_index_v1` | JSON array of `{name, createdAt, byteSize, layerCount}` — index of all local saves |
 | `weewoo_save_{name}` | Full JSON save object (schema v1); key e.g. `weewoo_save_mysave_20260511T143022Z` |
-| `weewoo_save_prefix` | Last-used save name prefix (string) |
-| `weewoo_save_notice_v1` | `'1'` once the first-save browser-storage warning has been shown |
-| `weewoo_storage_backend` | Selected backend ID: `'local'`, `'gdrive'`, `'onedrive'`, or `'dropbox'` |
 
-### `save-backends.js`
+### Planned, not built
 
-A new root-level plain global script (not an ES module). Load it in `index.html` after `core.js` and before `init.js`, with `?v=1` cache-busting:
-
-```html
-<script src="save-backends.js?v=1"></script>
-```
-
-It attaches `window.SaveBackends = { LocalStorageBackend, GoogleDriveBackend, OneDriveBackend, DropboxBackend }`. Add it to the `scripts/build.js` copy list so it reaches `www/` and the Android bundle.
-
-### URL sharing hash format
-
-Share links use the URL hash:
-
-```
-#share=<base64(gzip(JSON({ layers: { enabled, ses } })))>
-```
-
-Detected and applied at app init via `initShareDetection()`. Only layer state is encoded — no map view, UI prefs, or custom markers. The hash is cleared after loading via `history.replaceState`.
-
-### Cloud backend registration
-
-Each cloud backend requires a one-time app registration with the GitHub Pages origin whitelisted:
-
-| Provider | Console | Setting |
-|----------|---------|---------|
-| Google Drive | Google Cloud Console | Authorized JavaScript origin |
-| OneDrive | Azure App Registration | Redirect URI (SPA) |
-| Dropbox | Dropbox App Console | OAuth 2 redirect URI |
-
-Register `https://goatindex.github.io` for production and `http://localhost` (separate client ID) for local dev. Client IDs and App keys are public values — safe to ship in JS source.
+`docs/FEATURE_SAVE_LOAD.md` specs the fuller feature: a `save-backends.js` abstraction with Google Drive / OneDrive / Dropbox backends (plus `weewoo_save_prefix`, `weewoo_save_notice_v1`, and `weewoo_storage_backend` keys), and `#share=<base64(gzip(JSON))>` URL sharing applied via `initShareDetection()`. **None of that exists in the codebase yet** — do not assume these files, functions, or keys are present. Per a docs decision, cross-user sharing is parked; file export/import is the intended mechanism.
 
 ## Sectorisation tool
 
