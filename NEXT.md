@@ -3,7 +3,7 @@
 _Convention: update at end of each working session. The weekly portfolio review reads it._
 
 ## Current focus
-- EMV historic-record feature (`docs/FEATURE_EMV_HISTORY.md`): Phase 0 collector is **live** in private repo `goatindex/emergency-history` (30-min jittered cron, raw capture, failure alerting). Next: Phase 1 nightly summariser (per-zone point-in-polygon, gap monitor), then briefing UI
+- EMV historic-record feature (`docs/FEATURE_EMV_HISTORY.md`): Phases 0+1 **live** in private repo `goatindex/emergency-history` — 30-min collector plus nightly derive (per-zone summaries at `summaries/{ZONE}/last-{7,30}d.json`, gap monitor, size guard). Next: Phase 2 briefing UI, which first needs the serving decision (private repo → app can't fetch summaries directly; resolve feed licensing then make public, or proxy summaries through the WeeWoo repo)
 
 ## Next up
 - Telemetry gap-closure per `docs/PLAN_TELEMETRY.md` (GoatCounter is live; error events + coverage gaps remain)
