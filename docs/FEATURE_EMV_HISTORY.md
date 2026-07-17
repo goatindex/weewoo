@@ -24,7 +24,7 @@ Note: an earlier schema draft mentioned in NEXT.md was never committed to the re
 
 **Archive raw, derive curated.** The collector stores the **complete raw feature** (full `properties` object plus geometry — including warning polygons and burn areas, not just point coords) for each incident *version*, deduplicated on `(sourceId, updated)`, wrapped with a `capturedAt` timestamp:
 
-```
+```text
 { capturedAt, feature: <verbatim GeoJSON feature> }
 ```
 

@@ -236,7 +236,7 @@ The UX is **clean and credible** but has several gaps that matter for an emergen
 
 | ID | Risk | Likelihood | Impact |
 |----|------|------------|--------|
-| RSK-4.1 | A user on patchy connectivity (the exact scenario emergency-services use implies) opens the app and gets a blank or partially-loaded sidebar with no clear cause | H | H |
+| RSK-4.1 | A user on patchy connectivity (the exact scenario emergency-services use implies) opens the app and gets a blank or partially loaded sidebar with no clear cause | H | H |
 | RSK-4.2 | Screen-reader users cannot describe the search input or page header logo; accessibility complaints from a government audience | L | M |
 | RSK-4.3 | A user on a small phone cannot see all footer buttons; cannot reach "save" or "reset" | M | M |
 | RSK-4.4 | New users abandon because the sidebar tree's interactions (state → group → toggle) are not signposted | M | M |

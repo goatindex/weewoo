@@ -1,0 +1,19 @@
+{
+  "config": {
+    "default": true,
+    // Line length — prose wraps in the editor.
+    "MD013": false,
+    // Inline HTML — needed for badges/details blocks.
+    "MD033": false,
+    // First line must be a top-level heading — working files don't always comply.
+    "MD041": false,
+    // Table pipe spacing — compact tables are house style.
+    "MD060": false,
+    // Repeated section scaffolding (Observations/Risks per section) is fine.
+    "MD024": { "siblings_only": true }
+  },
+  // Mirrors the git-tracked markdown set: root docs + docs/ + geojson/.
+  "globs": ["*.md", "docs/*.md", "geojson/*.md"],
+  // Dated snapshot reports are frozen records; prose is still Vale-linted.
+  "ignores": ["docs/codebase-review-*.md"]
+}

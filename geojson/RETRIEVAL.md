@@ -10,23 +10,26 @@ How each file was obtained and processed. Use this when re-acquiring or updating
 
 The general query pattern for any ArcGIS MapServer or FeatureServer layer:
 
-```
+```text
 {serviceUrl}/{layerId}/query?where=1%3D1&outFields=*&f=geojson
 ```
 
 Key parameters:
+
 - `where=1%3D1` — return all features (`1=1` URL-encoded)
 - `outFields=*` — all fields; use comma-separated field names to reduce payload size
 - `resultOffset={n}&resultRecordCount={n}` — pagination (required when feature count exceeds server limit)
 - `f=geojson` — GeoJSON output (some servers also support `f=json` Esri JSON)
 
 Check `maxRecordCount` before downloading:
-```
+
+```text
 {serviceUrl}/{layerId}?f=json   # look for "maxRecordCount" in response
 ```
 
 Check total feature count before paginating:
-```
+
+```text
 {serviceUrl}/{layerId}/query?where=1%3D1&returnCountOnly=true&f=json
 ```
 
@@ -109,6 +112,7 @@ with open('output.geojson', 'w') as f:
 **How acquired:** Downloaded the national GeoJSON from the Digital Atlas, then split by state using Python filtering on the `state` field. Files named `SESBLD_{STATE_UPPER}.geojson`.
 
 **To re-acquire:** Download the national dataset from Digital Atlas, then split:
+
 ```python
 import json
 
@@ -220,6 +224,7 @@ Three features removed: 1× `SASES DUTY OFFICER`, 2× `NSWSES DUTY OFFICER` (out
 `https://services-ap1.arcgis.com/P744lA0wf4LlBZ84/arcgis/rest/services/Vicmap_Features_of_Interest/FeatureServer/1`
 **Filter:** `feature_subtype='municipal office'`
 **Transformation:**
+
 1. Downloaded 145 features covering VIC + some NSW border-region councils
 2. 27 NSW councils split to `NSW/municipal_offices.geojson`
 3. `weewoo_role` field added: `"COUNCIL HQ"` or `null`, determined by web research per council
@@ -336,6 +341,7 @@ features = [{
 **Original CRS:** GDA1994 (EPSG:4283) — must reproject to WGS84
 
 **Transformation pipeline:**
+
 ```python
 import zipfile, geopandas as gpd
 
@@ -365,6 +371,7 @@ for name, (dir_, shp) in files.items():
 ```
 
 **Name fields:**
+
 - `volunteer_brigade_areas`: `GAZ_NAME` (formal gazetted name)
 - `darwin_volunteer_brigades`: `GAZ_NAME` is null — use `SHORT_NAME`
 - `emergency_response_areas`: `GAZ_NAME`
@@ -423,6 +430,7 @@ Both fit in a single request. Layer 8 (Ambulance Tasmania Station Primary Respon
 ## South Australia
 
 No fire brigade or SES zone boundaries are published as open data:
+
 - **CFS (Country Fire Service)** brigade boundaries: not published. Only large-scale "Bushfire Management Areas" are available (data.sa.gov.au), which are regional committee areas, not individual brigade footprints.
 - **SA SES** zone boundaries: not found in any public service.
 
@@ -473,6 +481,7 @@ Helper scripts used during acquisition and configuration are stored in `scripts/
 | `scripts/audit_layers.py` | Compares files on disk against LAYERS.md to find undocumented or missing files |
 
 `audit_layers.py` is worth running any time new files are added:
+
 ```bash
 python scripts/audit_layers.py
 ```
