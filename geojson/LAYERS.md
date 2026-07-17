@@ -224,23 +224,23 @@ Each catchment has two files: `_current` (present-day 1% AEP extent) and `_2100`
 
 | File | Catchment |
 |------|-----------|
-| [VIC/flood/melbwater_flood_darebin_current.geojson](VIC/flood/melbwater_flood_darebin_current.geojson) | Darebin Creek — current |
-| [VIC/flood/melbwater_flood_darebin_2100.geojson](VIC/flood/melbwater_flood_darebin_2100.geojson) | Darebin Creek — 2100 projection |
-| [VIC/flood/melbwater_flood_glen_eira_current.geojson](VIC/flood/melbwater_flood_glen_eira_current.geojson) | Glen Eira — current |
-| [VIC/flood/melbwater_flood_glen_eira_2100.geojson](VIC/flood/melbwater_flood_glen_eira_2100.geojson) | Glen Eira — 2100 projection |
-| [VIC/flood/melbwater_flood_merri_bek_current.geojson](VIC/flood/melbwater_flood_merri_bek_current.geojson) | Merri-bek — current |
-| [VIC/flood/melbwater_flood_merri_bek_2100.geojson](VIC/flood/melbwater_flood_merri_bek_2100.geojson) | Merri-bek — 2100 projection |
-| [VIC/flood/melbwater_flood_yarra_current.geojson](VIC/flood/melbwater_flood_yarra_current.geojson) | Yarra River — current |
-| [VIC/flood/melbwater_flood_yarra_2100.geojson](VIC/flood/melbwater_flood_yarra_2100.geojson) | Yarra River — 2100 projection |
+| `VIC/flood/melbwater_flood_darebin_current.geojson` | Darebin Creek — current |
+| `VIC/flood/melbwater_flood_darebin_2100.geojson` | Darebin Creek — 2100 projection |
+| `VIC/flood/melbwater_flood_glen_eira_current.geojson` | Glen Eira — current |
+| `VIC/flood/melbwater_flood_glen_eira_2100.geojson` | Glen Eira — 2100 projection |
+| `VIC/flood/melbwater_flood_merri_bek_current.geojson` | Merri-bek — current |
+| `VIC/flood/melbwater_flood_merri_bek_2100.geojson` | Merri-bek — 2100 projection |
+| `VIC/flood/melbwater_flood_yarra_current.geojson` | Yarra River — current |
+| `VIC/flood/melbwater_flood_yarra_2100.geojson` | Yarra River — 2100 projection |
 
 ### Victoria — Statewide Flood Data
 
 | File | Description | Geometry | Source | Licence |
 |------|-------------|----------|--------|---------|
-| [VIC/flood/vic_flood_history_oct2022.geojson](VIC/flood/vic_flood_history_oct2022.geojson) | Observed flood inundation extents from the October 2022 Victoria flood event (1,826 features) | MultiPolygon | [data.vic.gov.au — Victorian Flood History October 2022](https://discover.data.vic.gov.au/dataset/victorian-flood-history-october-2022-event-public) | CC BY 4.0 |
-| [VIC/flood/vic_flood_stat_100yr.geojson](VIC/flood/vic_flood_stat_100yr.geojson) | Modelled 100-year ARI (1% AEP) flood extents, Victoria. Per-feature `SOURCE` property names the contributing CMA. | Polygon | [data.vic.gov.au — 1 in 100 Year Flood Extent](https://discover.data.vic.gov.au/dataset/1-in-100-year-flood-extent) | CC BY 4.0 |
-| [VIC/flood/vicmap_planning_FO.geojson](VIC/flood/vicmap_planning_FO.geojson) | Victorian Planning Scheme Floodway Overlay (FO) polygons, statewide | MultiPolygon | [Vicmap Planning](https://discover.data.vic.gov.au/dataset/vicmap-planning) | CC BY 4.0 |
-| [VIC/flood/vicmap_planning_LSIO.geojson](VIC/flood/vicmap_planning_LSIO.geojson) | Victorian Planning Scheme Land Subject to Inundation Overlay (LSIO) polygons, statewide | MultiPolygon | [Vicmap Planning](https://discover.data.vic.gov.au/dataset/vicmap-planning) | CC BY 4.0 |
+| `VIC/flood/vic_flood_history_oct2022.geojson` | Observed flood inundation extents from the October 2022 Victoria flood event (1,826 features) | MultiPolygon | [data.vic.gov.au — Victorian Flood History October 2022](https://discover.data.vic.gov.au/dataset/victorian-flood-history-october-2022-event-public) | CC BY 4.0 |
+| `VIC/flood/vic_flood_stat_100yr.geojson` | Modelled 100-year ARI (1% AEP) flood extents, Victoria. Per-feature `SOURCE` property names the contributing CMA. | Polygon | [data.vic.gov.au — 1 in 100 Year Flood Extent](https://discover.data.vic.gov.au/dataset/1-in-100-year-flood-extent) | CC BY 4.0 |
+| `VIC/flood/vicmap_planning_FO.geojson` | Victorian Planning Scheme Floodway Overlay (FO) polygons, statewide | MultiPolygon | [Vicmap Planning](https://discover.data.vic.gov.au/dataset/vicmap-planning) | CC BY 4.0 |
+| `VIC/flood/vicmap_planning_LSIO.geojson` | Victorian Planning Scheme Land Subject to Inundation Overlay (LSIO) polygons, statewide | MultiPolygon | [Vicmap Planning](https://discover.data.vic.gov.au/dataset/vicmap-planning) | CC BY 4.0 |
 
 ---
 
