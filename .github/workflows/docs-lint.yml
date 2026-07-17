@@ -58,14 +58,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # 403/429 accepted: government ArcGIS/data portals often reject HEAD probes.
+      # 302/403/429 accepted: government data portals cookie-gate non-browser
+      # clients (302 self-redirect loops) or reject HEAD probes outright.
       # codebase-review snapshots are frozen records — excluded here as in markdownlint.
       - uses: lycheeverse/lychee-action@v2
         with:
           fail: true
           args: >-
             --no-progress
-            --accept "200..=299,403,429"
+            --accept "200..=299,302,403,429"
             --exclude "^https?://localhost"
             --exclude-path docs/codebase-review-2026-05-15.md
             *.md docs/*.md geojson/*.md
