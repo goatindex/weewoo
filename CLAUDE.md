@@ -7,7 +7,7 @@ WeeWoo is a multi-state Australian emergency services map built on Leaflet 1.9.4
 The browser-side source is split across these files, all at repo root,
 loaded in dependency order by `index.html`:
 
-```
+```text
 sectorisation.js → core.js → map-view.js → data-loading.js →
 modals.js → persistence.js → pins.js → sidebar.js → init.js
 ```
@@ -40,6 +40,7 @@ All layer changes require edits in **two places**, then a build:
 2. **`core.js` `FILTERS` map** (top of file) — only if the layer needs a named filter function
 
 Then run:
+
 - `npm run build` — syncs everything to `www/` (GitHub Pages + Capacitor web)
 - `npm run cap:sync` — also propagates to the Android project
 
@@ -79,6 +80,7 @@ After creating or updating a GeoJSON file, copy it to all three locations. The b
 ```
 
 `sesLinking` wires a zone polygon layer to a point facility layer so enabling a zone auto-enables its HQ facility:
+
 ```json
 "sesLinking": {
   "linkedGroupId": "VIC__ses_facilities",
@@ -89,6 +91,7 @@ After creating or updating a GeoJSON file, copy it to all three locations. The b
 ## GeoJSON File Naming Convention
 
 Files follow `{org}_{level}_bld.geojson` for building/facility points:
+
 - `cfa_brigade_bld.geojson` — CFA brigade main stations (derived from `cfabld.geojson`)
 - `cfabld.geojson` — complete CFA building source (main + satellite stations; retain as-is)
 - Future: `cfa_district_bld.geojson`, `cfa_region_bld.geojson`
@@ -116,7 +119,8 @@ ArcGIS REST API. Max 1000 records per request — paginate with `resultOffset`. 
 | 16 | SES Response Boundaries |
 
 Query pattern:
-```
+
+```text
 /MapServer/{layerId}/query?where=1%3D1&outFields=*&f=geojson&resultOffset={offset}&resultRecordCount=1000
 ```
 
@@ -129,7 +133,7 @@ After merging to master, GitHub Pages rebuilds automatically. However, browsers 
 <script src="modals.js?v=2"></script>
 ```
 
-Bump only the file(s) you changed; the cache-busters are independent per file. `index.html` itself is served with short cache headers so browsers always pick up the new version numbers.
+Bump only the files you changed; the cache-busters are independent per file. `index.html` itself is served with short cache headers so browsers always pick up the new version numbers.
 
 **Also bump `SHELL_CACHE` in `sw.js`** whenever you bump any `?v=N` — format is `'weewoo-shell-vN'`, monotonically increasing across releases. This tells installed service workers to discard the old app shell and precache the new one on next visit.
 
@@ -189,7 +193,7 @@ JSTS is loaded after Leaflet and before Turf in `index.html`:
 |-----|-------|
 | `weewoo:sectorisation:{polygonId}` | Per-parent graph: `{ nodes, lines, nameOverrides, colorOverrides, opacityOverrides, parentRing, parentHash }` |
 
-`polygonId` is the sorted-joined `{groupId}::{featureName}` parts for the polygon(s) used as parent (e.g. `VIC__ses_zones::ALEXANDRA` or `VIC__ses_zones::ZoneA|VIC__ses_zones::ZoneB`). The sort makes the ID order-independent for multi-polygon selections.
+`polygonId` is the sorted-joined `{groupId}::{featureName}` parts for the polygons used as parent (e.g. `VIC__ses_zones::ALEXANDRA` or `VIC__ses_zones::ZoneA|VIC__ses_zones::ZoneB`). The sort makes the ID order-independent for multi-polygon selections.
 
 `parentHash` is a fingerprint of the parent ring's coordinates, used to warn the user if the source polygon boundary has drifted since the sectorisation was saved (FR-43).
 
@@ -206,10 +210,12 @@ Then `npm run build` to propagate. The current version is whatever's in `index.h
 ## Layer Ordering Convention
 
 Top-level states in `config/layers.json` must follow this order:
+
 1. National
 2. All states/territories alphabetically (ACT, NSW, NT, QLD, SA, TAS, VIC, WA)
 
 Within each state, groups must follow this order:
+
 1. SES (zones, then facilities)
 2. Fire service (CFA, NSWRFS, etc. — whatever applies to that state)
 3. LGA

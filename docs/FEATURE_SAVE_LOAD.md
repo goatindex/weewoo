@@ -9,10 +9,13 @@
 ## 0. Prerequisites and Caveats
 
 ### Custom markers do not exist yet
+
 The current codebase has no custom marker creation UI. All features are loaded from static GeoJSON files in `geojson/`. This plan designs the save/load schema to accommodate custom markers, but a custom marker feature must be built first (or in parallel). Section 5 flags exactly where the two features couple.
 
 ### What "saving" means
+
 WeeWoo does **not** save GeoJSON geometries in a save file. The GeoJSON boundary data lives in versioned static files served from GitHub Pages. A save file stores only:
+
 - Which feature IDs are enabled (pointers into `state.featureEnabled` / `state.sesFlags`)
 - Custom marker positions and popup content (user-authored data)
 - Map view and UI preferences at save time
@@ -159,7 +162,7 @@ Existing app keys (`weewoo_layers_v1`, `weewoo_basemap`, `weewoo_sidebar_text_si
 | Constraint | Detail |
 |------------|--------|
 | **Per-origin quota** | 5 MB on most browsers (Firefox default 10 MB; Safari 5 MB; Chrome 5 MB). Quota is scoped per origin (`scheme + hostname + port`), so `goatindex.github.io` has its own isolated bucket — unaffected by other `*.github.io` sites. |
-| **Existing app usage** | The current 7 localStorage keys total roughly 5–15 KB (layer state for a heavily-used session is the bulk). |
+| **Existing app usage** | The current 7 localStorage keys total roughly 5–15 KB (layer state for a heavily used session is the bulk). |
 | **Typical save size** | 20–100 KB depending on how many layers are enabled and how many custom markers exist. A session with 200 enabled features and 10 custom markers ≈ 30 KB. |
 | **Realistic save count** | At 30 KB/save and 4.9 MB available ≈ **160 saves**. At 100 KB/save (heavily used) ≈ **50 saves**. |
 | **Worst case** | A user who enables every single feature ID across all states could produce a large enabled map. Rough upper bound: 2000 feature IDs × 30 bytes ≈ 60 KB. Still well within per-save limits. |
@@ -208,7 +211,7 @@ Clicking `btn-save` opens a modal using the existing `openModal()` infrastructur
 
 **Save modal layout:**
 
-```
+```text
 ┌─────────────────────────────────────────┐
 │  Save map state                    [✕]  │
 ├─────────────────────────────────────────┤
@@ -239,7 +242,7 @@ Clicking `btn-load` opens the modal with type `'load'`.
 
 **Load modal layout:**
 
-```
+```text
 ┌──────────────────────────────────────────────┐
 │  Load map state                         [✕]  │
 ├──────────────────────────────────────────────┤
@@ -282,7 +285,7 @@ Clicking `btn-load` opens the modal with type `'load'`.
 
 Saves are shared as `.json` files. The export workflow is entirely client-side:
 
-```
+```text
 User clicks Export → generateSaveBlob(saveName) → URL.createObjectURL(blob) →
 <a href=blobUrl download="mysave_20260511T143022Z.json">.click() → URL.revokeObjectURL()
 ```
@@ -343,7 +346,7 @@ Optionally also add `btn-share` to `#sidebar-footer` as a standalone icon for us
 
 Wherever the share link is generated — whether in the save modal or a standalone share modal — display a plain-language summary of exactly what is and is not in the link. This must appear before the user copies the link, not buried in docs:
 
-```
+```text
 ┌──────────────────────────────────────┐
 │  Share link includes:                │
 │  ✓ Active layers (247 features)      │
@@ -444,7 +447,7 @@ Steps are ordered; each step is independently shippable.
 **Files:** `app.js`  
 **New functions:**
 
-```
+```text
 buildSaveObject(name)     → creates the full save envelope from current state
 parseSaveObject(json)     → validates schema version, returns save object or throws
 formatSaveName(prefix)    → prefix + '_' + toZuluSuffix(new Date())
@@ -452,6 +455,7 @@ toZuluSuffix(date)        → '20260511T143022Z' format
 ```
 
 `buildSaveObject` reads from:
+
 - `state.featureEnabled` — existing global
 - `state.sesFlags` — existing global
 - `map.getCenter()`, `map.getZoom()` — existing Leaflet map reference
@@ -471,6 +475,7 @@ Implement `LocalStorageBackend` with `listSaves`, `loadSave`, `writeSave`, `dele
 **New function:** `applySave(saveObject, opts = {restoreView: true, restoreUi: true})`
 
 Flow:
+
 1. `clearLayerState()` (line 153)
 2. Merge `saveObject.layers.enabled` into `state.featureEnabled`
 3. Merge `saveObject.layers.ses` into `state.sesFlags`
@@ -533,6 +538,7 @@ function exportSaveFile(saveObj) {
 **Files:** `save-backends.js`, `app.js`, `index.html`
 
 Implement `DropboxBackend` using direct `fetch` calls to Dropbox API v2. PKCE OAuth via redirect (no popup — no external SDK required):
+
 - Generate code verifier + challenge at auth initiation; store verifier in `sessionStorage`; redirect to `https://www.dropbox.com/oauth2/authorize`
 - On app startup, if `?code=` is present in the URL: exchange for access token, remove `?code=` from URL via `history.replaceState`, then continue normal init
 - Access token stored in `sessionStorage` only; refresh token in `localStorage` behind a user opt-in ("Keep me signed in")
@@ -554,33 +560,43 @@ Implement `DropboxBackend` using direct `fetch` calls to Dropbox API v2. PKCE OA
 ## 6. Edge Cases and Risks
 
 ### Stale feature IDs
+
 `config/layers.json` may change between save creation and load. A saved feature ID like `NSW__ambulance::142` may no longer exist if the GeoJSON file is rebuilt with fewer features or the group is renamed. **Mitigation:** silently skip unknown IDs during `applySave()` (mirror the existing `restoreLayerState()` behavior at line 141). Log skipped IDs to `console.warn` for debugging.
 
 ### Schema version mismatch
+
 Future schema changes (e.g. adding a field, changing ID format) are handled by `parseSaveObject()` checking `version`. If `version > 1` (unknown version), show a warning: "This save was created with a newer version of WeeWoo. Some features may not restore correctly." If `version < 1`, attempt migration or reject with a clear error.
 
 ### XSS via imported save files
+
 `customMarkers[].popupHtml` is user-authored HTML. If a malicious `.json` file is imported, it could inject scripts via popups. **Mitigation:** sanitize `popupHtml` with DOMPurify (already a CDN-loadable dependency with no build step required) before inserting into the DOM. `title` fields are treated as plain text only.
 
 ### localStorage full on save
+
 Caught explicitly as `QuotaExceededError`. UI surfaces an actionable error with two options: delete old saves, or export to file. Never silently fail.
 
 ### Private/incognito mode
+
 `localStorage.setItem()` may throw or write to a throwaway store. Detect at startup: attempt a test write/read/delete. If it fails, disable localStorage saves and show a banner: "Device storage unavailable — use file export to save your map state."
 
 ### Concurrent tabs
+
 Two browser tabs sharing the same origin may both write to `weewoo_saves_index_v1` simultaneously. The last writer wins, potentially losing an index entry. **Mitigation:** re-read the index from localStorage immediately before writing (i.e., read → merge → write, not cache → write). A `storage` event listener can detect external changes and refresh the save list in the UI.
 
 ### Very large custom marker popup content
+
 If a user pastes a large document into a marker popup (hypothetically), a single marker could be very large. **Mitigation:** cap `popupHtml` at 10 KB in the marker creation UI (separate from save/load). The save code does not enforce this cap — it is the marker UI's responsibility.
 
 ### Restore order and group-not-yet-loaded
+
 `applySave()` sets `state.featureEnabled` before groups are loaded. Enabled state for unloaded groups is automatically applied when the group is lazy-loaded via `ensureGroupLoaded()` (line 645 of `app.js`), which already calls `renderFeatureList()` and restores checked state. No special handling needed — the existing deferred-load path handles it.
 
 ### `name` collision
+
 If the user saves with the same prefix at the same second (possible if the datetime is truncated to seconds), the new save would overwrite the old one in localStorage. `weewoo_save_{name}` would be silently replaced, and the index would update the existing entry. This is acceptable behavior but should be noted in the UI: "A save with this name already exists — it will be overwritten."
 
 ### Browser data cleared unexpectedly
+
 A user may not realise that "Clear browsing data" or clearing site storage deletes their localStorage saves. **Mitigation:** display a one-time notice when the user creates their first save: "Saves on this device may be lost if you clear browser data. Export to file for a permanent copy." The notice is dismissible and its shown-state is tracked in a `weewoo_save_notice_v1` localStorage flag (small, single-character value).
 
 ---

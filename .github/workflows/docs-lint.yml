@@ -1,0 +1,69 @@
+name: docs-lint
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "**/*.md"
+      - ".vale.ini"
+      - ".github/styles/**"
+      - ".markdownlint-cli2.jsonc"
+      - ".github/workflows/docs-lint.yml"
+  pull_request:
+    paths:
+      - "**/*.md"
+      - ".vale.ini"
+      - ".github/styles/**"
+      - ".markdownlint-cli2.jsonc"
+      - ".github/workflows/docs-lint.yml"
+
+jobs:
+  prose:
+    name: Vale prose lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Pinned to the version used locally so findings match `npm run lint:docs`.
+      - name: Install Vale
+        run: |
+          curl -fsSL https://github.com/errata-ai/vale/releases/download/v3.15.1/vale_3.15.1_Linux_64-bit.tar.gz -o /tmp/vale.tar.gz
+          tar -xzf /tmp/vale.tar.gz -C /tmp vale
+          sudo mv /tmp/vale /usr/local/bin/vale
+
+      - name: Sync style packages
+        run: vale sync
+
+      # Gate: exits non-zero on any warning or error (MinAlertLevel = warning).
+      - name: Lint tracked markdown
+        run: git ls-files '*.md' | xargs -d '\n' vale --output=line
+
+  structure:
+    name: markdownlint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Globs mirror .markdownlint-cli2.jsonc; config (rules + ignores) is read from it.
+      - uses: DavidAnson/markdownlint-cli2-action@v20
+        with:
+          globs: |
+            *.md
+            docs/*.md
+            geojson/*.md
+
+  links:
+    name: lychee link check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # 403/429 accepted: government ArcGIS/data portals often reject HEAD probes.
+      - uses: lycheeverse/lychee-action@v2
+        with:
+          fail: true
+          args: >-
+            --no-progress
+            --accept "200..=299,403,429"
+            --exclude "^https?://localhost"
+            *.md docs/*.md geojson/*.md

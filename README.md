@@ -35,7 +35,7 @@ These commands run `npm run build` (copies web assets to `www/`), sync to the na
 
 ## Project structure
 
-```
+```text
 /
 ├── core.js             # Shared globals (state, lookups, helpers, text size, icons)
 ├── map-view.js         # Map init, basemap, layer add/remove, SES↔facility linking
@@ -74,7 +74,7 @@ All layer definitions live in `config/layers.json`. No code changes are needed f
 
 Place your GeoJSON file in the appropriate state directory under `geojson/`. The file must use WGS84 coordinates (EPSG:4326).
 
-```
+```text
 geojson/NSW/fire_stations.geojson
 ```
 
@@ -109,7 +109,7 @@ Find the state entry (e.g. `"id": "NSW"`) and add a new object to its `groups` a
 | `color` | Stroke colour (hex) |
 | `fillColor` | Fill colour for polygons (hex) |
 | `fillOpacity` | Fill transparency for polygons (`0`–`1`, default `0.15`) |
-| `weight` | Stroke width in pixels (default `1.5`) |
+| `weight` | Stroke width in px (default `1.5`) |
 | `markerRadius` | Circle radius for point layers (default `6`) |
 | `file` | Path to the GeoJSON file relative to project root |
 | `nameKey` | Property name used for display names in the sidebar and popups |

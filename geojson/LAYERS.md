@@ -81,6 +81,7 @@ Geometry: Point
 The `weewoo_role` property is added by WeeWoo and is not present in the source data. A value of `"COUNCIL HQ"` indicates that the feature has been identified (via web research) as the primary headquarters building for its Local Government Area. Features without a `"COUNCIL HQ"` value are satellite offices, customer service centres, depots, or unnamed locations. Where a council has only one entry in the dataset that entry is marked `"COUNCIL HQ"` if it corresponds to a plausible council office address. Known data-quality issues are noted below.
 
 **Known data issues in source data:**
+
 - `WURRIKI NYAL` is geocoded to Geelong ([144.357, -38.145]) but belongs to Brimbank (Sunshine); coordinates appear incorrect in the source.
 - `WELLINGTON SHIRE COUNCIL` has two near-identical duplicate points at Sale (~5 m apart); only the first is marked `"COUNCIL HQ"`.
 - `CIVIC CENTRE` ([145.106, -37.703]) is a near-duplicate of `BANYULE CITY COUNCIL - GREENSBOROUGH SERVICE CENTRE` at the same location.
