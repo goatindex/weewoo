@@ -18,7 +18,7 @@ _Convention: update at end of each working session. The weekly portfolio review 
 
 ## Done (2026-07-17 session)
 
-- Docs lint gate landed (first component of the agentic-issues pipeline, WeeWoo as pilot): Vale 3.15.1 (Microsoft package, tuned to house style — see D-2026-07-17-1) + markdownlint-cli2 + lychee, strict gate (warnings fail), all tracked markdown. `npm run lint:docs` locally, `.github/workflows/docs-lint.yml` in CI. Full shakeout done: 609 Vale findings and 108 markdownlint issues triaged to zero. **Uncommitted — needs commit/push, and first CI run will exercise lychee for the first time.**
+- Docs lint gate landed (first component of the agentic-issues pipeline, WeeWoo as pilot): Vale 3.15.1 (Microsoft package, tuned to house style — see D-2026-07-17-1) + markdownlint-cli2 + lychee, strict gate (warnings fail), all tracked markdown. `npm run lint:docs` locally, `.github/workflows/docs-lint.yml` in CI. Full shakeout done: 609 Vale findings and 108 markdownlint issues triaged to zero. Merged to master as PR #10; lychee's first runs surfaced two real doc fixes (links to gitignored flood files, frozen-review links to deleted `app.js`) plus a 302 cookie-gate allowance for `discover.data.vic.gov.au`.
 - Pipeline next: GitHub Issue Form template + BA skill (issue "context capsules"), then reviewer action on PRs, then weekly tech-writer cron.
 
 ## Done (2026-07-10 session)
