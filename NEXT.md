@@ -11,7 +11,7 @@ _Convention: update at end of each working session. The weekly portfolio review 
 - Error surfacing per `docs/PLAN_ERROR_SURFACING.md` — now issue #13 (ready, agent-ready)
 - Telemetry gap-closure per `docs/PLAN_TELEMETRY.md` — now issue #14 (ready, agent-ready)
 - End-user help/glossary + feedback button (review REC-7.1 / REC-5.2 — still open; not yet an issue)
-- Pipeline stage 3 activation (reviewer merged but inert until): install the Claude Code GitHub App on this repo (github.com/apps/claude), mint a token (`claude setup-token`), set repo secret `CLAUDE_CODE_OAUTH_TOKEN`; then test with a small code PR
+- Build issue #13 (logError) and open the PR with "Closes #13" — first full exercise of the auto-review contract table; #13's AC1 [demo] criterion needs a decision on GoatCounter-receipt verification (reviewer's observation, issue #13 comments)
 
 ## Done means
 
