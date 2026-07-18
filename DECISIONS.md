@@ -2,6 +2,24 @@
 
 Per-project decision log. Newest first. Format: `D-YYYY-MM-DD-n`.
 
+## D-2026-07-18-2 — Issue contract v0.2: EARS criteria, verification tags, banned-word ban, refinement workflow
+
+- **Status:** open
+- **Context:** Quality review of the `ba-issue` skill against BA/requirements-engineering practice (BABOK, INCOSE, EARS) found the DoR's "checkable" line subjective, a lifecycle gap (no needs-refinement → ready path), and no home for assumptions.
+- **Options considered:** Volere fit-criteria per requirement (rejected — overlaps EARS + tags) · MoSCoW priority field (rejected — NEXT.md/labels own sequencing; two sources of truth) · full plan-driven RE with baselined spec and trace matrix (rejected — ceremony without payoff at solo issue-grain) · **EARS/GWT criteria forms + [test]/[demo]/[inspect]/[analyze] verification tags + INCOSE ambiguous-word ban + refinement workflow + assumptions folded into the dependencies section (chosen)**.
+- **Why:** each adopted upgrade is mechanical enough to check consistently across sessions, and the verification tags feed pipeline stage 3 (reviewer can check "was each criterion verified by its declared method"). The skill now declares its methodology so future edits don't drift across paradigm lines.
+- **Expected outcome:** issues written by different agent instances read identically in form; the reviewer action can consume the tags; `needs-refinement` issues have a documented promotion path.
+- **Revisit:** when stage 3 lands (do the tags actually get consumed?), or if the banned-word list produces false positives worth encoding as exceptions.
+
+## D-2026-07-18-1 — Issue contract stage-2 choices (retro-logged)
+
+- **Status:** open
+- **Context:** The four decisions shaping the issue contract were made in-session on 2026-07-18 but not logged at the time; retro-logged per the review's process finding.
+- **Options considered:** slim template variant for chores (rejected) · **one template, visible "none" allowed (chosen)** · skill-only authoring (rejected) · **Issue Form + skill emitting matching markdown (chosen)** · structured interview / autonomous drafting (rejected) · **braindump-first with ≤3 gap questions (chosen)** · minimal labels (rejected) · **full taxonomy: type:*, size:*, ready/needs-refinement, agent-ready (chosen)**.
+- **Why:** a visible "none" is information while an absent section is ambiguity; the form covers hand-raised issues while the skill enforces the contract for agent-authored ones; research-before-asking exploits the agent's cheap reading; the fuller taxonomy is what later pipeline stages key off.
+- **Expected outcome:** every issue entering the repo carries the same contract regardless of author.
+- **Revisit:** if the single template grates on genuinely tiny chores.
+
 ## D-2026-07-17-1 — Docs lint gate: Vale (Microsoft, tuned) + markdownlint + lychee, strict
 
 - **Status:** open
