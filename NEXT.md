@@ -8,13 +8,18 @@ _Convention: update at end of each working session. The weekly portfolio review 
 
 ## Next up
 
-- Telemetry gap-closure per `docs/PLAN_TELEMETRY.md` (GoatCounter is live; error events + coverage gaps remain)
-- Error surfacing per `docs/PLAN_ERROR_SURFACING.md` (`logError` helper replacing silent catches)
-- End-user help/glossary + feedback button (review REC-7.1 / REC-5.2 — still open)
+- Error surfacing per `docs/PLAN_ERROR_SURFACING.md` — now issue #13 (ready, agent-ready)
+- Telemetry gap-closure per `docs/PLAN_TELEMETRY.md` — now issue #14 (ready, agent-ready)
+- End-user help/glossary + feedback button (review REC-7.1 / REC-5.2 — still open; not yet an issue)
+- Pipeline stage 3: reviewer action on PRs (claude-code-action + conventional comments)
 
 ## Done means
 
 - Phase 1 summariser producing per-zone `last-7d` summaries the app can fetch, and a week of collector uptime with no unexplained gaps in STATUS.md
+
+## Done (2026-07-18 session)
+
+- Issue contract landed (pipeline stage 2): label taxonomy (`type:*`, `size:*`, `ready`, `needs-refinement`, `agent-ready`), Task/Feature issue form (PR #12), personal `ba-issue` BA skill (braindump → researched, DoR-checked issue). Pilot issues #13 (logError) and #14 (telemetry events) filed through it — both ready + agent-ready.
 
 ## Done (2026-07-17 session)
 
@@ -37,4 +42,4 @@ _Convention: update at end of each working session. The weekly portfolio review 
 
 ## Last updated
 
-2026-07-17
+2026-07-18
