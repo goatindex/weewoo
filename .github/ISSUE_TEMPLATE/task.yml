@@ -25,10 +25,10 @@ body:
     id: acceptance-criteria
     attributes:
       label: Acceptance criteria
-      description: Testable statements. Use Given/When/Then where it fits; each criterion should be checkable by someone who didn't build it.
+      description: "One testable sentence each, in EARS form (When/While/If-then/Where … shall …) or Given/When/Then for user scenarios. End each with its verification tag: [test], [demo], [inspect], or [analyze]. No vague words (quickly, robust, user-friendly, handle, support, TBD …) — state the measurable thing meant."
       placeholder: |
-        - Given …, when …, then …
-        - …
+        - When <trigger>, the <part> shall <behaviour>. [test]
+        - Given <context>, when <action>, then <observable result>. [demo]
     validations:
       required: true
   - type: textarea
@@ -48,8 +48,8 @@ body:
   - type: textarea
     id: dependencies-risks
     attributes:
-      label: Dependencies & risks
-      description: Blocked-by issues, external prerequisites, known risks and their mitigations. Write "none" if none.
+      label: Dependencies, assumptions & risks
+      description: Blocked-by issues, external prerequisites, assumptions the work rests on, known risks and their mitigations. Write "none" if none.
     validations:
       required: true
   - type: dropdown
