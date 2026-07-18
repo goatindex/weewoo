@@ -125,6 +125,16 @@ function trackEvent(name, extra) {
   });
 }
 
+/* Central error reporter: always logs to console; also emits a telemetry
+   event so failure rates are visible in GoatCounter. `scope` is a short
+   stable slug (e.g. 'layer-load', 'save-restore'); never include user data
+   or coordinates in `scope` or the message sent to telemetry. */
+function logError(scope, err, userMessage) {
+  console.error(`[WeeWoo:${scope}]`, err);
+  trackEvent(`error/${scope}`, String(err && err.message || err).slice(0, 80));
+  if (userMessage) alert(userMessage); // replace with toast if/when a shared toast helper exists
+}
+
 /* ============================================================
    TEXT SIZE
    SIDEBAR_TEXT_SIZE_KEY and MAP_TEXT_SIZE_KEY are declared in

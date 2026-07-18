@@ -29,6 +29,7 @@ const sharedAppGlobals = {
   getFeatureName:      'writable',
   escapeHtml:          'writable',
   trackEvent:          'writable',
+  logError:            'writable',
   buildLookups:        'writable',
   allLeafGroups:       'writable',
   // Text size (core.js)

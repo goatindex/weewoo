@@ -56,7 +56,8 @@ function generatePinId() {
 function loadPins() {
   try {
     return JSON.parse(localStorage.getItem(CUSTOM_PINS_KEY) || '[]');
-  } catch (_) {
+  } catch (e) {
+    logError('pins-restore', e);
     return [];
   }
 }

@@ -68,7 +68,7 @@ async function ensureGroupLoaded(groupId) {
 
     } catch (err) {
       state.loadState[groupId] = 'error';
-      console.error(`[WeeWoo] Failed to load ${groupId}:`, err);
+      logError('layer-load', `${groupId}: ${err && err.message || err}`);
       if (loadingLi) {
         loadingLi.textContent = 'Failed to load data';
         loadingLi.classList.remove('hidden');
