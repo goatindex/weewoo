@@ -1,0 +1,65 @@
+name: Task / Feature
+description: A builder-ready unit of work. Every section is required — write "none" rather than leaving a section empty.
+labels: ["needs-refinement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This template is the issue contract: the same sections the BA skill emits.
+        A visible "none" is information; an absent section is ambiguity.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem / why now
+      description: What is wrong or missing, and why it matters now rather than later.
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Desired outcome
+      description: The end state in plain language — what exists or behaves differently once this is done.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance criteria
+      description: Testable statements. Use Given/When/Then where it fits; each criterion should be checkable by someone who didn't build it.
+      placeholder: |
+        - Given …, when …, then …
+        - …
+    validations:
+      required: true
+  - type: textarea
+    id: non-goals
+    attributes:
+      label: Non-goals
+      description: What this issue deliberately does NOT cover. The builder stops at this line. Write "none" if truly unbounded.
+    validations:
+      required: true
+  - type: textarea
+    id: context-pointers
+    attributes:
+      label: Context pointers
+      description: Files, functions, docs, prior PRs/issues, and DECISIONS.md entries a builder needs. Paths clickable from the repo root.
+    validations:
+      required: true
+  - type: textarea
+    id: dependencies-risks
+    attributes:
+      label: Dependencies & risks
+      description: Blocked-by issues, external prerequisites, known risks and their mitigations. Write "none" if none.
+    validations:
+      required: true
+  - type: dropdown
+    id: size
+    attributes:
+      label: Size
+      description: "Escape hatch: if the work turns out ~2x the estimate, stop and split the issue instead of pushing on."
+      options:
+        - S (hours; single sitting)
+        - M (a day or two)
+        - L (multi-day; consider splitting now)
+    validations:
+      required: true
