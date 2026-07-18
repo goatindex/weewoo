@@ -11,7 +11,7 @@ _Convention: update at end of each working session. The weekly portfolio review 
 - Error surfacing per `docs/PLAN_ERROR_SURFACING.md` — now issue #13 (ready, agent-ready)
 - Telemetry gap-closure per `docs/PLAN_TELEMETRY.md` — now issue #14 (ready, agent-ready)
 - End-user help/glossary + feedback button (review REC-7.1 / REC-5.2 — still open; not yet an issue)
-- Pipeline stage 3: reviewer action on PRs (claude-code-action + conventional comments)
+- Pipeline stage 3 activation: mint OAuth token (`claude setup-token`) and set repo secret `CLAUDE_CODE_OAUTH_TOKEN` — the reviewer workflow is merged but inert until then; then test with a small code PR
 
 ## Done means
 

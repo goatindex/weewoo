@@ -2,6 +2,15 @@
 
 Per-project decision log. Newest first. Format: `D-YYYY-MM-DD-n`.
 
+## D-2026-07-18-3 — Reviewer action: OAuth-token auth, auto on code PRs, code + contract check, Sonnet
+
+- **Status:** open
+- **Context:** Pipeline stage 3 — automated advisory review of PRs, documented on the PR. Architecture (advisory-only, conventional comments, human merges) was settled in the pipeline design; four operational choices remained.
+- **Options considered:** API-key secret (rejected — metered spend where the subscription already covers it; revisit if CI use strains the interactive quota) · mention-only triggering (rejected — relies on remembering, the pre-hook NEXT.md failure mode) · auto on every PR (rejected — pays to review one-line NEXT.md bumps docs-lint already covers) · code-findings-only scope (rejected — leaves the v0.2 verification tags unconsumed) · Opus-class model (rejected — WeeWoo PR sizes rarely need it; escalate per-PR via mention) · **subscription OAuth token + auto on code-path PRs with @claude fallback + code review and issue-contract verification-tag check + Sonnet (chosen)**.
+- **Why:** the contract check is what makes the reviewer a pipeline stage rather than a generic lint — it closes the loop from issue criteria (D-2026-07-18-2's tags) to PR evidence. Path-filtering keeps spend proportional to risk. [demo]/[analyze] criteria are marked "deferred: verify post-merge" rather than guessed at from a diff.
+- **Expected outcome:** every code PR carries an advisory review and, when it references an issue, a criterion-by-criterion verification table; review cost stays inside the subscription.
+- **Revisit:** if reviews strain the interactive quota (switch to API key), or when stage 5's auto-builder PRs need the reviewer to consume its output differently.
+
 ## D-2026-07-18-2 — Issue contract v0.2: EARS criteria, verification tags, banned-word ban, refinement workflow
 
 - **Status:** open

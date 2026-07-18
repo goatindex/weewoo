@@ -1,0 +1,85 @@
+name: claude-review
+
+# Stage 3 of the agentic-issues pipeline: an advisory reviewer.
+# It never approves, blocks, or pushes — findings land as comments and the
+# human merges. Auth is a subscription OAuth token (CLAUDE_CODE_OAUTH_TOKEN
+# repo secret, minted with `claude setup-token`).
+
+on:
+  pull_request:
+    types: [opened, synchronize, ready_for_review]
+    # Docs-only PRs are covered by docs-lint; don't spend reviews on them.
+    paths-ignore:
+      - "**/*.md"
+      - ".github/styles/**"
+      - ".github/ISSUE_TEMPLATE/**"
+      - ".markdownlint-cli2.jsonc"
+      - ".vale.ini"
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+
+concurrency:
+  group: claude-review-${{ github.event.pull_request.number || github.event.issue.number || github.run_id }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+  id-token: write
+  actions: read
+
+jobs:
+  auto-review:
+    if: github.event_name == 'pull_request' && github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          use_sticky_comment: true
+          prompt: |
+            You are the advisory reviewer for this repository. Review PR #${{ github.event.pull_request.number }} in ${{ github.repository }}.
+
+            Ground rules:
+            - Advisory only: never approve, request changes, push commits, or edit files. Your entire output is comments.
+            - The human merges. A finding's severity is expressed in its label, not in gatekeeping.
+            - Skip anything the mechanical gates already catch (docs-lint, eslint, check-sync) — do not duplicate linters.
+
+            Part 1 — code review:
+            - Review the diff for correctness, security, edge cases, and consistency with the conventions in CLAUDE.md (cache-buster ?v= + SHELL_CACHE discipline, never editing www/ or android/ build outputs, vanilla-JS global-script architecture).
+            - Format EVERY finding as a Conventional Comment: "label (decoration): subject" followed by discussion. Labels: praise, nitpick, suggestion, issue, todo, question, thought, note. Decorations: (blocking) = must fix before merge in your judgment, (non-blocking), (if-minor).
+            - Post findings as inline comments on the relevant diff lines where possible; include at least one sincere praise if the diff earns it. Only report findings that survive scrutiny — a short review of real findings beats a long review of maybes.
+
+            Part 2 — issue-contract check:
+            - If the PR body or title references an issue (Closes/Fixes/Resolves #N, or a plain #N reference), fetch it with `gh issue view N`.
+            - Walk its "Acceptance criteria" section. Each criterion ends with a verification tag: [test], [demo], [inspect], or [analyze].
+            - In the sticky summary comment, produce a table: criterion (abbreviated) | tag | verified by this PR? (yes / no / partial) | evidence (the test, the code location, or what is missing).
+            - A criterion tagged [test] counts as verified only if the PR contains or updates an automated check for it. [inspect] counts if the diff itself demonstrably satisfies it. [demo]/[analyze] usually cannot be verified from the diff alone — mark them "deferred: verify post-merge" rather than guessing.
+            - If the PR references no issue, say so in one line in the summary; do not invent a contract to check.
+
+            End the sticky comment with a one-line verdict: "Advisory review complete — N findings (M blocking-labelled), contract check: X/Y criteria verified."
+          claude_args: |
+            --model sonnet
+            --max-turns 30
+
+  mention:
+    if: >-
+      (github.event_name == 'issue_comment' || github.event_name == 'pull_request_review_comment')
+      && contains(github.event.comment.body, '@claude')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          claude_args: --model sonnet
