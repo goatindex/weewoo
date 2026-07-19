@@ -770,7 +770,7 @@ window.SectorisationTool = (function () {
       try {
         const data = JSON.parse(localStorage.getItem(key));
         if (data && data.parentRing) _renderStoredEntry(id, data);
-      } catch (e) { logError('sector-restore', `${key}: ${e && e.message || e}`); }
+      } catch (e) { logError('sector-restore', e, null, key); }
     });
 
     /* Render current session sectors. We still need _lastSectors populated
@@ -1749,7 +1749,7 @@ window.SectorisationTool = (function () {
   function exportSectorBundle() {
     const sectors = {};
     _allSectorKeys().forEach(key => {
-      try { sectors[key] = JSON.parse(localStorage.getItem(key)); } catch (e) { logError('sector-restore', `${key}: ${e && e.message || e}`); }
+      try { sectors[key] = JSON.parse(localStorage.getItem(key)); } catch (e) { logError('sector-restore', e, null, key); }
     });
     if (!Object.keys(sectors).length) { _toast('No sector data to export.', 'info'); return; }
     const bundle = { type: 'weewoo-sector-bundle', version: 1, createdAt: new Date().toISOString(), sectors };
@@ -1798,12 +1798,12 @@ window.SectorisationTool = (function () {
     if (data.sectorisation && typeof data.sectorisation === 'object') {
       // Full WeeWoo save file
       Object.entries(data.sectorisation).forEach(([key, val]) => {
-        try { localStorage.setItem(key, JSON.stringify(val)); count++; } catch (e) { logError('sector-import', `${key}: ${e && e.message || e}`); }
+        try { localStorage.setItem(key, JSON.stringify(val)); count++; } catch (e) { logError('sector-import', e, null, key); }
       });
     } else if (data.type === 'weewoo-sector-bundle' && data.sectors) {
       // Standalone sector bundle exported by "Sector data"
       Object.entries(data.sectors).forEach(([key, val]) => {
-        try { localStorage.setItem(key, JSON.stringify(val)); count++; } catch (e) { logError('sector-import', `${key}: ${e && e.message || e}`); }
+        try { localStorage.setItem(key, JSON.stringify(val)); count++; } catch (e) { logError('sector-import', e, null, key); }
       });
     }
 

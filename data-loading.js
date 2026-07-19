@@ -68,7 +68,7 @@ async function ensureGroupLoaded(groupId) {
 
     } catch (err) {
       state.loadState[groupId] = 'error';
-      logError('layer-load', `${groupId}: ${err && err.message || err}`);
+      logError('layer-load', err, null, groupId);
       if (loadingLi) {
         loadingLi.textContent = 'Failed to load data';
         loadingLi.classList.remove('hidden');

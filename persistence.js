@@ -197,7 +197,7 @@ function applySave(saveObj, opts = { restoreView: true }) {
   /* Restore sectorisation data if present */
   if (saveObj.sectorisation && typeof saveObj.sectorisation === 'object') {
     Object.entries(saveObj.sectorisation).forEach(([key, val]) => {
-      try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) { logError('save-restore', `${key}: ${e && e.message || e}`); }
+      try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) { logError('save-restore', e, null, key); }
     });
     SectorisationTool.reloadFromStorage();
   }
