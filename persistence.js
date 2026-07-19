@@ -250,8 +250,7 @@ function wireLoadModal() {
         applySave(parseSaveObject(e.target.result));
         closeModal();
       } catch (err) {
-        logError('save-import', err);
-        alert('Could not read save file — it may be corrupted or from an incompatible version.');
+        logError('save-import', err, 'Could not read save file — it may be corrupted or from an incompatible version.');
       }
     };
     reader.readAsText(file);
@@ -268,7 +267,7 @@ function wireLoadModal() {
       const raw = localStorage.getItem(`${SAVE_KEY_PREFIX}${name}`);
       if (!raw) { entry.remove(); return; }
       try { applySave(parseSaveObject(raw)); trackEvent('save_loaded'); closeModal(); }
-      catch (err) { logError('save-load', err); alert('Could not load this save.'); }
+      catch (err) { logError('save-load', err, 'Could not load this save.'); }
 
     } else if (btn.dataset.action === 'export') {
       const raw = localStorage.getItem(`${SAVE_KEY_PREFIX}${name}`);

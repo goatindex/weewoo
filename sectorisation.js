@@ -1841,7 +1841,7 @@ window.SectorisationTool = (function () {
           displayName: _idToDisplayName(id),
           lineCount:   Object.keys(data.lines || {}).length,
         });
-      } catch (e) { logError('sector-restore', `${key}: ${e && e.message || e}`); }
+      } catch (e) { logError('sector-restore', e, null, key); }
     });
     return sums;
   }
