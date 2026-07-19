@@ -11,11 +11,19 @@ _Convention: update at end of each working session. The weekly portfolio review 
 - Error surfacing per `docs/PLAN_ERROR_SURFACING.md` — now issue #13 (ready, agent-ready)
 - Telemetry gap-closure per `docs/PLAN_TELEMETRY.md` — now issue #14 (ready, agent-ready)
 - End-user help/glossary + feedback button (review REC-7.1 / REC-5.2 — still open; not yet an issue)
-- Build issue #13 (logError) and open the PR with "Closes #13" — first full exercise of the auto-review contract table; #13's AC1 [demo] criterion needs a decision on GoatCounter-receipt verification (reviewer's observation, issue #13 comments)
+- **Merge PR #20** (logError, Closes #13) — built, reviewed clean by the auto-review action, all checks green, mergeable. Merge is a human step by design. Post-merge: verify GoatCounter receives the `error/*` event (issue #13's AC1 [demo] half that can't be checked from localhost)
+- Build issue #24 (scheduled tech-writer/docs-audit agent — pipeline stage 4, `ready` + `agent-ready`): new workflow copying `claude-review.yml`'s shape (`schedule:` trigger instead of `pull_request`, self-contained prompt embedding the task.yml contract, 2-issue/run cap, dedup via `gh issue list --search`)
 
 ## Done means
 
 - Phase 1 summariser producing per-zone `last-7d` summaries the app can fetch, and a week of collector uptime with no unexplained gaps in STATUS.md
+
+## Done (2026-07-19 session)
+
+- Issue contract v0.2 (EARS/GWT criteria, verification tags, INCOSE weak-word ban, refinement workflow) synced to task.yml, PR #16, decisions D-2026-07-18-1/-2. Retrofitted issues #13/#14 to v0.2.
+- Pipeline stage 3 (advisory reviewer) built, activated, and proven end-to-end: PR #17, decision D-2026-07-18-3. Needed three plumbing fixes on first real runs (PRs #21 tool grants, #22 max-turns 50, #23 Read/Grep/Glob + always-post-summary) — all merged.
+- Issue #13 (logError) built on branch `logerror-13` → PR #20. The reviewer caught two real stack-trace regressions across two rounds (a string-folded Error losing its trace, then a missed sibling site during the fix) — both fixed, confirmed in-browser, final review clean. PR is mergeable, awaiting merge (see Next up).
+- Stage 4 spec'd through our own issues process, dogfooding both untested paths: filed issue #24 as `needs-refinement` (four open decisions stated, not guessed), then promoted via Workflow B once the decisions were resolved in conversation (mechanism: GitHub Action schedule; scope: staleness + readability; output: self-contained prompt, cap 2/run, dedup; cadence: weekly Friday AEST). Now `ready` + `agent-ready`.
 
 ## Done (2026-07-18 session)
 
@@ -42,4 +50,4 @@ _Convention: update at end of each working session. The weekly portfolio review 
 
 ## Last updated
 
-2026-07-18
+2026-07-19

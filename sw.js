@@ -8,7 +8,7 @@
 // releases — it does not need to match any individual asset's ?v= number,
 // just be different from the last SHELL_CACHE value.
 
-const SHELL_CACHE  = 'weewoo-shell-v8';
+const SHELL_CACHE  = 'weewoo-shell-v9';
 const GEOJSON_CACHE = 'weewoo-geojson-v1';
 const TILE_CACHE   = 'weewoo-tiles-v1';
 const MAX_TILES    = 500;
@@ -18,16 +18,16 @@ const MAX_TILES    = 500;
 const SHELL_PATHS = [
   './',
   './index.html',
-  './core.js?v=1',
+  './core.js?v=2',
   './map-view.js?v=1',
-  './data-loading.js?v=1',
+  './data-loading.js?v=2',
   './modals.js?v=2',
-  './persistence.js?v=1',
-  './pins.js?v=1',
+  './persistence.js?v=2',
+  './pins.js?v=2',
   './sidebar.js?v=1',
-  './init.js?v=1',
+  './init.js?v=2',
   './style.css?v=5',
-  './sectorisation.js?v=4',
+  './sectorisation.js?v=5',
   './manifest.json',
   // CDN libraries — version-pinned, safe to cache indefinitely
   'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',

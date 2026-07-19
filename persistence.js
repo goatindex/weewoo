@@ -26,7 +26,8 @@ function restoreLayerState() {
     const { enabled = {}, ses = {} } = JSON.parse(raw);
     Object.assign(state.featureEnabled, enabled);
     Object.assign(state.sesFlags, ses);
-  } catch {
+  } catch (e) {
+    logError('layers-restore', e);
     localStorage.removeItem(STORAGE_KEY);
   }
 }
@@ -98,7 +99,7 @@ function buildSaveObject(name) {
 
 function readSavesIndex() {
   try { return JSON.parse(localStorage.getItem(SAVE_INDEX_KEY) || '[]'); }
-  catch { return []; }
+  catch (e) { logError('saves-index', e); return []; }
 }
 
 function saveToLocalStorage(prefix) {
@@ -114,6 +115,7 @@ function saveToLocalStorage(prefix) {
     trackEvent('save_created', `${layerCount} layers`);
     return { ok: true, name };
   } catch (e) {
+    logError('save-write', e);
     if (e.name === 'QuotaExceededError') return { ok: false, error: 'quota' };
     throw e;
   }
@@ -195,7 +197,7 @@ function applySave(saveObj, opts = { restoreView: true }) {
   /* Restore sectorisation data if present */
   if (saveObj.sectorisation && typeof saveObj.sectorisation === 'object') {
     Object.entries(saveObj.sectorisation).forEach(([key, val]) => {
-      try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) { console.warn('WeeWoo: failed to restore sectorisation key', key, e); }
+      try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) { logError('save-restore', e, null, key); }
     });
     SectorisationTool.reloadFromStorage();
   }
@@ -247,8 +249,8 @@ function wireLoadModal() {
       try {
         applySave(parseSaveObject(e.target.result));
         closeModal();
-      } catch {
-        alert('Could not read save file — it may be corrupted or from an incompatible version.');
+      } catch (err) {
+        logError('save-import', err, 'Could not read save file — it may be corrupted or from an incompatible version.');
       }
     };
     reader.readAsText(file);
@@ -265,7 +267,7 @@ function wireLoadModal() {
       const raw = localStorage.getItem(`${SAVE_KEY_PREFIX}${name}`);
       if (!raw) { entry.remove(); return; }
       try { applySave(parseSaveObject(raw)); trackEvent('save_loaded'); closeModal(); }
-      catch { alert('Could not load this save.'); }
+      catch (err) { logError('save-load', err, 'Could not load this save.'); }
 
     } else if (btn.dataset.action === 'export') {
       const raw = localStorage.getItem(`${SAVE_KEY_PREFIX}${name}`);

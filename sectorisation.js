@@ -213,7 +213,7 @@ window.SectorisationTool = (function () {
         ...graphLines.map(coords => reader.read({ type: 'LineString', coordinates: coords })),
       ];
     } catch (e) {
-      console.warn('[Sectorisation] JSTS read failed:', e);
+      logError('sector-geometry', e);
       return [];
     }
 
@@ -223,7 +223,7 @@ window.SectorisationTool = (function () {
     try {
       noded = lineGeoms.reduce((a, b) => a.union(b));
     } catch (e) {
-      console.warn('[Sectorisation] JSTS union failed:', e);
+      logError('sector-geometry', e);
       return [];
     }
 
@@ -508,7 +508,7 @@ window.SectorisationTool = (function () {
         parentHash:      _parentHash,
         parentRing:      _parentRing,
       }));
-    } catch (e) { console.warn('[Sectorisation] localStorage save failed:', e); }
+    } catch (e) { logError('sector-save', e); }
   }
 
   function _loadGraph(id) {
@@ -770,7 +770,7 @@ window.SectorisationTool = (function () {
       try {
         const data = JSON.parse(localStorage.getItem(key));
         if (data && data.parentRing) _renderStoredEntry(id, data);
-      } catch (e) { console.warn('WeeWoo: failed to render stored sectorisation entry', key, e); }
+      } catch (e) { logError('sector-restore', e, null, key); }
     });
 
     /* Render current session sectors. We still need _lastSectors populated
@@ -1032,7 +1032,7 @@ window.SectorisationTool = (function () {
         if (!union) throw new Error('union returned null');
       }
     } catch (e) {
-      console.warn('WeeWoo: polygon union failed', e);
+      logError('sector-geometry', e);
       _toast('Could not compute polygon union.', 'error');
       _mode = 'IDLE';
       document.getElementById('btn-sectorise').classList.remove('active');
@@ -1749,7 +1749,7 @@ window.SectorisationTool = (function () {
   function exportSectorBundle() {
     const sectors = {};
     _allSectorKeys().forEach(key => {
-      try { sectors[key] = JSON.parse(localStorage.getItem(key)); } catch (e) { console.warn('WeeWoo: malformed sector data in localStorage', key, e); }
+      try { sectors[key] = JSON.parse(localStorage.getItem(key)); } catch (e) { logError('sector-restore', e, null, key); }
     });
     if (!Object.keys(sectors).length) { _toast('No sector data to export.', 'info'); return; }
     const bundle = { type: 'weewoo-sector-bundle', version: 1, createdAt: new Date().toISOString(), sectors };
@@ -1781,7 +1781,8 @@ window.SectorisationTool = (function () {
       try {
         const text = await file.text();
         importSectorData(text);
-      } catch {
+      } catch (err) {
+        logError('sector-import', err);
         _toast('Could not read file.', 'error');
       }
     });
@@ -1791,18 +1792,18 @@ window.SectorisationTool = (function () {
   function importSectorData(jsonText) {
     let data;
     try { data = typeof jsonText === 'string' ? JSON.parse(jsonText) : jsonText; }
-    catch { _toast('Invalid JSON file.', 'error'); return; }
+    catch (e) { logError('sector-import', e); _toast('Invalid JSON file.', 'error'); return; }
 
     let count = 0;
     if (data.sectorisation && typeof data.sectorisation === 'object') {
       // Full WeeWoo save file
       Object.entries(data.sectorisation).forEach(([key, val]) => {
-        try { localStorage.setItem(key, JSON.stringify(val)); count++; } catch (e) { console.warn('WeeWoo: failed to import sectorisation key', key, e); }
+        try { localStorage.setItem(key, JSON.stringify(val)); count++; } catch (e) { logError('sector-import', e, null, key); }
       });
     } else if (data.type === 'weewoo-sector-bundle' && data.sectors) {
       // Standalone sector bundle exported by "Sector data"
       Object.entries(data.sectors).forEach(([key, val]) => {
-        try { localStorage.setItem(key, JSON.stringify(val)); count++; } catch (e) { console.warn('WeeWoo: failed to import sector bundle key', key, e); }
+        try { localStorage.setItem(key, JSON.stringify(val)); count++; } catch (e) { logError('sector-import', e, null, key); }
       });
     }
 
@@ -1840,7 +1841,7 @@ window.SectorisationTool = (function () {
           displayName: _idToDisplayName(id),
           lineCount:   Object.keys(data.lines || {}).length,
         });
-      } catch (e) { console.warn('WeeWoo: malformed sector summary entry', key, e); }
+      } catch (e) { logError('sector-restore', e, null, key); }
     });
     return sums;
   }

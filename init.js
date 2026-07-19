@@ -153,7 +153,7 @@ async function initApp() {
 
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js').catch(err =>
-      console.warn('WeeWoo: service worker registration failed', err)
+      logError('sw-register', err)
     );
   }
 }
