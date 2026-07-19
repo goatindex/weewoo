@@ -52,6 +52,8 @@ jobs:
             - The human merges. A finding's severity is expressed in its label, not in gatekeeping.
             - Skip anything the mechanical gates already catch (docs-lint, eslint, check-sync) — do not duplicate linters.
 
+            Tools: read the diff with `gh pr diff ${{ github.event.pull_request.number }}` / `gh pr view`; post inline findings with the mcp__github_inline_comment__create_inline_comment tool; write the summary with the mcp__github_comment__update_claude_comment tool.
+
             Part 1 — code review:
             - Review the diff for correctness, security, edge cases, and consistency with the conventions in CLAUDE.md (cache-buster ?v= + SHELL_CACHE discipline, never editing www/ or android/ build outputs, vanilla-JS global-script architecture).
             - Format EVERY finding as a Conventional Comment: "label (decoration): subject" followed by discussion. Labels: praise, nitpick, suggestion, issue, todo, question, thought, note. Decorations: (blocking) = must fix before merge in your judgment, (non-blocking), (if-minor).
@@ -67,7 +69,8 @@ jobs:
             End the sticky comment with a one-line verdict: "Advisory review complete — N findings (M blocking-labelled), contract check: X/Y criteria verified."
           claude_args: |
             --model sonnet
-            --max-turns 30
+            --max-turns 50
+            --allowedTools "mcp__github_comment__update_claude_comment,mcp__github_inline_comment__create_inline_comment,Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh issue view:*),Bash(git log:*),Bash(git diff:*),Bash(git show:*)"
 
   mention:
     if: >-
