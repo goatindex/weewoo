@@ -69,7 +69,7 @@ jobs:
             End the sticky comment with a one-line verdict: "Advisory review complete — N findings (M blocking-labelled), contract check: X/Y criteria verified."
           claude_args: |
             --model sonnet
-            --max-turns 30
+            --max-turns 50
             --allowedTools "mcp__github_comment__update_claude_comment,mcp__github_inline_comment__create_inline_comment,Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh issue view:*),Bash(git log:*),Bash(git diff:*),Bash(git show:*)"
 
   mention:
