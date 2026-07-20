@@ -24,9 +24,18 @@ permissions:
 
 jobs:
   build:
+    # Author + readiness are enforced HERE, not just in the prompt below.
+    # An in-prompt-only check is vulnerable to prompt injection from the
+    # very issue content it reads, and would still check out the repo and
+    # call `gh issue view` on attacker-controlled content before deciding
+    # to stop. Both gates fail closed: wrong commenter or missing label
+    # means the job never starts at all.
     if: >-
       github.event.issue.pull_request == null
       && contains(github.event.comment.body, '@claude build')
+      && contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)
+      && contains(github.event.issue.labels.*.name, 'agent-ready')
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -51,21 +60,18 @@ jobs:
               human builder to behave.
             - If a tool call is denied, do not retry it.
 
-            Step 1 - check readiness:
-            Fetch the issue: `gh issue view ${{ github.event.issue.number }} --json
-            title,body,labels`. If it does not carry the `agent-ready` label, comment
-            explaining that this issue needs to reach `ready` + `agent-ready` first
-            (via the ba-issue refinement process) before it can be auto-built, and
-            stop - do not attempt an implementation.
-
-            Step 2 - read the spec:
+            Step 1 - read the spec:
+            The workflow trigger already confirmed this issue carries `agent-ready`
+            and that the commenter is a trusted collaborator - you don't need to
+            re-check either. Fetch the issue: `gh issue view
+            ${{ github.event.issue.number }} --json title,body,labels`.
             Treat the issue body as the complete, authoritative spec: Problem/why
             now, Desired outcome, Acceptance criteria (each tagged [test], [demo],
             [inspect], or [analyze]), Non-goals, Context pointers, Dependencies/
             assumptions/risks, Size. Read every file the Context pointers name
             before writing anything.
 
-            Step 3 - implement:
+            Step 2 - implement:
             - Create a branch from a fresh, explicit base:
               `git checkout -b <descriptive-name> origin/master`.
             - Follow this repo's conventions in CLAUDE.md: bump `?v=N` cache-busters
@@ -76,7 +82,7 @@ jobs:
               exceeding the size estimate, stop per the ground rules above rather
               than pushing on.
 
-            Step 4 - verify what you can, and say so honestly:
+            Step 3 - verify what you can, and say so honestly:
             Run whatever local checks apply to what you touched: `npx eslint <files>`
             for JS, `node scripts/check-sync.js` after a version bump, `npm run
             lint:docs` if you touched markdown. You have no browser and no preview
@@ -84,7 +90,7 @@ jobs:
             a running app (e.g. "reload and check the console") CANNOT be verified
             here. Do not claim to have verified something you couldn't actually run.
 
-            Step 5 - open the PR:
+            Step 4 - open the PR:
             Commit with a clear message and no AI co-author trailer. Push, then
             open a PR titled to match the issue, with a body that:
             - Says "Closes #${{ github.event.issue.number }}".
@@ -102,4 +108,4 @@ jobs:
           claude_args: |
             --model sonnet
             --max-turns 75
-            --allowedTools "Read,Grep,Glob,Write,Edit,Bash(gh issue view:*),Bash(gh issue comment:*),Bash(gh pr create:*),Bash(git *),Bash(node scripts/check-sync.js),Bash(npx eslint *),Bash(npm run *)"
+            --allowedTools "Read,Grep,Glob,Write,Edit,Bash(gh issue view:*),Bash(gh issue comment:*),Bash(gh pr create:*),Bash(git checkout:*),Bash(git add:*),Bash(git commit:*),Bash(git push:*),Bash(node scripts/check-sync.js),Bash(npx eslint *),Bash(npm run *)"
