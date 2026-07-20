@@ -8,9 +8,15 @@ name: claude-review
 on:
   pull_request:
     types: [opened, synchronize, ready_for_review]
-    # Docs-only PRs are covered by docs-lint; don't spend reviews on them.
+    # Skip only trivial tracker/tooling-config changes — those add no
+    # correctness or contract risk and are covered by docs-lint. Substantive
+    # docs (README, PRODUCT_BRIEF, docs/**, geojson/**) are NOT ignored: the
+    # pipeline generates its own docs PRs (tech-writer files docs issues,
+    # claude-build builds them), and those need the advisory review + the
+    # issue-contract verification table this stage exists to provide.
     paths-ignore:
-      - "**/*.md"
+      - "NEXT.md"
+      - "DECISIONS.md"
       - ".github/styles/**"
       - ".github/ISSUE_TEMPLATE/**"
       - ".markdownlint-cli2.jsonc"
