@@ -200,6 +200,16 @@ export default [
     },
   },
 
+  // Node test suite — CommonJS, Node globals (node:test is imported, not global)
+  {
+    files: ['test/**/*.js'],
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: 'commonjs',
+      globals: globals.node,
+    },
+  },
+
   // Ignore build outputs and the lint config file itself
   {
     ignores: ['www/', 'android/', 'node_modules/', 'eslint.config.mjs'],

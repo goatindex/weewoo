@@ -4,6 +4,7 @@
   "description": "Australian emergency services map",
   "scripts": {
     "start": "node serve.js",
+    "test": "node --test \"test/**/*.test.js\"",
     "build": "node scripts/build.js",
     "cap:sync": "npm run build && npx cap sync",
     "cap:android": "npm run build && npx cap sync android && npx cap open android",
