@@ -5,8 +5,10 @@ body:
   - type: markdown
     attributes:
       value: |
-        This template is the issue contract: the same sections the BA skill emits.
-        A visible "none" is information; an absent section is ambiguity.
+        These fields mirror the house issue contract — the canonical definition
+        lives in [docs/ISSUE_CONTRACT.md](../../docs/ISSUE_CONTRACT.md) (the same
+        sections the BA skill emits). A visible "none" is information; an absent
+        section is ambiguity.
   - type: textarea
     id: problem
     attributes:
