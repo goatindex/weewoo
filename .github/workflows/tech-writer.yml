@@ -85,43 +85,27 @@ jobs:
               file at most the top 2.
 
             Every issue you file MUST use `gh issue create` with
-            `--label type:docs --label needs-refinement` and a body containing
-            exactly these sections, in this order (this is the task.yml
-            contract, inlined here because Actions runners cannot reach the
-            local-only ~/.claude/skills/ba-issue skill):
+            `--label type:docs --label needs-refinement` and a body that
+            follows the house issue contract.
 
-            ### Problem / why now
-            What is wrong or missing, and why it matters now rather than
-            later. Cite the doc location (file + section/line) and quote or
-            summarize the stale or unclear claim.
+            The runner has checked out the repo, so read the canonical
+            contract and follow it: Read `docs/ISSUE_CONTRACT.md`. It defines
+            the seven required sections and their order, the EARS/GWT
+            acceptance-criteria forms, the verification tags ([test], [demo],
+            [inspect], [analyze]), and the banned-word list. Emit every
+            section as a `###` heading in the order that document gives, and
+            write "none" rather than leaving a section empty.
 
-            ### Desired outcome
-            The end state in plain language — what the doc should say once
-            fixed.
-
-            ### Acceptance criteria
-            One testable sentence each, EARS form (When/While/If-then/Where
-            … shall …) or Given/When/Then, each ending with a verification
-            tag ([test], [demo], [inspect], or [analyze]). No vague words.
-
-            ### Non-goals
-            What this issue deliberately does not cover. Write "none" if
-            truly unbounded.
-
-            ### Context pointers
-            The specific doc location AND the specific contradicting code
-            location (file + line/function where possible) that justifies
-            this finding. For readability findings, the doc location and the
-            confusing phrase.
-
-            ### Dependencies, assumptions & risks
-            Write "none" if none, otherwise state them plainly — including
-            the risk that this is a false positive and should be checked by
-            a human before anyone acts on it.
-
-            ### Size
-            One of: S (hours; single sitting), M (a day or two), L
-            (multi-day; consider splitting now).
+            Tech-writer-specific notes when filling those sections:
+            - Problem / why now: cite the doc location (file + section/line)
+              and quote or summarize the stale or unclear claim.
+            - Context pointers: give the specific doc location AND the
+              specific contradicting code location (file + line/function
+              where possible) that justifies the finding. For readability
+              findings, the doc location and the confusing phrase.
+            - Dependencies, assumptions & risks: include the risk that this
+              is a false positive and should be checked by a human before
+              anyone acts on it.
 
             Title each issue concisely, e.g. "docs: <doc file> claims X but
             code does Y".
