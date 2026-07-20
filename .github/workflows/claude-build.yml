@@ -109,4 +109,4 @@ jobs:
           claude_args: |
             --model sonnet
             --max-turns 75
-            --allowedTools "Read,Grep,Glob,Write,Edit,Bash(gh issue view:*),Bash(gh issue comment:*),Bash(gh pr create:*),Bash(git checkout:*),Bash(git add:*),Bash(git commit:*),Bash(git push:*),Bash(node scripts/check-sync.js),Bash(npx eslint *),Bash(npm run lint:docs)"
+            --allowedTools "Read,Grep,Glob,Write,Edit,Bash(gh issue view:*),Bash(gh issue comment:*),Bash(gh pr create:*),Bash(git checkout:*),Bash(git add:*),Bash(git commit:*),Bash(git push:*),Bash(node scripts/check-sync.js),Bash(npx eslint:*),Bash(npm run lint:docs)"
