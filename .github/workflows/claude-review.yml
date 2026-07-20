@@ -74,9 +74,20 @@ jobs:
             --allowedTools "mcp__github_comment__update_claude_comment,mcp__github_inline_comment__create_inline_comment,Read,Grep,Glob,Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh issue view:*),Bash(git log:*),Bash(git diff:*),Bash(git show:*)"
 
   mention:
+    # Author is gated HERE, not just inside claude-code-action, and not in a
+    # prompt. This is a PUBLIC repo and the workflow carries id-token: write
+    # plus pull-requests/issues: write, so an in-action-only check is not
+    # enough: the action's internal write-permission check was bypassed in the
+    # wild via the "[bot]"-suffix hole (fixed upstream in claude-code-action
+    # v1.0.94; GMO Flatt Security, "Poisoning Claude Code"). An in-prompt check
+    # is also prompt-injectable from the very comment it reads. This fail-closed
+    # author_association gate mirrors claude-build.yml and the house doctrine in
+    # DECISIONS.md D-2026-07-20-1: a comment from anyone outside the trusted set
+    # never starts the job at all — no checkout, no action run.
     if: >-
       (github.event_name == 'issue_comment' || github.event_name == 'pull_request_review_comment')
       && contains(github.event.comment.body, '@claude')
+      && contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -86,4 +97,9 @@ jobs:
       - uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          claude_args: --model sonnet
+          # Least privilege: an on-demand helper needs to read the PR/issue and
+          # git history and post comments — nothing more. No Write/Edit, no
+          # unscoped Bash. Mirrors the auto-review job's grant above.
+          claude_args: |
+            --model sonnet
+            --allowedTools "mcp__github_comment__update_claude_comment,mcp__github_inline_comment__create_inline_comment,Read,Grep,Glob,Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh issue view:*),Bash(git log:*),Bash(git diff:*),Bash(git show:*)"
