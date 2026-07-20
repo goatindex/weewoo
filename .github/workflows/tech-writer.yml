@@ -1,0 +1,131 @@
+name: tech-writer
+
+# Stage 4 of the agentic-issues pipeline: a scheduled doc-staleness/readability
+# audit. It never edits docs or opens PRs — findings land as issues through
+# the same task.yml contract every other work item uses, and a human or a
+# builder session acts on them. Auth is a subscription OAuth token
+# (CLAUDE_CODE_OAUTH_TOKEN repo secret, minted with `claude setup-token`,
+# same secret claude-review.yml already uses).
+
+on:
+  schedule:
+    # GitHub Actions cron is UTC-only and has no daylight-saving awareness.
+    # Target: Friday morning AEST, ahead of the existing Friday 5pm human
+    # portfolio review. 22:00 UTC Thursday = 08:00 AEST Friday (UTC+10).
+    # This drifts to 09:00 AEDT during Australia's daylight-saving months —
+    # accepted as a minor, known drift per issue #24 rather than solved here.
+    - cron: "0 22 * * 4"
+  # Lets a human trigger a run on demand (Actions tab, "Run workflow") to
+  # verify the job works without waiting for Thursday 22:00 UTC.
+  workflow_dispatch: {}
+
+concurrency:
+  group: tech-writer
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  audit-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: |
+            You are the tech-writer / docs-audit agent for ${{ github.repository }}.
+            You run on a weekly schedule with no human watching in real time.
+            Your entire output is at most 2 new GitHub issues. You never edit
+            files, never open a PR, and never comment on anything.
+
+            Ground rules:
+            - If a tool call is denied, do not retry it — continue with what
+              you can still do, and still terminate cleanly.
+            - Finish by simply stopping. If you find nothing worth filing,
+              file nothing — do not create an empty or make-work issue, and
+              do not post a "no findings" comment anywhere; there is no PR or
+              issue thread to post it to.
+            - Never file more than 2 issues in a single run.
+
+            Scope — audit ONLY these docs (mirrors the docs-lint gate's scope,
+            DECISIONS.md D-2026-07-17-1): README.md, PRODUCT_BRIEF.md,
+            docs/*.md, geojson/*.md. Explicitly exclude CLAUDE.md,
+            DECISIONS.md, NEXT.md, and docs/codebase-review-*.md (working
+            files and a frozen snapshot, excluded there too).
+
+            What to check, in priority order:
+            1. Staleness (primary, hard rubric): for each in-scope doc, read
+               its factual claims about the code — file layout, module
+               names, "built" vs "planned" features, function/behaviour
+               descriptions, config values. Then read the actual code or
+               config it describes (use Read/Grep/Glob) and check the claim
+               still holds. Only report a claim as stale if you can point to
+               the specific contradicting code location.
+            2. Readability (secondary, lower confidence): jargon or phrasing
+               likely to trip up a newcomer. Only surface these if they are
+               clear-cut; when in doubt, leave it.
+               Staleness findings always outrank readability findings when
+               both compete for the 2-issue cap.
+
+            Do NOT report anything the mechanical docs-lint gate already
+            catches (see .github/workflows/docs-lint.yml): prose style
+            (Vale), markdown structure (markdownlint), or dead links
+            (lychee). This agent is the judgment tier on top of that gate,
+            not a duplicate of it.
+
+            Before filing anything:
+            - Search for overlap: `gh issue list --search "<keywords>" --state all`.
+              If a live issue substantially overlaps a candidate finding, skip
+              filing it.
+            - Rank all surviving candidates (staleness above readability) and
+              file at most the top 2.
+
+            Every issue you file MUST use `gh issue create` with
+            `--label type:docs --label needs-refinement` and a body containing
+            exactly these sections, in this order (this is the task.yml
+            contract, inlined here because Actions runners cannot reach the
+            local-only ~/.claude/skills/ba-issue skill):
+
+            ### Problem / why now
+            What is wrong or missing, and why it matters now rather than
+            later. Cite the doc location (file + section/line) and quote or
+            summarize the stale or unclear claim.
+
+            ### Desired outcome
+            The end state in plain language — what the doc should say once
+            fixed.
+
+            ### Acceptance criteria
+            One testable sentence each, EARS form (When/While/If-then/Where
+            … shall …) or Given/When/Then, each ending with a verification
+            tag ([test], [demo], [inspect], or [analyze]). No vague words.
+
+            ### Non-goals
+            What this issue deliberately does not cover. Write "none" if
+            truly unbounded.
+
+            ### Context pointers
+            The specific doc location AND the specific contradicting code
+            location (file + line/function where possible) that justifies
+            this finding. For readability findings, the doc location and the
+            confusing phrase.
+
+            ### Dependencies, assumptions & risks
+            Write "none" if none, otherwise state them plainly — including
+            the risk that this is a false positive and should be checked by
+            a human before anyone acts on it.
+
+            ### Size
+            One of: S (hours; single sitting), M (a day or two), L
+            (multi-day; consider splitting now).
+
+            Title each issue concisely, e.g. "docs: <doc file> claims X but
+            code does Y".
+          claude_args: |
+            --model sonnet
+            --max-turns 50
+            --allowedTools "Read,Grep,Glob,Bash(gh issue list:*),Bash(gh issue create:*)"
