@@ -1,0 +1,113 @@
+name: claude-build
+
+# Stage 5 of the agentic-issues pipeline: builds a `ready` + `agent-ready`
+# issue into a PR on request. Triggered by an explicit "@claude build"
+# comment on the issue (not the agent-ready label itself, so applying that
+# label - which happens automatically during ba-issue refinement - never
+# silently starts a build; a human still chooses when). It never merges its
+# own PR - a human merges reviewed feature work in this repo, by explicit
+# design (see DECISIONS.md D-2026-07-18-3). Auth is the same subscription
+# OAuth token claude-review.yml and tech-writer.yml already use.
+
+on:
+  issue_comment:
+    types: [created]
+
+concurrency:
+  group: claude-build-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  build:
+    # Author + readiness are enforced HERE, not just in the prompt below.
+    # An in-prompt-only check is vulnerable to prompt injection from the
+    # very issue content it reads, and would still check out the repo and
+    # call `gh issue view` on attacker-controlled content before deciding
+    # to stop. Both gates fail closed: wrong commenter or missing label
+    # means the job never starts at all.
+    if: >-
+      github.event.issue.pull_request == null
+      && github.event.issue.state == 'open'
+      && contains(github.event.comment.body, '@claude build')
+      && contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)
+      && contains(github.event.issue.labels.*.name, 'ready')
+      && contains(github.event.issue.labels.*.name, 'agent-ready')
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: |
+            You are the auto-builder for ${{ github.repository }}, triggered by an
+            explicit "@claude build" comment on issue #${{ github.event.issue.number }}.
+
+            Ground rules:
+            - You open a PR. You never merge it. A human merges reviewed feature
+              work in this repo, by explicit design.
+            - If you get stuck (the issue is genuinely ambiguous, bigger than its
+              stated size, or blocked on something needing human judgment), stop -
+              do not push half-working code. Comment on the issue explaining
+              specifically what's blocking you, the same way the issue contract's
+              own "if this exceeds ~2x the estimate, stop and split" line asks a
+              human builder to behave.
+            - If a tool call is denied, do not retry it.
+
+            Step 1 - read the spec:
+            The workflow trigger already confirmed this issue carries `agent-ready`
+            and that the commenter is a trusted collaborator - you don't need to
+            re-check either. Fetch the issue: `gh issue view
+            ${{ github.event.issue.number }} --json title,body,labels`.
+            Treat the issue body as the complete, authoritative spec: Problem/why
+            now, Desired outcome, Acceptance criteria (each tagged [test], [demo],
+            [inspect], or [analyze]), Non-goals, Context pointers, Dependencies/
+            assumptions/risks, Size. Read every file the Context pointers name
+            before writing anything.
+
+            Step 2 - implement:
+            - Create a branch from a fresh, explicit base:
+              `git checkout -b <descriptive-name> origin/master`.
+            - Follow this repo's conventions in CLAUDE.md: bump `?v=N` cache-busters
+              and `SHELL_CACHE` in sw.js on every touched JS file, never edit the
+              `www/` or `android/` build-output directories directly, run
+              `node scripts/check-sync.js` after any version bump.
+            - Stay inside the issue's stated Non-goals and Size. If you're clearly
+              exceeding the size estimate, stop per the ground rules above rather
+              than pushing on.
+
+            Step 3 - verify what you can, and say so honestly:
+            Run whatever local checks apply to what you touched: `npx eslint <files>`
+            for JS, `node scripts/check-sync.js` after a version bump, `npm run
+            lint:docs` if you touched markdown. You have no browser and no preview
+            server in this environment - acceptance criteria tagged [demo] that need
+            a running app (e.g. "reload and check the console") CANNOT be verified
+            here. Do not claim to have verified something you couldn't actually run.
+
+            Step 4 - open the PR:
+            Commit with a clear message and no AI co-author trailer. Push, then
+            open a PR titled to match the issue, with a body that:
+            - Says "Closes #${{ github.event.issue.number }}".
+            - Lists EVERY acceptance criterion from the issue with its verification
+              status: "Verified: <how>" for anything you actually ran ([test]/
+              [inspect] criteria, usually), or "NOT verified in CI (needs a human/
+              browser check): <why>" for anything you couldn't ([demo]/[analyze]
+              criteria, usually). This checklist is mandatory - a PR with unverified
+              criteria left silent is worse than one that states its gaps plainly.
+            - Notes any judgment call you made that the issue didn't explicitly
+              resolve, rather than silently deciding and staying quiet about it.
+
+            Do not touch NEXT.md or DECISIONS.md - a human updates project trackers
+            after reviewing your PR.
+          claude_args: |
+            --model sonnet
+            --max-turns 75
+            --allowedTools "Read,Grep,Glob,Write,Edit,Bash(gh issue view:*),Bash(gh issue comment:*),Bash(gh pr create:*),Bash(git checkout:*),Bash(git add:*),Bash(git commit:*),Bash(git push:*),Bash(node scripts/check-sync.js),Bash(npx eslint:*),Bash(npm run lint:docs)"
