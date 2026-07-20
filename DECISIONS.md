@@ -2,6 +2,15 @@
 
 Per-project decision log. Newest first. Format: `D-YYYY-MM-DD-n`.
 
+## D-2026-07-20-1 — Auto-builder (stage 5): @claude build mention, GitHub Actions, explicit unverified-checklist
+
+- **Status:** open
+- **Context:** Pipeline stage 5 — build a `ready`/`agent-ready` issue into a PR on request, closing the loop from issue to build without a human manually invoking an agent each time (as was done for #13 interactively and #24 via delegated subagent).
+- **Options considered:** `agent-ready` label itself as the trigger (rejected — collapses "this issue meets the autonomous-build bar" with "build it now" into one signal; the label is applied automatically during `ba-issue` refinement, so this would silently start builds with no separate human intent) · local/interactive delegation like #24's build (rejected as the standing mechanism — structurally can't repeat the day's branch-mixing incident the way GitHub Actions' always-fresh checkout can't, since a CI runner has no leftover branch state to mix up) · silently claiming full verification of agent-ready criteria (rejected — a CI runner has no browser/preview access, so `[demo]` criteria genuinely cannot be verified there) · **`@claude build` mention triggering a GitHub Action (reusing the proven `claude-code-action` pattern), re-checking `agent-ready` inside the workflow before attempting anything, mandatory per-criterion verified/unverified checklist in the PR body, builder never merges its own PR (chosen)**.
+- **Why:** the mention trigger reuses `claude-review.yml`'s already-proven mechanism at near-zero new complexity and leaves an audit-trail comment; GitHub Actions' fresh-checkout-per-run structurally eliminates the failure class behind today's incident; the verification checklist surfaces a real gap the `agent-ready` bar didn't originally account for (it assumed an execution environment with browser/preview access, which CI doesn't have) rather than silently over-claiming. Treated with the same human-merge boundary as issue-built feature work (#13, #24), not the lighter self-merge treatment given to read-only stages 1/3 infra — this stage writes code and pushes commits, a materially higher blast radius.
+- **Expected outcome:** an `@claude build` comment on a ready+agent-ready issue produces a PR with an honest, per-criterion verification record; `claude-review.yml` auto-reviews it same as any code PR; a human merges.
+- **Revisit:** after the first real build — whether `--max-turns 75` is enough, whether the unverified-checklist format needs adjusting, and whether the `agent-ready` bar in the `ba-issue` skill itself needs a matching patch to account for CI-only execution (flagged, not yet done).
+
 ## D-2026-07-18-3 — Reviewer action: OAuth-token auth, auto on code PRs, code + contract check, Sonnet
 
 - **Status:** open
