@@ -4,19 +4,43 @@ _Convention: update at end of each working session. The weekly portfolio review 
 
 ## Current focus
 
+- Agentic-issues pipeline: **all five stages built and merged** (docs-lint → issue contract/BA → reviewer → tech-writer → auto-builder). Now in a settle-and-verify phase — one known bug to fix, a real end-to-end `@claude build` test still owed, and two standing decisions (see Next up). Product work (EMV Phase 2) resumes after.
 - EMV historic-record feature (`docs/FEATURE_EMV_HISTORY.md`): Phases 0+1 **live** in private repo `goatindex/emergency-history` — 30-min collector plus nightly derive (per-zone summaries at `summaries/{ZONE}/last-{7,30}d.json`, gap monitor, size guard). Next: Phase 2 briefing UI, which first needs the serving decision (private repo → app can't fetch summaries directly; resolve feed licensing then make public, or proxy summaries through the WeeWoo repo)
 
 ## Next up
 
-- Error surfacing per `docs/PLAN_ERROR_SURFACING.md` — now issue #13 (ready, agent-ready)
-- Telemetry gap-closure per `docs/PLAN_TELEMETRY.md` — now issue #14 (ready, agent-ready)
+Pipeline settle/verify (do these before more product work):
+
+- **Fix tech-writer audit scope (agreed, not yet executed).** `tech-writer.yml` on master excludes CLAUDE.md and falsely cites D-2026-07-17-1 as justification — but that decision chose "all tracked markdown". Agreed fix: add CLAUDE.md to scope, delete the false citation. Leave DECISIONS.md/NEXT.md out (log + self-hooked). Plus: file a follow-up issue for a file-type-aware rubric (an ADR log goes stale on its `Status` field, not content-vs-code — a different check).
+- **First real `@claude build` test.** Comment `@claude build` on a `ready`+`agent-ready` issue (#14 is the candidate) and confirm the loop actually closes — specifically that the builder's `gh pr create` re-triggers `claude-review.yml` (open question from #27's review: default `GITHUB_TOKEN` may not fire downstream workflows).
+- **Tech-writer `workflow_dispatch` test-fire** — the manual verification run added for exactly this was never done.
+- #36 — guard auto-builder against duplicate `@claude build` runs + tighten the substring trigger match (`needs-refinement`; dedup mechanism is the open decision).
+- Optional: point `claude-build.yml` Step 1 at `docs/ISSUE_CONTRACT.md` (both files now on master) — low value, the builder reads the issue body which is already contract-shaped.
+
+Standing decisions (Kirk's call):
+
+- **OAuth token vs API key for CI Claude workflows.** Today's rate-limit collision (three reviews failed at the first API call, $0/1-turn) is the live evidence D-2026-07-18-3's revisit clause named. Needs a DECISIONS.md entry once picked.
+- **Where `ba-issue` is versioned** — in weewoo vs a goatindex skills repo (raised in #33).
+- Post-merge `[demo]` verification debt has no tracking mechanism — e.g. PR #20's GoatCounter `error/*` receipt check is still outstanding, only recorded here.
+
+Product backlog:
+
+- Telemetry gap-closure — issue #14 (`ready`, `agent-ready`)
 - End-user help/glossary + feedback button (review REC-7.1 / REC-5.2 — still open; not yet an issue)
-- **Merge PR #20** (logError, Closes #13) — built, reviewed clean by the auto-review action, all checks green, mergeable. Merge is a human step by design. Post-merge: verify GoatCounter receives the `error/*` event (issue #13's AC1 [demo] half that can't be checked from localhost)
-- Build issue #24 (scheduled tech-writer/docs-audit agent — pipeline stage 4, `ready` + `agent-ready`): new workflow copying `claude-review.yml`'s shape (`schedule:` trigger instead of `pull_request`, self-contained prompt embedding the task.yml contract, 2-issue/run cap, dedup via `gh issue list --search`)
+- EMV Phase 2 briefing UI (needs the serving decision above)
 
 ## Done means
 
-- Phase 1 summariser producing per-zone `last-7d` summaries the app can fetch, and a week of collector uptime with no unexplained gaps in STATUS.md
+- Pipeline: all five stages live on master, the tech-writer scope bug fixed, and one real `@claude build` proven to produce a reviewed PR end-to-end
+- EMV: Phase 1 summariser producing per-zone `last-7d` summaries the app can fetch, and a week of collector uptime with no unexplained gaps in STATUS.md
+
+## Done (2026-07-20 session)
+
+- **Pipeline stages 3–5 landed on master.** Stage 3 proven end-to-end: issue #13 (logError) built → PR #20, reviewer caught two real stack-trace regressions, both fixed, merged. Stage 4 (tech-writer, #26) and stage 5 (auto-builder, #27) built, reviewed, merged. #27's review caught a genuine security hole (author gate was in-prompt only, prompt-injectable) — moved to a fail-closed workflow-level `if:` gate; plus fixed a dead eslint tool-grant and added a `ready`-label check.
+- **Pipeline hardened via its own process.** Four assessment findings filed as issues, built by delegated agents, reviewed, merged: #30 (mention-job author gate + least-privilege), #32 (narrow review-skip to NEXT/DECISIONS so docs PRs get reviewed), #34 (single-source contract → `docs/ISSUE_CONTRACT.md`), #35 (node:test harness + seed tests, `[test]` now enforceable). Merge pass done in dependency order, master green throughout.
+- **Branch-base incident + guard.** A new branch cut off a leftover feature branch (not master) merged PR #20's commits early and auto-closed #13. Left as-is (code was reviewed-clean). Prevented recurrence with a `PreToolUse` hook (`~/.claude/hooks/branch_base_guard.py`) that blocks `git checkout -b` with no explicit base off a non-master branch — see [[branch-base-incident]] memory.
+- **Known bug carried forward:** tech-writer scope excludes CLAUDE.md w/ a false D-2026-07-17-1 citation (agreed fix pending — see Next up).
+- #36 filed (auto-builder idempotency, `needs-refinement`). D-2026-07-20-1 logged (auto-builder design).
 
 ## Done (2026-07-19 session)
 
@@ -50,4 +74,4 @@ _Convention: update at end of each working session. The weekly portfolio review 
 
 ## Last updated
 
-2026-07-19
+2026-07-20
