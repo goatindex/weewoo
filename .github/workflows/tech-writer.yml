@@ -51,11 +51,21 @@ jobs:
               issue thread to post it to.
             - Never file more than 2 issues in a single run.
 
-            Scope — audit ONLY these docs (mirrors the docs-lint gate's scope,
-            DECISIONS.md D-2026-07-17-1): README.md, PRODUCT_BRIEF.md,
-            docs/*.md, geojson/*.md. Explicitly exclude CLAUDE.md,
-            DECISIONS.md, NEXT.md, and docs/codebase-review-*.md (working
-            files and a frozen snapshot, excluded there too).
+            Scope — audit ONLY these docs: README.md, PRODUCT_BRIEF.md,
+            CLAUDE.md, docs/*.md, geojson/*.md. This is a deliberate subset
+            chosen for what content-vs-code staleness-checking applies to —
+            NOT the docs-lint gate's scope (that lints all tracked markdown).
+            CLAUDE.md is explicitly IN and is a priority target: it is the
+            architecture/agent-instructions doc, and stale claims in it (e.g.
+            describing code that has since been rewritten) are exactly what
+            motivated this agent. Explicitly EXCLUDE:
+            - DECISIONS.md — an append-only ADR log; its old entries correctly
+              describe the past, so content-vs-code staleness does not apply
+              (an ADR goes stale on its Status/supersession field, a different
+              check — see the follow-up issue).
+            - NEXT.md — a mutable status snapshot with its own freshness
+              mechanism; auditing it here would duplicate that.
+            - docs/codebase-review-*.md — a frozen dated snapshot.
 
             What to check, in priority order:
             1. Staleness (primary, hard rubric): for each in-scope doc, read
