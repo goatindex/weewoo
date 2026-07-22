@@ -21,6 +21,10 @@ permissions:
   contents: write
   pull-requests: write
   issues: write
+  # Required by claude-code-action for its OAuth-token / OIDC exchange —
+  # without it the run dies at "Could not fetch an OIDC token" before doing
+  # anything (caught by the first real test-fire, not static review).
+  id-token: write
 
 jobs:
   build:
