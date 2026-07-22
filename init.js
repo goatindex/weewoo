@@ -77,6 +77,30 @@ function initOnboarding() {
   });
 }
 
+/* Self-reported return-rate signal: no identifier ever leaves the browser.
+   weewoo_first_seen is set once, on the very first visit, and never fires
+   the event that same visit. On later visits, once at least 24h have
+   elapsed since that timestamp, fire returning_visit — but at most once
+   per calendar day, gated by weewoo_returning_visit_last. */
+function trackReturningVisit() {
+  const FIRST_SEEN_KEY = 'weewoo_first_seen';
+  const LAST_FIRED_KEY = 'weewoo_returning_visit_last';
+  const now = Date.now();
+
+  const firstSeen = localStorage.getItem(FIRST_SEEN_KEY);
+  if (!firstSeen) {
+    localStorage.setItem(FIRST_SEEN_KEY, String(now));
+    return;
+  }
+
+  if (now - Number(firstSeen) < 24 * 60 * 60 * 1000) return;
+
+  const today = new Date(now).toISOString().slice(0, 10);
+  if (localStorage.getItem(LAST_FIRED_KEY) === today) return;
+  localStorage.setItem(LAST_FIRED_KEY, today);
+  trackEvent('returning_visit');
+}
+
 async function initApp() {
   // Load layer config before anything else
   const resp = await fetch('config/layers.json');
@@ -84,6 +108,7 @@ async function initApp() {
   buildLookups();
   Object.keys(groupById).forEach(id => { state.loadState[id] = 'unloaded'; });
 
+  trackReturningVisit();
   restoreLayerState();
 
   initMap();
