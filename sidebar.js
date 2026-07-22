@@ -630,8 +630,14 @@ function updateSubSectionCountDOM(section) {
    SEARCH
    ============================================================ */
 
+let _searchUsedFired = false;
+
 function applySearchFilter(groupId, query) {
   const q  = query.trim().toLowerCase();
+  if (q && !_searchUsedFired) {
+    _searchUsedFired = true;
+    trackEvent('search_used');
+  }
   const ul = document.querySelector(`.feature-list[data-group-id="${groupId}"]`);
   if (!ul) return;
 
