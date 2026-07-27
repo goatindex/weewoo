@@ -2,6 +2,15 @@
 
 Per-project decision log. Newest first. Format: `D-YYYY-MM-DD-n`.
 
+## D-2026-07-27-1 — Work-item contract moves upstream; this repo carries a vendored copy
+
+- **Status:** open
+- **Context:** The contract was single-sourced into this repo by D-2026-07-20-1's follow-up work (#34), which was right while WeeWoo was the only project using it. It is not WeeWoo-specific: the seven sections, EARS/GWT forms, verification tags, banned words and the readiness gates apply to any project, including the non-code ones. Keeping the master here left the other eight projects unable to reach it.
+- **Options considered:** leave the master here and copy outward per project (rejected — the copies diverge, which is the failure #34 fixed in the first place) · make the skills repo public so CI can fetch the contract at run time (rejected — publishing is hard to reverse and the repo holds unrelated personal working material) · give CI a token to read a private repo (rejected — a new credential and a network dependency on every workflow run, to avoid a file that costs nothing to keep) · **master moves to the `ba-issue` skill in `goatindex/claude-workflow`; this repo keeps a full vendored copy marked generated, with only the label taxonomy local (chosen)**.
+- **Why:** `tech-writer.yml` and `claude-build.yml` read the contract from the checkout at run time, so a local copy has to exist regardless of where the master lives — vendoring is therefore free, and the only question is which copy is authoritative. Making the skill authoritative is what lets the other projects use the contract at all. The criteria rules were additionally split into their own file upstream so the break-it-down skill and a future plan-doc skill vendor one text rather than each carrying a paraphrase.
+- **Expected outcome:** the contract is edited in one place; this repo's copy is regenerated rather than hand-edited; the pipeline workflows keep working with no change.
+- **Revisit:** if a second repo adopts the pipeline (does vendoring scale, or does it want a fetch step?), or if the vendored copy is ever hand-edited — that is the signal the arrangement is not holding.
+
 ## D-2026-07-20-1 — Auto-builder (stage 5): @claude build mention, GitHub Actions, explicit unverified-checklist
 
 - **Status:** open

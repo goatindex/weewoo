@@ -1,22 +1,31 @@
 # Issue Contract
 
-This is the single source of truth for how issues are written in this repository.
+<!-- markdownlint-disable-next-line MD036 -->
+**Vendored file — do not edit here.**
+
+The master text lives in the `ba-issue` skill, in the private repo
+`goatindex/claude-workflow`:
+
+- Work-item contract, Definition of Ready, agent-ready bar —
+  `skills/ba-issue/SKILL.md`
+- Acceptance-criteria rules — `skills/ba-issue/references/acceptance-criteria.md`
+
+This copy exists because tooling in this repository reads the contract from a
+checkout and cannot reach a private repo: `.github/workflows/tech-writer.yml`
+and `.github/workflows/claude-build.yml` both read it at run time, and
+`.github/ISSUE_TEMPLATE/task.yml` links to it. Change the master, then
+re-vendor here. If the two disagree, the master wins.
+
+Only the "Labels in this repository" section below is local to WeeWoo.
+
+## How issues are written here
+
 Every issue — whether hand-raised through the GitHub issue form, drafted by the
 `ba-issue` skill, or filed by a pipeline agent — carries the same contract so a
 builder (human or agent) can execute it cold.
 
 A visible "none" in a section is information; an absent section is ambiguity. No
 section is ever omitted.
-
-Anything that consumes or restates this contract points here rather than keeping
-its own copy:
-
-- `.github/ISSUE_TEMPLATE/task.yml` — the issue form for hand-raised issues.
-- `.github/workflows/tech-writer.yml` — the docs-audit agent reads this document
-  before filing.
-- `.github/workflows/claude-build.yml` — the auto-builder treats an issue body in
-  this shape as its authoritative spec.
-- The `ba-issue` skill (authoring guide; canonical policy lives here).
 
 ## The seven sections
 
@@ -64,6 +73,10 @@ Every criterion ends with how it will be verified:
 - `[inspect]` — read the code, config, or dashboard.
 - `[analyze]` — reason over data or logs.
 
+The tags let the reviewer ask a mechanical question: was each criterion verified
+by its declared method? A tag naming a method nobody can run in the available
+environment is a defect in the criterion.
+
 ### Banned words
 
 None of these may appear in a criterion (outside quoted strings or code
@@ -79,6 +92,17 @@ quickly". This ban comes from INCOSE requirements practice.
 
 Three sharp criteria beat eight vague ones; a criterion no one would ever
 actually check is noise wearing a checkbox.
+
+### Marking gaps
+
+Where something genuinely is not known, write the question rather than the hole:
+
+```text
+[NEEDS CLARIFICATION: which of the two export formats is authoritative?]
+```
+
+A bare "TBD" records that someone stopped thinking. A clarification marker
+records what they stopped on.
 
 ## Definition of Ready
 
@@ -96,8 +120,8 @@ Every line must pass for the `ready` label:
 - Size estimated. If L: splitting was considered, and the body says why it was
   not split — or the work is redirected to a requirements-doc pass first.
 - No decision requiring the user's judgment is left implicit in the body —
-  either it was asked or the issue is `needs-refinement` with the open question
-  stated.
+  either it was asked, or the issue is `needs-refinement` with the open question
+  stated as a `[NEEDS CLARIFICATION: ...]` marker.
 
 An issue that fails any line is filed with `needs-refinement` rather than
 `ready`; the label is the warning, and the open questions are stated in the
@@ -116,7 +140,9 @@ body.
   `[test]`, `[inspect]`, or a `[demo]` drivable in the app or preview — nothing
   that needs human taste to verify.
 
-## Label taxonomy
+## Labels in this repository
+
+This section is local to WeeWoo; the labels below exist in this repo.
 
 - Type (exactly one): `type:feature` `type:bug` `type:docs` `type:chore`
 - Size (exactly one): `size:S` `size:M` `size:L`
@@ -137,9 +163,13 @@ no traceability matrix, no requirement IDs; issues are cheap, disposable units
 of intent. Priority is deliberately absent from the contract: sequencing lives
 in NEXT.md and the priority labels, not inside issue bodies.
 
+Size is under review upstream. It currently does three jobs — a split prompt at
+authoring, the autonomy gate, and the builder's stop condition. Once work
+arrives already broken down, all three get better mechanisms. Do not build new
+dependencies on it.
+
 ## Provenance
 
-The full authoring workflow, elicitation method, and graceful-degradation ladder
-live in the `ba-issue` skill, which treats this document as canonical policy.
-The version history of the contract itself is recorded in DECISIONS.md
-(D-2026-07-18-1, D-2026-07-18-2).
+The version history of the contract before it moved upstream is recorded in
+DECISIONS.md (D-2026-07-18-1, D-2026-07-18-2). The move itself is
+D-2026-07-27-1.
