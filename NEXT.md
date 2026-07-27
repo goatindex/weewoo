@@ -11,7 +11,6 @@ _Convention: update at end of each working session. The weekly portfolio review 
 
 Pipeline settle/verify (do these before more product work):
 
-- **Fix tech-writer audit scope (agreed, not yet executed).** `tech-writer.yml` on master excludes CLAUDE.md and falsely cites D-2026-07-17-1 as justification — but that decision chose "all tracked markdown". Agreed fix: add CLAUDE.md to scope, delete the false citation. Leave DECISIONS.md/NEXT.md out (log + self-hooked). Plus: file a follow-up issue for a file-type-aware rubric (an ADR log goes stale on its `Status` field, not content-vs-code — a different check).
 - **First real `@claude build` test.** Comment `@claude build` on a `ready`+`agent-ready` issue (#14 is the candidate) and confirm the loop actually closes — specifically that the builder's `gh pr create` re-triggers `claude-review.yml` (open question from #27's review: default `GITHUB_TOKEN` may not fire downstream workflows).
 - **Tech-writer `workflow_dispatch` test-fire** — the manual verification run added for exactly this was never done.
 - #36 — guard auto-builder against duplicate `@claude build` runs + tighten the substring trigger match (`needs-refinement`; dedup mechanism is the open decision).
@@ -20,12 +19,11 @@ Pipeline settle/verify (do these before more product work):
 Standing decisions (Kirk's call):
 
 - **OAuth token vs API key for CI Claude workflows.** Today's rate-limit collision (three reviews failed at the first API call, $0/1-turn) is the live evidence D-2026-07-18-3's revisit clause named. Needs a DECISIONS.md entry once picked.
-- **Where `ba-issue` is versioned** — in weewoo vs a goatindex skills repo (raised in #33).
 - Post-merge `[demo]` verification debt has no tracking mechanism — e.g. PR #20's GoatCounter `error/*` receipt check is still outstanding, only recorded here.
 
 Product backlog:
 
-- Telemetry gap-closure — issue #14 (`ready`, `agent-ready`)
+- Telemetry gap-closure — issue #14 (`ready`, `agent-ready`); PR #41 open against it
 - End-user help/glossary + feedback button (review REC-7.1 / REC-5.2 — still open; not yet an issue)
 - EMV Phase 2 briefing UI (needs the serving decision above)
 
@@ -33,6 +31,13 @@ Product backlog:
 
 - Pipeline: all five stages live on master, the tech-writer scope bug fixed, and one real `@claude build` proven to produce a reviewed PR end-to-end
 - EMV: Phase 1 summariser producing per-zone `last-7d` summaries the app can fetch, and a week of collector uptime with no unexplained gaps in STATUS.md
+
+## Done (2026-07-27 session)
+
+- **PR #42 — the issue contract moves upstream.** `docs/ISSUE_CONTRACT.md` becomes a vendored, generated copy naming the `ba-issue` skill in private repo `goatindex/claude-workflow` as master. Full text retained on purpose: `tech-writer.yml` and `claude-build.yml` read it from the checkout at run time and cannot reach a private repo, so a local copy has to exist regardless — which makes vendoring free and leaves only the question of which copy is authoritative. Only "Labels in this repository" is local now. Adds the `[NEEDS CLARIFICATION: <question>]` rule and a note that `Size` is under review upstream. `npm run lint:docs` clean. Decision D-2026-07-27-1.
+- **Resolves the standing "where is `ba-issue` versioned" question (#33)** — it is versioned in `goatindex/claude-workflow`, and this repo vendors what its CI needs.
+- Context: the contract was single-sourced here by #34, correct while WeeWoo was its only consumer. A cross-project baseline against GitHub Spec Kit found the rules are domain-neutral apart from the label taxonomy, and that keeping the master here left the other eight projects unable to reach it. Full reasoning in `D:\mpd\NEXT.md` (27 Jul entry).
+- Not this session, but landed since the 20 Jul wrap-up and pruned from Next up above: PR #38 (tech-writer audit scope fixed — CLAUDE.md included, false D-2026-07-17-1 citation removed, follow-up issue #39 filed) and PR #40 (`id-token: write` OIDC auth fix on claude-build and tech-writer).
 
 ## Done (2026-07-20 session)
 
@@ -74,4 +79,4 @@ Product backlog:
 
 ## Last updated
 
-2026-07-20
+2026-07-27
