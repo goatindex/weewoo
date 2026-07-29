@@ -39,3 +39,8 @@ geojson/**/flood/vic_flood_stat_100yr_extracted/
 # Python
 __pycache__/
 *.py[cod]
+
+# Planning files live in the private goatindex/project-tracking repo
+# and are symlinked in. See that repo README.
+/NEXT.md
+/DECISIONS.md
