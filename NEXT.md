@@ -5,13 +5,12 @@ _Convention: update at end of each working session. The weekly portfolio review 
 ## Current focus
 
 - Agentic-issues pipeline: **all five stages built and merged** (docs-lint → issue contract/BA → reviewer → tech-writer → auto-builder). Now in a settle-and-verify phase — one known bug to fix, a real end-to-end `@claude build` test still owed, and two standing decisions (see Next up). Product work (EMV Phase 2) resumes after.
-- EMV historic-record feature (`docs/FEATURE_EMV_HISTORY.md`): Phases 0+1 **live** in private repo `goatindex/emergency-history` — 30-min collector plus nightly derive (per-zone summaries at `summaries/{ZONE}/last-{7,30}d.json`, gap monitor, size guard). Next: Phase 2 briefing UI, which first needs the serving decision (private repo → app can't fetch summaries directly; resolve feed licensing then make public, or proxy summaries through the WeeWoo repo)
+- EMV historic-record feature (`docs/FEATURE_EMV_HISTORY.md`): Phases 0+1 **live** in private repo `goatindex/emergency-history` — 30-min collector plus nightly derive (per-zone summaries at `summaries/{ZONE}/last-{7,30}d.json`, gap monitor). Raw archive re-partitioned 2026-08-23 to daily segments with a size valve (D-2026-08-23-1) after the old monthly guard silently killed the nightly for 13 nights — fixed and verified live. Next: Phase 2 briefing UI, which first needs the serving decision (private repo → app can't fetch summaries directly; resolve feed licensing then make public, or proxy summaries through the WeeWoo repo)
 
 ## Next up
 
 Pipeline settle/verify (do these before more product work):
 
-- **Fix tech-writer audit scope (agreed, not yet executed).** `tech-writer.yml` on master excludes CLAUDE.md and falsely cites D-2026-07-17-1 as justification — but that decision chose "all tracked markdown". Agreed fix: add CLAUDE.md to scope, delete the false citation. Leave DECISIONS.md/NEXT.md out (log + self-hooked). Plus: file a follow-up issue for a file-type-aware rubric (an ADR log goes stale on its `Status` field, not content-vs-code — a different check).
 - **First real `@claude build` test.** Comment `@claude build` on a `ready`+`agent-ready` issue (#14 is the candidate) and confirm the loop actually closes — specifically that the builder's `gh pr create` re-triggers `claude-review.yml` (open question from #27's review: default `GITHUB_TOKEN` may not fire downstream workflows).
 - **Tech-writer `workflow_dispatch` test-fire** — the manual verification run added for exactly this was never done.
 - #36 — guard auto-builder against duplicate `@claude build` runs + tighten the substring trigger match (`needs-refinement`; dedup mechanism is the open decision).
@@ -28,11 +27,18 @@ Product backlog:
 - Telemetry gap-closure — issue #14 (`ready`, `agent-ready`)
 - End-user help/glossary + feedback button (review REC-7.1 / REC-5.2 — still open; not yet an issue)
 - EMV Phase 2 briefing UI (needs the serving decision above)
+- EMV collector cron reliability — `goatindex/emergency-history`'s 30-min schedule is dropping roughly half its runs (observed gaps 34–77 min against a 30-min cron on 2026-08-23), producing real holes in the incident record independent of the partitioning fix. Likely needs an offset second schedule or self-rescheduling; not yet investigated.
 
 ## Done means
 
 - Pipeline: all five stages live on master, the tech-writer scope bug fixed, and one real `@claude build` proven to produce a reviewed PR end-to-end
 - EMV: Phase 1 summariser producing per-zone `last-7d` summaries the app can fetch, and a week of collector uptime with no unexplained gaps in STATUS.md
+
+## Done (2026-08-23 session)
+
+- **EMV collector outage fixed.** `goatindex/emergency-history`'s nightly derive had failed silently every night since 2026-08-11 — the monthly raw partition outgrew a hard 5 MB size guard, and because the guard fired _after_ `summarise.js` wrote its output with the commit step gated on success, 13 nights of summaries/`incidents/`/`REPORT.md` were computed then discarded. Re-partitioned the raw archive to daily segments (`raw/YYYY-MM-DD.NNN.ndjson`) with a 60%-of-ceiling size valve for storm days; demoted the size check from fatal to reported (a derive step should never discard completed work over it). Migration of the two legacy monthly files verified lossless (6573 lines in/out, zero content diffs, correct day-bucketing and ordering). Logged as D-2026-08-23-1. Pushed and confirmed live: nightly green again, collector producing daily segments with cross-segment dedupe confirmed on two runs 18s apart. `docs/FEATURE_EMV_HISTORY.md` corrected to match — PR #49.
+- **New finding, not yet actioned:** the collector's 30-min cron is dropping roughly half its scheduled runs (see Next up) — a separate, still-open reliability gap in the incident record.
+- Housekeeping: noticed while catching NEXT.md up that PR #38 (tech-writer audit scope fix — CLAUDE.md added, false citation dropped) and PR #40 (OIDC `id-token: write` fix for claude-build/tech-writer) landed 2026-07-21/22 without a wrap-up recording them. Recorded here so the log isn't missing them; no other pipeline activity in the gap.
 
 ## Done (2026-07-20 session)
 
@@ -74,4 +80,4 @@ Product backlog:
 
 ## Last updated
 
-2026-07-20
+2026-08-23
