@@ -285,6 +285,7 @@ function openPinStep2() {
     };
     pinState.pins.push(pin);
     savePins(pinState.pins);
+    trackEvent('pin_created');
     addPinMarker(pin);
     closeModal();
     pinState.markers[pin.id].openPopup();

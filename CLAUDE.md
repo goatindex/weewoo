@@ -151,6 +151,7 @@ The app uses these keys in addition to `weewoo_layers_v1` and other existing pre
 |-----|-------|
 | `weewoo_saves_index_v1` | JSON array of `{name, createdAt, byteSize, layerCount}` — index of all local saves |
 | `weewoo_save_{name}` | Full JSON save object (schema v1); key e.g. `weewoo_save_mysave_20260511T143022Z` |
+| `weewoo_first_seen` | Epoch-ms timestamp set once on first visit; drives the `returning_visit` telemetry event (`init.js`). Never transmitted — read locally only. |
 
 ### Planned, not built
 

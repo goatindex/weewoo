@@ -163,6 +163,8 @@ window.SectorisationTool = (function () {
   let _history = { past: [], future: [] };
   let _pending = null;  // pre-change snapshot captured by _beginOp(); pushed to history by _commit()
 
+  let _sectoriseSavedFired = false;  // sectorise_saved fires once per session, not per edit
+
   /* ============================================================
      GEOMETRY — segment intersection + noding
      ============================================================ */
@@ -440,6 +442,10 @@ window.SectorisationTool = (function () {
     _renderGraph();
     _updateToolbar();
     refreshSidebarSection();
+    if (!_sectoriseSavedFired) {
+      _sectoriseSavedFired = true;
+      trackEvent('sectorise_saved');
+    }
   }
 
   function _undo() {
@@ -1722,6 +1728,7 @@ window.SectorisationTool = (function () {
       },
     })));
     _downloadJSON(fc, `sectors_${(_parentName || 'export').replace(/\W+/g, '_').slice(0, 40)}.geojson`);
+    trackEvent('sector_export');
   }
 
   function _exportGeoJSONById(id) {
@@ -1744,6 +1751,7 @@ window.SectorisationTool = (function () {
       },
     })));
     _downloadJSON(fc, `sectors_${displayName.replace(/\W+/g, '_').slice(0, 40)}.geojson`);
+    trackEvent('sector_export');
   }
 
   function exportSectorBundle() {
@@ -1754,6 +1762,7 @@ window.SectorisationTool = (function () {
     if (!Object.keys(sectors).length) { _toast('No sector data to export.', 'info'); return; }
     const bundle = { type: 'weewoo-sector-bundle', version: 1, createdAt: new Date().toISOString(), sectors };
     _downloadJSON(bundle, `sector_data_${new Date().toISOString().slice(0, 10)}.json`);
+    trackEvent('sector_export');
   }
 
   function _downloadJSON(obj, filename) {
