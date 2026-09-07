@@ -28,7 +28,7 @@ Note: an earlier schema draft mentioned in NEXT.md was never committed to the re
 { capturedAt, feature: <verbatim GeoJSON feature> }
 ```
 
-- Append-only NDJSON, partitioned monthly (`raw/2026-07.ndjson`) — trivially convertible to Parquet/DuckDB later, diff-friendly in git. The repo is private and the feed is small, so keeping everything costs almost nothing and no future view is foreclosed.
+- Append-only NDJSON, partitioned by UTC day with a size valve (`raw/2026-07-10.001.ndjson`; see D-2026-08-23-1) — trivially convertible to Parquet/DuckDB later, diff-friendly in git. The repo is private and the feed is small, so keeping everything costs almost nothing and no future view is foreclosed. *Originally monthly; changed 2026-08-23 after the monthly partition outgrew the size guard and silently killed the nightly derive for 13 nights.*
 - A derived, flattened table (`incidents/2026-07.ndjson`: `sourceId, feedType, sourceOrg, category1, category2, status, location, name, created, updated, capturedAt, lon, lat`) is regenerated from the raw archive by the nightly job — it is a convenience artifact, never the source of truth.
 - The same nightly step assigns incidents to SES response areas by point-in-polygon against the boundary GeoJSON already in the repo, and pre-bakes `summaries/{zoneId}/last-{7,30}d.json` for the client.
 
@@ -72,7 +72,7 @@ Scheduled workflows (zero manual steps in steady state):
 - **Failure / block alerting:** the collector inspects the HTTP status and exits non-zero with an explicit reason — `403`/`429` → `POSSIBLY BLOCKED`, timeout/5xx → `FEED UNREACHABLE`, anything else unexpected → `SCHEMA/FETCH ERROR`. A failing scheduled workflow triggers GitHub's built-in failure email to the repo owner, so a block is known within one poll cycle with no extra infrastructure. `STATUS.md` (below) tracks **consecutive** failures to separate a transient CDN hiccup from a sustained block.
 - **Schema-drift canary:** collector validates expected fields on every run and fails loudly if EMV changes the feed shape.
 - **Gap monitor:** nightly job checks capture timestamps for holes > 2h and flags them in a `STATUS.md` the workflow rewrites — visible at a glance, and the first place to look after any failure email.
-- Repo-size guard: nightly job asserts the current monthly partition < 5 MB.
+- Size handling (revised 2026-08-23, D-2026-08-23-1): the collector rolls to a new segment once the current one reaches 60% of the 5 MB ceiling, so size is bounded at write time rather than merely asserted afterwards. The nightly job still reports any over-ceiling segment in `REPORT.md` and on stderr, but **never fails over it** — the original guard did, and because it fired after the outputs were written it discarded 13 nights of summaries before anyone noticed. A derive step must fail only when it genuinely cannot do its job.
 
 ## 7. Extensibility — what the historic DB enables later
 
