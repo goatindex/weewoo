@@ -15,5 +15,9 @@
   // Mirrors the git-tracked markdown set: root docs + docs/ + geojson/.
   "globs": ["*.md", "docs/*.md", "geojson/*.md"],
   // Dated snapshot reports are frozen records; prose is still Vale-linted.
-  "ignores": ["docs/codebase-review-*.md"]
+  // NEXT.md and DECISIONS.md are no longer in this repo — they live in the
+  // private goatindex/project-tracking repo and are symlinked into the working
+  // directory, so they are present on disk locally but absent on a CI checkout.
+  // Listed here so a local `npm run lint:docs` doesn't lint another repo's file.
+  "ignores": ["docs/codebase-review-*.md", "NEXT.md", "DECISIONS.md"]
 }
